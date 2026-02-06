@@ -68,6 +68,113 @@ button:hover {
       <input type="checkbox" checked="checked"> Remember me   
       <button type="button" class="cancelbtn"> Cancel</button>   
       Forgot <a href="#"> password? </a>   
+      <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Forgot Password</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: #fff;
+      padding: 25px;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 14px;
+      color: #555;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+      color: green;
+      display: none;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      text-decoration: none;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Forgot Password</h2>
+    <p>Enter your email and we’ll send reset instructions.</p>
+
+    <form id="forgotForm">
+      <input type="email" id="email" placeholder="Enter your email" required />
+      <button type="submit">Send Reset Link</button>
+    </form>
+
+    <div class="message" id="message">
+      If this email exists, a reset link has been sent.
+    </div>
+
+    <a href="index.html">Back to Login</a>
+  </div>
+
+  <script>
+    document.getElementById("forgotForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      // UI-only behavior (no bypass, no password handling)
+      document.getElementById("message").style.display = "block";
+
+      // Clear input
+      document.getElementById("email").value = "";
+    });
+  </script>
     </form>     
   </div>
 </body>     
