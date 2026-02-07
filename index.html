@@ -55,8 +55,8 @@ button:hover {
 
 .forgot-link a {
   color: #007bff;
-  cursor: pointer;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .forgot-link a:hover {
@@ -80,7 +80,7 @@ button:hover {
 
 <div class="container">
 
-  <!-- LOGIN FORM (VISIBLE BY DEFAULT) -->
+  <!-- LOGIN -->
   <div id="loginForm">
     <h1 style="text-align:center;">Login Form</h1>
 
@@ -98,12 +98,12 @@ button:hover {
       </label>
 
       <div class="forgot-link">
-        <a onclick="showForgot()">Forgot password?</a>
+        <a href="#" id="forgotLink">Forgot password?</a>
       </div>
     </form>
   </div>
 
-  <!-- FORGOT PASSWORD (HIDDEN INITIALLY) -->
+  <!-- FORGOT PASSWORD -->
   <div id="forgotForm" class="hidden">
     <h1 style="text-align:center;">Forgot Password</h1>
     <p style="text-align:center;font-size:14px;">
@@ -120,26 +120,39 @@ button:hover {
     </div>
 
     <div class="forgot-link">
-      <a onclick="showLogin()">Back to Login</a>
+      <a href="#" id="backLink">Back to Login</a>
     </div>
   </div>
 
 </div>
 
 <script>
-function showForgot() {
-  document.getElementById("loginForm").classList.add("hidden");
-  document.getElementById("forgotForm").classList.remove("hidden");
-}
+document.addEventListener("DOMContentLoaded", function () {
 
-function showLogin() {
-  document.getElementById("forgotForm").classList.add("hidden");
-  document.getElementById("loginForm").classList.remove("hidden");
-}
+  const loginForm = document.getElementById("loginForm");
+  const forgotForm = document.getElementById("forgotForm");
+  const forgotLink = document.getElementById("forgotLink");
+  const backLink = document.getElementById("backLink");
+  const resetForm = document.getElementById("resetForm");
+  const message = document.getElementById("message");
 
-document.getElementById("resetForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  document.getElementById("message").style.display = "block";
+  forgotLink.addEventListener("click", function (e) {
+    e.preventDefault();
+    loginForm.classList.add("hidden");
+    forgotForm.classList.remove("hidden");
+  });
+
+  backLink.addEventListener("click", function (e) {
+    e.preventDefault();
+    forgotForm.classList.add("hidden");
+    loginForm.classList.remove("hidden");
+  });
+
+  resetForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    message.style.display = "block";
+  });
+
 });
 </script>
 
