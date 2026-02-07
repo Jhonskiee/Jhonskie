@@ -31,10 +31,10 @@ h2 {
   margin-bottom: 15px;
 }
 
-/* INPUTS – SHORTER & CLEAN */
+/* INPUTS */
 input {
-  width: 90%;              /* 👈 not full width */
-  padding: 8px;            /* 👈 shorter height */
+  width: 90%;
+  padding: 8px;
   margin: 6px auto 12px;
   display: block;
   border: 2px solid #000;
@@ -54,23 +54,38 @@ button {
   cursor: pointer;
 }
 
-/* LINKS */
-a {
-  color: blue;
+/* LINK ROW */
+.link-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* HIGHLIGHTED LINKS */
+.action-link {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
   cursor: pointer;
-  text-decoration: none;
 }
 
-a:hover {
-  text-decoration: underline;
+.forgot {
+  color: #ff4500;
+  background: #ffe5dc;
 }
 
-/* CREATE ACCOUNT BOX */
-.create-box {
-  margin-top: 20px;
+.register {
+  color: #1e90ff;
+  background: #eaf3ff;
+}
+
+/* CREATE & FORGOT BOX */
+.box {
+  margin-top: 15px;
   padding: 15px;
   border: 2px solid #1e90ff;
-  background: #eaf3ff;
+  background: #f9fbff;
 }
 
 /* HIDE */
@@ -95,77 +110,19 @@ a:hover {
     <input type="password" placeholder="Enter Password">
 
     <button>Login</button>
- <div class="forgot-link">
-        <a href="#" id="forgotLink">Forgot password?</a>
-      </div>
-    </form>
-  </div>
 
-  <!-- FORGOT PASSWORD -->
-  <div id="forgotForm" class="hidden">
-    <h1>Reset Password</h1>
-    <p style="text-align:center; font-size:14px; opacity:0.9;">
-      Enter your email and we’ll send instructions.
-    </p>
-
-    <form id="resetForm">
-      <input type="email" placeholder="Enter your email" required>
-      <button type="submit">Send Reset Link</button>
-    </form>
-
-    <div class="message" id="message">
-      If this email exists, a reset link has been sent.
+    <!-- LEFT & RIGHT LINKS -->
+    <div class="link-row">
+      <span class="action-link forgot" onclick="showForgot()">Forgot Password?</span>
+      <span class="action-link register" onclick="showRegister()">Create Account</span>
     </div>
-
-    <div class="forgot-link">
-      <a href="#" id="backLink">← Back to Login</a>
-    </div>
-  </div>
-
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-  const loginForm = document.getElementById("loginForm");
-  const forgotForm = document.getElementById("forgotForm");
-  const forgotLink = document.getElementById("forgotLink");
-  const backLink = document.getElementById("backLink");
-  const resetForm = document.getElementById("resetForm");
-  const message = document.getElementById("message");
-
-  forgotLink.onclick = e => {
-    e.preventDefault();
-    loginForm.classList.add("hidden");
-    forgotForm.classList.remove("hidden");
-  };
-
-  backLink.onclick = e => {
-    e.preventDefault();
-    forgotForm.classList.add("hidden");
-    loginForm.classList.remove("hidden");
-  };
-
-  resetForm.onsubmit = e => {
-    e.preventDefault();
-    message.style.display = "block";
-  };
-
-});
-</script>
-
-</body>
-</html>
-    <p style="text-align:center;">
-      <a onclick="showRegister()">Create an account</a>
-    </p>
   </div>
 
   <!-- REGISTER -->
   <div id="registerForm" class="hidden">
     <h2>Create Account</h2>
 
-    <div class="create-box">
+    <div class="box">
       <label>Email</label>
       <input type="email" placeholder="Enter Email">
 
@@ -177,9 +134,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
       <button>Create Account</button>
 
-      <p style="text-align:center;">
-        <a onclick="showLogin()">Back to Login</a>
-      </p>
+      <div class="link-row">
+        <span class="action-link forgot" onclick="showLogin()">Back to Login</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORGOT PASSWORD -->
+  <div id="forgotForm" class="hidden">
+    <h2>Forgot Password</h2>
+
+    <div class="box">
+      <label>Email</label>
+      <input type="email" placeholder="Enter your registered email">
+
+      <button>Reset Password</button>
+
+      <div class="link-row">
+        <span class="action-link forgot" onclick="showLogin()">Back to Login</span>
+      </div>
     </div>
   </div>
 
@@ -187,13 +160,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script>
 function showRegister() {
-  document.getElementById("loginForm").classList.add("hidden");
-  document.getElementById("registerForm").classList.remove("hidden");
+  loginForm.classList.add("hidden");
+  forgotForm.classList.add("hidden");
+  registerForm.classList.remove("hidden");
+}
+
+function showForgot() {
+  loginForm.classList.add("hidden");
+  registerForm.classList.add("hidden");
+  forgotForm.classList.remove("hidden");
 }
 
 function showLogin() {
-  document.getElementById("registerForm").classList.add("hidden");
-  document.getElementById("loginForm").classList.remove("hidden");
+  registerForm.classList.add("hidden");
+  forgotForm.classList.add("hidden");
+  loginForm.classList.remove("hidden");
 }
 </script>
 
