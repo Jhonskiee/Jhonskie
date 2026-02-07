@@ -1,14 +1,15 @@
-<!DOCTYPE html>   
-<html>   
+<!DOCTYPE html>
+<html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">  
-<title> Login Page </title>  
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login</title>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<style>   
-body {  
-  font-family: Calibri, Helvetica, sans-serif;  
+
+<style>
+body {
+  font-family: Calibri, Helvetica, sans-serif;
   margin: 0;
-  padding: 0;
   background-image: url("https://hotimg.com/Screenshot-2025-10-28-233058.4XVK1R");
   background-size: cover;
   display: flex;
@@ -18,142 +19,99 @@ body {
 }
 
 .container {
-  padding: 25px;   
-  background-color: rgba(255, 255, 255, 0.7); /* Background color with transparency */
+  padding: 25px;
+  background-color: rgba(255,255,255,0.75);
   border: 3px solid black;
   max-width: 400px;
+  width: 100%;
 }
 
-button {   
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 2px solid black;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  background-color: brown;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.link {
   text-align: center;
-  background-color: brown;   
-  width: 100%;  
-  color: white;   
-  padding: 15px;   
-  margin: 10px 0px;   
-  border: none;   
-  cursor: pointer;   
+  margin-top: 15px;
+  font-weight: bold;
 }
 
-input[type=text], input[type=password] {   
-  width: 100%;   
-  margin: 8px 0;  
-  padding: 12px 20px;   
-  display: inline-block;   
-  border: 2px solid black;   
-  box-sizing: border-box;   
-} 
+.link a {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
+}
 
-button:hover {   
-  opacity: 0.7;   
-}   
+.link a:hover {
+  text-decoration: underline;
+}
 
-.cancelbtn {   
-  width: auto;   
-  padding: 10px 18px;  
-  margin: 10px 5px;  
-}   
+.hidden {
+  display: none;
+}
 
-</style>   
-</head>    
-<body>    
-  <div class="container">   
-    <center> <h1> Login Form </h1> </center>   
-    <form>  
-      <label><i class="fas fa-user"></i> Name:</label>   
-      <input type="text" placeholder="Enter Name" name="name" required>  
-      <label><i class="fas fa-lock"></i> Password:</label>   
-      <input type="password" placeholder="Enter Password" name="password" required>  
-      <button type="submit">Login</button>   
-      <input type="checkbox" checked="checked"> Remember me   
-      <button type="button" class="cancelbtn"> Cancel</button>   
-      Forgot <a href="#"> password? </a>   
-      <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Forgot Password</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .card {
-      background: #fff;
-      padding: 25px;
-      width: 100%;
-      max-width: 400px;
-      border-radius: 8px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    p {
-      font-size: 14px;
-      color: #555;
-      text-align: center;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 15px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 15px;
-      background: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-
-    .message {
-      margin-top: 15px;
-      text-align: center;
-      font-size: 14px;
-      color: green;
-      display: none;
-    }
-
-    a {
-      display: block;
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-      text-decoration: none;
-      color: #007bff;
-    }
-  </style>
+.message {
+  text-align: center;
+  color: green;
+  margin-top: 15px;
+  display: none;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="card">
-    <h2>Forgot Password</h2>
-    <p>Enter your email and we’ll send reset instructions.</p>
+<div class="container">
+
+  <!-- LOGIN FORM -->
+  <div id="loginBox">
+    <h1 style="text-align:center;">Login Form</h1>
+
+    <form>
+      <label><i class="fas fa-user"></i> Name</label>
+      <input type="text" placeholder="Enter Name" required>
+
+      <label><i class="fas fa-lock"></i> Password</label>
+      <input type="password" placeholder="Enter Password" required>
+
+      <button type="submit">Login</button>
+
+      <label>
+        <input type="checkbox" checked> Remember me
+      </label>
+
+      <div class="link">
+        <a onclick="showForgot()">Forgot password?</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- FORGOT PASSWORD -->
+  <div id="forgotBox" class="hidden">
+    <h1 style="text-align:center;">Forgot Password</h1>
+    <p style="text-align:center;font-size:14px;">
+      Enter your email and we’ll send reset instructions.
+    </p>
 
     <form id="forgotForm">
-      <input type="email" id="email" placeholder="Enter your email" required />
+      <input type="email" placeholder="Enter your email" required>
       <button type="submit">Send Reset Link</button>
     </form>
 
@@ -161,22 +119,29 @@ button:hover {
       If this email exists, a reset link has been sent.
     </div>
 
-    <a href="index.html">Back to Login</a>
+    <div class="link">
+      <a onclick="showLogin()">Back to Login</a>
+    </div>
   </div>
 
-  <script>
-    document.getElementById("forgotForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+</div>
 
-      // UI-only behavior (no bypass, no password handling)
-      document.getElementById("message").style.display = "block";
+<script>
+function showForgot() {
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("forgotBox").classList.remove("hidden");
+}
 
-      // Clear input
-      document.getElementById("email").value = "";
-    });
-  </script>
-    </form>     
-  </div>
-</body>     
+function showLogin() {
+  document.getElementById("forgotBox").classList.add("hidden");
+  document.getElementById("loginBox").classList.remove("hidden");
+}
+
+document.getElementById("forgotForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  document.getElementById("message").style.display = "block";
+});
+</script>
+
+</body>
 </html>
-
