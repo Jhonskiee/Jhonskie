@@ -13,95 +13,129 @@
 }
 
 body {
-  font-family: Calibri, Helvetica, sans-serif;
   margin: 0;
-  background: url("https://hotimg.com/Screenshot-2025-10-28-233058.4XVK1R") no-repeat center center/cover;
   min-height: 100vh;
+  font-family: "Segoe UI", Calibri, sans-serif;
+  background: linear-gradient(
+      rgba(0,0,0,0.45),
+      rgba(0,0,0,0.45)
+    ),
+    url("https://hotimg.com/Screenshot-2025-10-28-233058.4XVK1R") 
+    no-repeat center/cover;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* Card */
 .container {
-  background-color: rgba(255, 255, 255, 0.85);
-  border: 2px solid #000;
-  border-radius: 8px;
-  padding: 30px;
   width: 100%;
   max-width: 380px;
+  padding: 35px 30px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+  color: #fff;
 }
 
+/* Headings */
 h1 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
+/* Labels */
 label {
   display: block;
-  margin-top: 15px;
-  font-weight: bold;
+  margin-top: 18px;
+  font-size: 14px;
+  opacity: 0.9;
 }
 
 label i {
   margin-right: 6px;
 }
 
+/* Inputs */
 input {
   width: 100%;
-  padding: 12px;
-  margin-top: 5px;
-  border: 2px solid #000;
-  border-radius: 4px;
+  padding: 13px 14px;
+  margin-top: 6px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  background: rgba(255,255,255,0.9);
 }
 
+/* Button */
 button {
   width: 100%;
   padding: 14px;
-  margin-top: 20px;
-  background-color: brown;
-  color: #fff;
+  margin-top: 25px;
   border: none;
-  border-radius: 4px;
+  border-radius: 12px;
   font-size: 16px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ff7a18, #b34700);
+  color: #fff;
   cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 button:hover {
-  opacity: 0.85;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.35);
 }
 
+/* Options */
 .options {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-top: 12px;
+  font-size: 13px;
+}
+
+.options input {
+  width: auto;
+  margin-right: 6px;
+}
+
+/* Links */
+.forgot-link {
+  text-align: center;
+  margin-top: 22px;
   font-size: 14px;
 }
 
-.forgot-link {
-  text-align: center;
-  margin-top: 20px;
-  font-weight: bold;
-}
-
 .forgot-link a {
-  color: #007bff;
+  color: #ffd6b0;
   text-decoration: none;
+  font-weight: 500;
 }
 
 .forgot-link a:hover {
   text-decoration: underline;
 }
 
+/* Hidden */
 .hidden {
   display: none;
 }
 
+/* Message */
 .message {
-  margin-top: 15px;
+  margin-top: 18px;
+  padding: 10px;
   text-align: center;
-  color: green;
-  font-weight: bold;
+  border-radius: 10px;
+  background: rgba(0, 255, 0, 0.15);
+  color: #b6ffb6;
+  font-size: 14px;
   display: none;
 }
 </style>
@@ -113,14 +147,14 @@ button:hover {
 
   <!-- LOGIN -->
   <div id="loginForm">
-    <h1>Login</h1>
+    <h1>Welcome Back</h1>
 
     <form>
       <label><i class="fas fa-user"></i> Username</label>
-      <input type="text" placeholder="Enter username" required>
+      <input type="text" placeholder="Enter your username" required>
 
       <label><i class="fas fa-lock"></i> Password</label>
-      <input type="password" placeholder="Enter password" required>
+      <input type="password" placeholder="Enter your password" required>
 
       <button type="submit">Login</button>
 
@@ -138,9 +172,9 @@ button:hover {
 
   <!-- FORGOT PASSWORD -->
   <div id="forgotForm" class="hidden">
-    <h1>Forgot Password</h1>
-    <p style="text-align:center; font-size:14px;">
-      Enter your email to receive reset instructions.
+    <h1>Reset Password</h1>
+    <p style="text-align:center; font-size:14px; opacity:0.9;">
+      Enter your email and we’ll send instructions.
     </p>
 
     <form id="resetForm">
@@ -160,7 +194,7 @@ button:hover {
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
   const loginForm = document.getElementById("loginForm");
   const forgotForm = document.getElementById("forgotForm");
@@ -169,19 +203,19 @@ document.addEventListener("DOMContentLoaded", function () {
   const resetForm = document.getElementById("resetForm");
   const message = document.getElementById("message");
 
-  forgotLink.onclick = (e) => {
+  forgotLink.onclick = e => {
     e.preventDefault();
     loginForm.classList.add("hidden");
     forgotForm.classList.remove("hidden");
   };
 
-  backLink.onclick = (e) => {
+  backLink.onclick = e => {
     e.preventDefault();
     forgotForm.classList.add("hidden");
     loginForm.classList.remove("hidden");
   };
 
-  resetForm.onsubmit = (e) => {
+  resetForm.onsubmit = e => {
     e.preventDefault();
     message.style.display = "block";
   };
