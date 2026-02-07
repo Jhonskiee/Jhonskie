@@ -16,42 +16,82 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: "Segoe UI", Calibri, sans-serif;
-  background: linear-gradient(
-      rgba(0,0,0,0.45),
-      rgba(0,0,0,0.45)
-    ),
-    url("https://hotimg.com/Screenshot-2025-10-28-233058.4XVK1R") 
+  background: linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)),
+    url("https://hotimg.com/Screenshot-2025-10-28-233058.4XVK1R")
     no-repeat center/cover;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Card */
+/* MAIN CARD */
+.wrapper {
+  display: flex;
+  width: 720px;
+  max-width: 95%;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 25px 45px rgba(0,0,0,.4);
+  backdrop-filter: blur(14px);
+}
+
+/* LEFT PANEL */
+.left-panel {
+  width: 40%;
+  background: linear-gradient(135deg, #1e90ff, #0a58ca);
+  color: #fff;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.left-panel h2 {
+  margin-bottom: 15px;
+}
+
+.left-panel p {
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.left-panel a {
+  margin-top: 25px;
+  display: inline-block;
+  padding: 12px;
+  border-radius: 10px;
+  background: #fff;
+  color: #0a58ca;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all .2s;
+}
+
+.left-panel a:hover {
+  background: #e6f0ff;
+}
+
+/* RIGHT PANEL */
 .container {
-  width: 100%;
-  max-width: 380px;
+  width: 60%;
   padding: 35px 30px;
-  background: rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+  background: rgba(255,255,255,0.18);
   color: #fff;
 }
 
-/* Headings */
+/* HEADINGS */
 h1 {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 22px;
   font-weight: 600;
-  letter-spacing: 0.5px;
 }
 
-/* Labels */
+/* LABELS */
 label {
   display: block;
-  margin-top: 18px;
+  margin-top: 16px;
   font-size: 14px;
   opacity: 0.9;
 }
@@ -60,80 +100,76 @@ label i {
   margin-right: 6px;
 }
 
-/* Inputs */
+/* INPUTS – slightly smaller */
 input {
   width: 100%;
-  padding: 13px 14px;
+  padding: 10px 12px;   /* 👈 reduced height */
   margin-top: 6px;
   border-radius: 10px;
   border: none;
   outline: none;
-  font-size: 15px;
+  font-size: 14px;
   background: rgba(255,255,255,0.9);
 }
 
-/* Button */
+/* BUTTON */
 button {
   width: 100%;
-  padding: 14px;
-  margin-top: 25px;
+  padding: 12px;
+  margin-top: 22px;
   border: none;
   border-radius: 12px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   background: linear-gradient(135deg, #ff7a18, #b34700);
   color: #fff;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform .2s, box-shadow .2s;
 }
 
 button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+  box-shadow: 0 10px 20px rgba(0,0,0,.35);
 }
 
-/* Options */
+/* OPTIONS */
 .options {
-  display: flex;
-  align-items: center;
   margin-top: 12px;
   font-size: 13px;
 }
 
 .options input {
   width: auto;
-  margin-right: 6px;
 }
 
-/* Links */
+/* LINKS */
 .forgot-link {
   text-align: center;
-  margin-top: 22px;
+  margin-top: 20px;
   font-size: 14px;
 }
 
 .forgot-link a {
   color: #ffd6b0;
   text-decoration: none;
-  font-weight: 500;
 }
 
 .forgot-link a:hover {
   text-decoration: underline;
 }
 
-/* Hidden */
+/* HIDDEN */
 .hidden {
   display: none;
 }
 
-/* Message */
+/* MESSAGE */
 .message {
-  margin-top: 18px;
+  margin-top: 16px;
   padding: 10px;
-  text-align: center;
   border-radius: 10px;
-  background: rgba(0, 255, 0, 0.15);
+  text-align: center;
+  background: rgba(0,255,0,.15);
   color: #b6ffb6;
   font-size: 14px;
   display: none;
@@ -143,54 +179,63 @@ button:hover {
 
 <body>
 
-<div class="container">
+<div class="wrapper">
 
-  <!-- LOGIN -->
-  <div id="loginForm">
-    <h1>Welcome Back</h1>
+  <!-- CREATE ACCOUNT -->
+  <div class="left-panel">
+    <h2>New Here?</h2>
+    <p>
+      Create an account to get started and access all features.
+    </p>
+    <a href="#signup">Create New Account</a>
+  </div>
 
-    <form>
-      <label><i class="fas fa-user"></i> Username</label>
-      <input type="text" placeholder="Enter your username" required>
+  <!-- LOGIN / FORGOT -->
+  <div class="container">
 
-      <label><i class="fas fa-lock"></i> Password</label>
-      <input type="password" placeholder="Enter your password" required>
+    <div id="loginForm">
+      <h1>Welcome Back</h1>
 
-      <button type="submit">Login</button>
+      <form>
+        <label><i class="fas fa-user"></i> Username</label>
+        <input type="text" placeholder="Enter your username" required>
 
-      <div class="options">
-        <label>
-          <input type="checkbox" checked> Remember me
-        </label>
+        <label><i class="fas fa-lock"></i> Password</label>
+        <input type="password" placeholder="Enter your password" required>
+
+        <button type="submit">Login</button>
+
+        <div class="options">
+          <label>
+            <input type="checkbox" checked> Remember me
+          </label>
+        </div>
+
+        <div class="forgot-link">
+          <a href="#" id="forgotLink">Forgot password?</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div id="forgotForm" class="hidden">
+      <h1>Reset Password</h1>
+
+      <form id="resetForm">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit">Send Reset Link</button>
+      </form>
+
+      <div class="message" id="message">
+        If this email exists, a reset link has been sent.
       </div>
 
       <div class="forgot-link">
-        <a href="#" id="forgotLink">Forgot password?</a>
+        <a href="#" id="backLink">← Back to Login</a>
       </div>
-    </form>
-  </div>
-
-  <!-- FORGOT PASSWORD -->
-  <div id="forgotForm" class="hidden">
-    <h1>Reset Password</h1>
-    <p style="text-align:center; font-size:14px; opacity:0.9;">
-      Enter your email and we’ll send instructions.
-    </p>
-
-    <form id="resetForm">
-      <input type="email" placeholder="Enter your email" required>
-      <button type="submit">Send Reset Link</button>
-    </form>
-
-    <div class="message" id="message">
-      If this email exists, a reset link has been sent.
     </div>
 
-    <div class="forgot-link">
-      <a href="#" id="backLink">← Back to Login</a>
-    </div>
   </div>
-
 </div>
 
 <script>
