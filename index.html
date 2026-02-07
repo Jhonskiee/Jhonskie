@@ -1,91 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <style>
+* { box-sizing: border-box; }
+
 body {
-  font-family: Calibri, sans-serif;
   margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", Calibri, sans-serif;
   background: #f2f2f2;
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
+  justify-content: center;
 }
 
-/* MAIN BOX */
+/* CARD */
 .container {
-  width: 420px;
-  border: 2px solid #000;
+  width: 400px;
   background: #fff;
-  padding: 25px;
+  border-radius: 14px;
+  padding: 30px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
 
-/* TITLES */
+/* TITLE */
 h2 {
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 /* INPUTS */
 input {
-  width: 90%;
-  padding: 8px;
-  margin: 6px auto 12px;
-  display: block;
-  border: 2px solid #000;
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0 14px;
+  border-radius: 8px;
+  border: 1.8px solid #000;
   font-size: 14px;
 }
 
 /* BUTTON */
 button {
-  width: 90%;
-  padding: 10px;
-  margin: 10px auto;
-  display: block;
+  width: 100%;
+  padding: 11px;
+  border-radius: 8px;
+  border: none;
   background: brown;
   color: #fff;
-  border: none;
   font-size: 15px;
   cursor: pointer;
 }
 
-/* LINK ROW */
-.link-row {
+/* ACTION ROW */
+.action-row {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 /* HIGHLIGHTED LINKS */
-.action-link {
-  padding: 6px 12px;
+.action {
+  padding: 6px 14px;
   border-radius: 20px;
   font-size: 13px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .forgot {
-  color: #ff4500;
   background: #ffe5dc;
+  color: #d14a00;
 }
 
 .register {
-  color: #1e90ff;
   background: #eaf3ff;
+  color: #1e90ff;
 }
 
-/* CREATE & FORGOT BOX */
+/* BOX */
 .box {
-  margin-top: 15px;
   padding: 15px;
-  border: 2px solid #1e90ff;
-  background: #f9fbff;
+  background: #f9f9f9;
+  border-radius: 10px;
+  border: 1.5px solid #1e90ff;
 }
 
 /* HIDE */
@@ -101,20 +104,19 @@ button {
 
   <!-- LOGIN -->
   <div id="loginForm">
-    <h2>Login Form</h2>
+    <h2>Login</h2>
 
-    <label><i class="fas fa-user"></i> Name</label>
-    <input type="text" placeholder="Enter Name">
+    <label><i class="fas fa-user"></i> Username</label>
+    <input type="text" placeholder="Enter username">
 
     <label><i class="fas fa-lock"></i> Password</label>
-    <input type="password" placeholder="Enter Password">
+    <input type="password" placeholder="Enter password">
 
     <button>Login</button>
 
-    <!-- LEFT & RIGHT LINKS -->
-    <div class="link-row">
-      <span class="action-link forgot" onclick="showForgot()">Forgot Password?</span>
-      <span class="action-link register" onclick="showRegister()">Create Account</span>
+    <div class="action-row">
+      <span class="action forgot" onclick="showForgot()">Forgot Password?</span>
+      <span class="action register" onclick="showRegister()">Create Account</span>
     </div>
   </div>
 
@@ -123,35 +125,28 @@ button {
     <h2>Create Account</h2>
 
     <div class="box">
-      <label>Email</label>
-      <input type="email" placeholder="Enter Email">
-
-      <label>Username</label>
-      <input type="text" placeholder="Create Username">
-
-      <label>Password</label>
-      <input type="password" placeholder="Create Password">
+      <input type="email" placeholder="Email">
+      <input type="text" placeholder="Username">
+      <input type="password" placeholder="Password">
 
       <button>Create Account</button>
 
-      <div class="link-row">
-        <span class="action-link forgot" onclick="showLogin()">Back to Login</span>
+      <div class="action-row">
+        <span class="action forgot" onclick="showLogin()">Back to Login</span>
       </div>
     </div>
   </div>
 
   <!-- FORGOT PASSWORD -->
   <div id="forgotForm" class="hidden">
-    <h2>Forgot Password</h2>
+    <h2>Reset Password</h2>
 
     <div class="box">
-      <label>Email</label>
-      <input type="email" placeholder="Enter your registered email">
+      <input type="email" placeholder="Enter registered email">
+      <button>Send Reset Link</button>
 
-      <button>Reset Password</button>
-
-      <div class="link-row">
-        <span class="action-link forgot" onclick="showLogin()">Back to Login</span>
+      <div class="action-row">
+        <span class="action forgot" onclick="showLogin()">Back to Login</span>
       </div>
     </div>
   </div>
