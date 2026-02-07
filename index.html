@@ -1,62 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Calibri, Helvetica, sans-serif;
   margin: 0;
-  background-image: url("https://hotimg.com/Screenshot-2025-10-28-233058.4XVK1R");
-  background-size: cover;
+  background: url("https://hotimg.com/Screenshot-2025-10-28-233058.4XVK1R") no-repeat center center/cover;
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
+  justify-content: center;
 }
 
 .container {
-  padding: 25px;
-  background-color: rgba(255,255,255,0.75);
-  border: 3px solid black;
-  max-width: 400px;
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 30px;
   width: 100%;
+  max-width: 380px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+label i {
+  margin-right: 6px;
 }
 
 input {
   width: 100%;
   padding: 12px;
-  margin: 8px 0;
-  border: 2px solid black;
+  margin-top: 5px;
+  border: 2px solid #000;
+  border-radius: 4px;
 }
 
 button {
   width: 100%;
-  padding: 15px;
+  padding: 14px;
+  margin-top: 20px;
   background-color: brown;
-  color: white;
+  color: #fff;
   border: none;
+  border-radius: 4px;
+  font-size: 16px;
   cursor: pointer;
-  margin-top: 10px;
 }
 
 button:hover {
-  opacity: 0.8;
+  opacity: 0.85;
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 14px;
 }
 
 .forgot-link {
   text-align: center;
-  margin-top: 15px;
+  margin-top: 20px;
   font-weight: bold;
 }
 
 .forgot-link a {
   color: #007bff;
   text-decoration: none;
-  cursor: pointer;
 }
 
 .forgot-link a:hover {
@@ -68,9 +98,10 @@ button:hover {
 }
 
 .message {
+  margin-top: 15px;
   text-align: center;
   color: green;
-  margin-top: 15px;
+  font-weight: bold;
   display: none;
 }
 </style>
@@ -82,20 +113,22 @@ button:hover {
 
   <!-- LOGIN -->
   <div id="loginForm">
-    <h1 style="text-align:center;">Login Form</h1>
+    <h1>Login</h1>
 
     <form>
-      <label><i class="fas fa-user"></i> Name</label>
-      <input type="text" placeholder="Enter Name" required>
+      <label><i class="fas fa-user"></i> Username</label>
+      <input type="text" placeholder="Enter username" required>
 
       <label><i class="fas fa-lock"></i> Password</label>
-      <input type="password" placeholder="Enter Password" required>
+      <input type="password" placeholder="Enter password" required>
 
       <button type="submit">Login</button>
 
-      <label>
-        <input type="checkbox" checked> Remember me
-      </label>
+      <div class="options">
+        <label>
+          <input type="checkbox" checked> Remember me
+        </label>
+      </div>
 
       <div class="forgot-link">
         <a href="#" id="forgotLink">Forgot password?</a>
@@ -105,9 +138,9 @@ button:hover {
 
   <!-- FORGOT PASSWORD -->
   <div id="forgotForm" class="hidden">
-    <h1 style="text-align:center;">Forgot Password</h1>
-    <p style="text-align:center;font-size:14px;">
-      Enter your email and we’ll send reset instructions.
+    <h1>Forgot Password</h1>
+    <p style="text-align:center; font-size:14px;">
+      Enter your email to receive reset instructions.
     </p>
 
     <form id="resetForm">
@@ -120,7 +153,7 @@ button:hover {
     </div>
 
     <div class="forgot-link">
-      <a href="#" id="backLink">Back to Login</a>
+      <a href="#" id="backLink">← Back to Login</a>
     </div>
   </div>
 
@@ -136,22 +169,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const resetForm = document.getElementById("resetForm");
   const message = document.getElementById("message");
 
-  forgotLink.addEventListener("click", function (e) {
+  forgotLink.onclick = (e) => {
     e.preventDefault();
     loginForm.classList.add("hidden");
     forgotForm.classList.remove("hidden");
-  });
+  };
 
-  backLink.addEventListener("click", function (e) {
+  backLink.onclick = (e) => {
     e.preventDefault();
     forgotForm.classList.add("hidden");
     loginForm.classList.remove("hidden");
-  });
+  };
 
-  resetForm.addEventListener("submit", function (e) {
+  resetForm.onsubmit = (e) => {
     e.preventDefault();
     message.style.display = "block";
-  });
+  };
 
 });
 </script>
