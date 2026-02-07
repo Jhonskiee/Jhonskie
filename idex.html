@@ -3,258 +3,211 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Account Access</title>
+<title>Login</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <style>
-/* --- RESET & BASIC SETUP --- */
+/* --- BASE STYLES --- */
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  /* Dark overlay on background image for better text contrast */
-  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+  height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+  /* Background Image with Dark Overlay */
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
               url("https://hotimg.com/Screenshot-2025-10-28-233058.4XVK1R")
               no-repeat center/cover;
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* --- MAIN CARD WRAPPER --- */
-.wrapper {
-  display: flex;
-  width: 750px;
-  max-width: 90%;
-  min-height: 450px;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-}
-
-/* --- LEFT PANEL (The "Switch" Side) --- */
-.side-panel {
-  width: 40%;
-  background: linear-gradient(135deg, #1e90ff, #0056d2);
-  color: #fff;
-  display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  padding: 40px 20px;
-  position: relative;
 }
 
-.side-panel h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.side-panel p {
-  font-size: 14px;
-  line-height: 1.5;
-  margin-bottom: 25px;
-  opacity: 0.9;
-}
-
-/* White outline button for the side panel */
-.btn-outline {
-  padding: 10px 25px;
-  border: 2px solid #fff;
-  background: transparent;
-  color: #fff;
-  border-radius: 25px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-outline:hover {
-  background: #fff;
-  color: #0056d2;
-}
-
-/* --- RIGHT PANEL (The Form Side) --- */
-.form-container {
-  width: 60%;
-  background: rgba(255, 255, 255, 0.9); /* Slight transparency */
-  backdrop-filter: blur(10px);
+/* --- GLASS CARD CONTAINER --- */
+.card {
+  width: 400px;
+  background: rgba(255, 255, 255, 0.15); /* Glass effect */
+  backdrop-filter: blur(15px);            /* Blur effect */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
   padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
+  color: #fff;
+  box-shadow: 0 15px 25px rgba(0,0,0,0.5);
 }
 
-.form-header {
-  margin-bottom: 30px;
+h2 {
   text-align: center;
-}
-
-.form-header h1 {
-  margin: 0;
-  color: #333;
-  font-size: 26px;
+  margin: 0 0 30px;
+  font-size: 28px;
+  font-weight: 600;
 }
 
 /* --- INPUTS --- */
 .input-group {
-  margin-bottom: 15px;
   position: relative;
+  margin-bottom: 25px;
+}
+
+.input-group i {
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  color: #fff;
+  font-size: 14px;
 }
 
 .input-group label {
   display: block;
-  font-size: 12px;
-  color: #666;
   margin-bottom: 5px;
-  margin-left: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-left: 2px;
 }
 
 .input-group input {
   width: 100%;
-  padding: 12px 15px;
-  padding-left: 15px;
-  background: #f0f4f8;
-  border: none;
-  border-radius: 8px;
+  padding: 10px 10px 10px 35px; /* Space for icon */
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  color: #fff;
   outline: none;
   font-size: 14px;
-  transition: 0.3s;
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .input-group input:focus {
-  background: #e1eaf3;
-  box-shadow: 0 0 0 2px rgba(30, 144, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
 }
 
-/* --- MAIN ACTION BUTTON --- */
-.btn-submit {
+/* --- BUTTON --- */
+button {
   width: 100%;
-  padding: 12px;
-  margin-top: 10px;
+  padding: 10px;
+  background: #ff4757; /* Nice Red/Pink */
   border: none;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #ff7a18, #d15403);
+  border-radius: 5px;
   color: #fff;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(210, 84, 3, 0.3);
-  transition: transform 0.2s;
+  margin-bottom: 20px;
+  transition: 0.3s;
 }
 
-.btn-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(210, 84, 3, 0.4);
+button:hover {
+  background: #ff6b81;
 }
 
-/* --- UTILITY CLASSES --- */
-.hidden {
-  display: none !important;
+/* --- LINKS ROW (LEFT & RIGHT) --- */
+.actions {
+  display: flex;
+  justify-content: space-between; /* Pushes items to edges */
+  font-size: 13px;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 650px) {
-  .wrapper {
-    flex-direction: column;
-    width: 90%;
-    height: auto;
-  }
-  .side-panel {
-    width: 100%;
-    padding: 20px;
-    order: 2; /* Move side panel to bottom on mobile */
-  }
-  .form-container {
-    width: 100%;
-    padding: 30px 20px;
-    order: 1;
-  }
+.actions a {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.3s;
 }
+
+.actions a:hover {
+  text-decoration: underline;
+  color: #ffecd1;
+}
+
+/* --- REGISTER BACK LINK --- */
+.center-link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 13px;
+}
+.center-link a {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+.center-link a:hover { text-decoration: underline; }
+
+/* --- HIDDEN --- */
+.hidden { display: none; }
 </style>
 </head>
+
 <body>
 
-<div class="wrapper">
+<div class="card">
 
-  <div class="side-panel">
-    
-    <div id="panel-register-text">
-      <h2>New Here?</h2>
-      <p>Sign up and discover a great amount of new opportunities!</p>
-      <button class="btn-outline" onclick="toggleForm()">Sign Up</button>
+  <div id="loginForm">
+    <h2>Login</h2>
+
+    <div class="input-group">
+      <label>Name</label>
+      <i class="fas fa-user"></i>
+      <input type="text" placeholder="Enter Name">
     </div>
 
-    <div id="panel-login-text" class="hidden">
-      <h2>Welcome Back!</h2>
-      <p>To keep connected with us please login with your personal info.</p>
-      <button class="btn-outline" onclick="toggleForm()">Sign In</button>
+    <div class="input-group">
+      <label>Password</label>
+      <i class="fas fa-lock"></i>
+      <input type="password" placeholder="Enter Password">
     </div>
 
+    <button>Login</button>
+
+    <div class="actions">
+      <a onclick="showRegister()">Create an account</a>
+      <a href="#">Forgot Password?</a>
+    </div>
   </div>
 
-  <div class="form-container">
+  <div id="registerForm" class="hidden">
+    <h2>Register</h2>
 
-    <form id="loginForm">
-      <div class="form-header">
-        <h1>Login</h1>
-      </div>
-      
-      <div class="input-group">
-        <label>Username</label>
-        <input type="text" placeholder="Enter Username" required>
-      </div>
+    <div class="input-group">
+      <label>Email</label>
+      <i class="fas fa-envelope"></i>
+      <input type="email" placeholder="Enter Email">
+    </div>
 
-      <div class="input-group">
-        <label>Password</label>
-        <input type="password" placeholder="Enter Password" required>
-      </div>
+    <div class="input-group">
+      <label>Username</label>
+      <i class="fas fa-user"></i>
+      <input type="text" placeholder="Create Username">
+    </div>
 
-      <button type="button" class="btn-submit">Login</button>
-    </form>
+    <div class="input-group">
+      <label>Password</label>
+      <i class="fas fa-lock"></i>
+      <input type="password" placeholder="Create Password">
+    </div>
 
-    <form id="registerForm" class="hidden">
-      <div class="form-header">
-        <h1>Create Account</h1>
-      </div>
+    <button>Sign Up</button>
 
-      <div class="input-group">
-        <label>Email</label>
-        <input type="email" placeholder="name@example.com" required>
-      </div>
-
-      <div class="input-group">
-        <label>Username</label>
-        <input type="text" placeholder="Create Username" required>
-      </div>
-
-      <div class="input-group">
-        <label>Password</label>
-        <input type="password" placeholder="Create Password" required>
-      </div>
-
-      <button type="button" class="btn-submit">Sign Up</button>
-    </form>
-
+    <div class="center-link">
+      <a onclick="showLogin()">Back to Login</a>
+    </div>
   </div>
+
 </div>
 
 <script>
-  // Simple Toggle Function
-  function toggleForm() {
-    // Toggle the Forms
-    document.getElementById('loginForm').classList.toggle('hidden');
-    document.getElementById('registerForm').classList.toggle('hidden');
+function showRegister() {
+  document.getElementById("loginForm").classList.add("hidden");
+  document.getElementById("registerForm").classList.remove("hidden");
+}
 
-    // Toggle the Side Panel Text
-    document.getElementById('panel-login-text').classList.toggle('hidden');
-    document.getElementById('panel-register-text').classList.toggle('hidden');
-  }
+function showLogin() {
+  document.getElementById("registerForm").classList.add("hidden");
+  document.getElementById("loginForm").classList.remove("hidden");
+}
 </script>
 
 </body>
