@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)),
+    url("https://hotimg.com/Screenshot-2025-10-28-233058.4XVK1R")
+    no-repeat center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* MAIN CARD */
+.wrapper {
+  display: flex;
+  width: 680px;                 /* 👈 narrower overall */
+  max-width: 95%;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 25px 45px rgba(0,0,0,.4);
+}
+
+/* LEFT PANEL */
+.left-panel {
+  width: 42%;
+  background: linear-gradient(135deg, #1e90ff, #0056d2);
+  color: #fff;
+  padding: 40px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.left-panel h2 {
+  margin-bottom: 12px;
+}
+
+.left-panel p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.left-panel button {
+  margin-top: 25px;
+  padding: 11px;
+  border-radius: 10px;
+  border: none;
+  background: #fff;
+  color: #0056d2;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* RIGHT PANEL */
+.container {
+  width: 58%;
+  padding: 32px 26px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(14px);
+  color: #fff;
+}
+
+/* HEADINGS */
+h1 {
+  text-align: center;
+  margin-bottom: 18px;
+  font-size: 22px;
+}
+
+/* LABELS */
+label {
+  display: block;
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+/* INPUTS — VISIBLY SHORTER */
+input {
+  width: 100%;
+  padding: 8px 10px;          /* 👈 clearly reduced */
+  margin-top: 4px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;            /* 👈 smaller text */
+  background: rgba(255,255,255,0.95);
+}
+
+/* BUTTON */
+button.main {
+  width: 100%;
+  padding: 11px;              /* 👈 shorter button */
+  margin-top: 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ff7a18, #b34700);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* LINKS */
+.link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.link a {
+  color: #ffd6b0;
+  text-decoration: none;
+}
+
+/* HIDDEN */
+.hidden { display: none; }
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+  <!-- CREATE ACCOUNT PANEL -->
+  <div class="left-panel">
+    <h2>Create Account</h2>
+    <p>New here? Sign up and get started.</p>
+    <button onclick="showSignup()">Sign Up</button>
+  </div>
+
+  <!-- RIGHT CONTENT -->
+  <div class="container">
+
+    <!-- LOGIN -->
+    <div id="loginForm">
+      <h1>Login</h1>
+
+      <label>Username</label>
+      <input type="text">
+
+      <label>Password</label>
+      <input type="password">
+
+      <button class="main">Login</button>
+
+      <div class="link">
+        <a href="#" onclick="showSignup()">Create account</a>
+      </div>
+    </div>
+
+    <!-- SIGN UP -->
+    <div id="signupForm" class="hidden">
+      <h1>Sign Up</h1>
+
+      <label>Email</label>
+      <input type="email">
+
+      <label>Username</label>
+      <input type="text">
+
+      <label>Password</label>
+      <input type="password">
+
+      <button class="main">Create Account</button>
+
+      <div class="link">
+        <a href="#" onclick="showLogin()">Back to login</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function showSignup() {
+  document.getElementById("loginForm").classList.add("hidden");
+  document.getElementById("signupForm").classList.remove("hidden");
+}
+
+function showLogin() {
+  document.getElementById("signupForm").classList.add("hidden");
+  document.getElementById("loginForm").classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
