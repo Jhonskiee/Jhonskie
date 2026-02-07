@@ -47,19 +47,19 @@ button:hover {
   opacity: 0.8;
 }
 
-.link {
+.forgot-link {
   text-align: center;
   margin-top: 15px;
   font-weight: bold;
 }
 
-.link a {
+.forgot-link a {
   color: #007bff;
   cursor: pointer;
   text-decoration: none;
 }
 
-.link a:hover {
+.forgot-link a:hover {
   text-decoration: underline;
 }
 
@@ -80,8 +80,8 @@ button:hover {
 
 <div class="container">
 
-  <!-- LOGIN FORM -->
-  <div id="loginBox">
+  <!-- LOGIN FORM (VISIBLE BY DEFAULT) -->
+  <div id="loginForm">
     <h1 style="text-align:center;">Login Form</h1>
 
     <form>
@@ -97,20 +97,20 @@ button:hover {
         <input type="checkbox" checked> Remember me
       </label>
 
-      <div class="link">
+      <div class="forgot-link">
         <a onclick="showForgot()">Forgot password?</a>
       </div>
     </form>
   </div>
 
-  <!-- FORGOT PASSWORD -->
-  <div id="forgotBox" class="hidden">
+  <!-- FORGOT PASSWORD (HIDDEN INITIALLY) -->
+  <div id="forgotForm" class="hidden">
     <h1 style="text-align:center;">Forgot Password</h1>
     <p style="text-align:center;font-size:14px;">
       Enter your email and we’ll send reset instructions.
     </p>
 
-    <form id="forgotForm">
+    <form id="resetForm">
       <input type="email" placeholder="Enter your email" required>
       <button type="submit">Send Reset Link</button>
     </form>
@@ -119,7 +119,7 @@ button:hover {
       If this email exists, a reset link has been sent.
     </div>
 
-    <div class="link">
+    <div class="forgot-link">
       <a onclick="showLogin()">Back to Login</a>
     </div>
   </div>
@@ -128,16 +128,16 @@ button:hover {
 
 <script>
 function showForgot() {
-  document.getElementById("loginBox").classList.add("hidden");
-  document.getElementById("forgotBox").classList.remove("hidden");
+  document.getElementById("loginForm").classList.add("hidden");
+  document.getElementById("forgotForm").classList.remove("hidden");
 }
 
 function showLogin() {
-  document.getElementById("forgotBox").classList.add("hidden");
-  document.getElementById("loginBox").classList.remove("hidden");
+  document.getElementById("forgotForm").classList.add("hidden");
+  document.getElementById("loginForm").classList.remove("hidden");
 }
 
-document.getElementById("forgotForm").addEventListener("submit", function(e) {
+document.getElementById("resetForm").addEventListener("submit", function(e) {
   e.preventDefault();
   document.getElementById("message").style.display = "block";
 });
