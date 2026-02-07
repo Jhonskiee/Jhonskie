@@ -1,198 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Login</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <style>
-/* --- BASE STYLES --- */
-* { box-sizing: border-box; }
-
 body {
+  font-family: Calibri, sans-serif;
   margin: 0;
-  height: 100vh;
-  font-family: "Segoe UI", sans-serif;
-  /* Background Image with Dark Overlay */
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-              url("https://hotimg.com/Screenshot-2025-10-28-233058.4XVK1R")
-              no-repeat center/cover;
+  background: #f2f2f2;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 }
 
-/* --- GLASS CARD CONTAINER --- */
-.card {
-  width: 400px;
-  background: rgba(255, 255, 255, 0.15); /* Glass effect */
-  backdrop-filter: blur(15px);            /* Blur effect */
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 15px;
-  padding: 40px;
-  color: #fff;
-  box-shadow: 0 15px 25px rgba(0,0,0,0.5);
+/* MAIN BOX */
+.container {
+  width: 420px;
+  border: 2px solid #000;
+  background: #fff;
+  padding: 25px;
 }
 
+/* TITLES */
 h2 {
   text-align: center;
-  margin: 0 0 30px;
-  font-size: 28px;
-  font-weight: 600;
+  margin-bottom: 15px;
 }
 
-/* --- INPUTS --- */
-.input-group {
-  position: relative;
-  margin-bottom: 25px;
-}
-
-.input-group i {
-  position: absolute;
-  top: 12px;
-  left: 10px;
-  color: #fff;
-  font-size: 14px;
-}
-
-.input-group label {
+/* INPUTS – SHORTER & CLEAN */
+input {
+  width: 90%;              /* 👈 not full width */
+  padding: 8px;            /* 👈 shorter height */
+  margin: 6px auto 12px;
   display: block;
-  margin-bottom: 5px;
-  font-size: 13px;
-  font-weight: 500;
-  margin-left: 2px;
-}
-
-.input-group input {
-  width: 100%;
-  padding: 10px 10px 10px 35px; /* Space for icon */
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 5px;
-  color: #fff;
-  outline: none;
+  border: 2px solid #000;
   font-size: 14px;
 }
 
-.input-group input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.input-group input:focus {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: #fff;
-}
-
-/* --- BUTTON --- */
+/* BUTTON */
 button {
-  width: 100%;
+  width: 90%;
   padding: 10px;
-  background: #ff4757; /* Nice Red/Pink */
+  margin: 10px auto;
+  display: block;
+  background: brown;
+  color: #fff;
   border: none;
-  border-radius: 5px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 15px;
   cursor: pointer;
-  margin-bottom: 20px;
-  transition: 0.3s;
 }
 
-button:hover {
-  background: #ff6b81;
-}
-
-/* --- LINKS ROW (LEFT & RIGHT) --- */
-.actions {
-  display: flex;
-  justify-content: space-between; /* Pushes items to edges */
-  font-size: 13px;
-}
-
-.actions a {
-  color: #fff;
+/* LINKS */
+a {
+  color: blue;
+  cursor: pointer;
   text-decoration: none;
-  cursor: pointer;
-  transition: 0.3s;
 }
 
-.actions a:hover {
+a:hover {
   text-decoration: underline;
-  color: #ffecd1;
 }
 
-/* --- REGISTER BACK LINK --- */
-.center-link {
-  text-align: center;
-  margin-top: 15px;
-  font-size: 13px;
+/* CREATE ACCOUNT BOX */
+.create-box {
+  margin-top: 20px;
+  padding: 15px;
+  border: 2px solid #1e90ff;
+  background: #eaf3ff;
 }
-.center-link a {
-  color: #fff;
-  text-decoration: none;
-  cursor: pointer;
-}
-.center-link a:hover { text-decoration: underline; }
 
-/* --- HIDDEN --- */
-.hidden { display: none; }
+/* HIDE */
+.hidden {
+  display: none;
+}
 </style>
 </head>
 
 <body>
 
-<div class="card">
+<div class="container">
 
+  <!-- LOGIN -->
   <div id="loginForm">
-    <h2>Login</h2>
+    <h2>Login Form</h2>
 
-    <div class="input-group">
-      <label>Name</label>
-      <i class="fas fa-user"></i>
-      <input type="text" placeholder="Enter Name">
-    </div>
+    <label><i class="fas fa-user"></i> Name</label>
+    <input type="text" placeholder="Enter Name">
 
-    <div class="input-group">
-      <label>Password</label>
-      <i class="fas fa-lock"></i>
-      <input type="password" placeholder="Enter Password">
-    </div>
+    <label><i class="fas fa-lock"></i> Password</label>
+    <input type="password" placeholder="Enter Password">
 
     <button>Login</button>
 
-    <div class="actions">
+    <p style="text-align:center;">
       <a onclick="showRegister()">Create an account</a>
-      <a href="#">Forgot Password?</a>
-    </div>
+    </p>
   </div>
 
+  <!-- REGISTER -->
   <div id="registerForm" class="hidden">
-    <h2>Register</h2>
+    <h2>Create Account</h2>
 
-    <div class="input-group">
+    <div class="create-box">
       <label>Email</label>
-      <i class="fas fa-envelope"></i>
       <input type="email" placeholder="Enter Email">
-    </div>
 
-    <div class="input-group">
       <label>Username</label>
-      <i class="fas fa-user"></i>
       <input type="text" placeholder="Create Username">
-    </div>
 
-    <div class="input-group">
       <label>Password</label>
-      <i class="fas fa-lock"></i>
       <input type="password" placeholder="Create Password">
-    </div>
 
-    <button>Sign Up</button>
+      <button>Create Account</button>
 
-    <div class="center-link">
-      <a onclick="showLogin()">Back to Login</a>
+      <p style="text-align:center;">
+        <a onclick="showLogin()">Back to Login</a>
+      </p>
     </div>
   </div>
 
