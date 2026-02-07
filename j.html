@@ -95,7 +95,67 @@ a:hover {
     <input type="password" placeholder="Enter Password">
 
     <button>Login</button>
+ <div class="forgot-link">
+        <a href="#" id="forgotLink">Forgot password?</a>
+      </div>
+    </form>
+  </div>
 
+  <!-- FORGOT PASSWORD -->
+  <div id="forgotForm" class="hidden">
+    <h1>Reset Password</h1>
+    <p style="text-align:center; font-size:14px; opacity:0.9;">
+      Enter your email and we’ll send instructions.
+    </p>
+
+    <form id="resetForm">
+      <input type="email" placeholder="Enter your email" required>
+      <button type="submit">Send Reset Link</button>
+    </form>
+
+    <div class="message" id="message">
+      If this email exists, a reset link has been sent.
+    </div>
+
+    <div class="forgot-link">
+      <a href="#" id="backLink">← Back to Login</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const loginForm = document.getElementById("loginForm");
+  const forgotForm = document.getElementById("forgotForm");
+  const forgotLink = document.getElementById("forgotLink");
+  const backLink = document.getElementById("backLink");
+  const resetForm = document.getElementById("resetForm");
+  const message = document.getElementById("message");
+
+  forgotLink.onclick = e => {
+    e.preventDefault();
+    loginForm.classList.add("hidden");
+    forgotForm.classList.remove("hidden");
+  };
+
+  backLink.onclick = e => {
+    e.preventDefault();
+    forgotForm.classList.add("hidden");
+    loginForm.classList.remove("hidden");
+  };
+
+  resetForm.onsubmit = e => {
+    e.preventDefault();
+    message.style.display = "block";
+  };
+
+});
+</script>
+
+</body>
+</html>
     <p style="text-align:center;">
       <a onclick="showRegister()">Create an account</a>
     </p>
