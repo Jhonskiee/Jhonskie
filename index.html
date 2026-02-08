@@ -3,97 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login</title>
+<title>Auth System</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: "Segoe UI", Calibri, sans-serif;
-  background: #f2f2f2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"Segoe UI",Calibri,sans-serif;
+  background:#f2f2f2;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
-
-/* CARD */
-.container {
-  width: 400px;
-  background: #fff;
-  border-radius: 14px;
-  padding: 30px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+.container{
+  width:420px;
+  background:#fff;
+  border-radius:14px;
+  padding:30px;
+  box-shadow:0 15px 35px rgba(0,0,0,.2);
 }
-
-/* TITLE */
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
+h2{text-align:center;margin-bottom:20px}
+input{
+  width:100%;
+  padding:10px;
+  margin:8px 0 14px;
+  border-radius:8px;
+  border:1.8px solid #000;
 }
-
-/* INPUTS */
-input {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0 14px;
-  border-radius: 8px;
-  border: 1.8px solid #000;
-  font-size: 14px;
+button{
+  width:100%;
+  padding:11px;
+  border-radius:8px;
+  border:none;
+  background:brown;
+  color:#fff;
+  font-size:15px;
+  cursor:pointer;
 }
-
-/* BUTTON */
-button {
-  width: 100%;
-  padding: 11px;
-  border-radius: 8px;
-  border: none;
-  background: brown;
-  color: #fff;
-  font-size: 15px;
-  cursor: pointer;
+.action-row{
+  display:flex;
+  justify-content:space-between;
+  margin-top:15px;
 }
-
-/* ACTION ROW */
-.action-row {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
+.action{
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
 }
-
-/* HIGHLIGHTED LINKS */
-.action {
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
+.forgot{background:#ffe5dc;color:#d14a00}
+.register{background:#eaf3ff;color:#1e90ff}
+.box{
+  padding:15px;
+  background:#f9f9f9;
+  border-radius:10px;
+  border:1.5px solid #1e90ff;
 }
-
-.forgot {
-  background: #ffe5dc;
-  color: #d14a00;
+.hidden{display:none}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
 }
-
-.register {
-  background: #eaf3ff;
-  color: #1e90ff;
-}
-
-/* BOX */
-.box {
-  padding: 15px;
-  background: #f9f9f9;
-  border-radius: 10px;
-  border: 1.5px solid #1e90ff;
-}
-
-/* HIDE */
-.hidden {
-  display: none;
+th,td{
+  padding:8px;
+  border-bottom:1px solid #ddd;
+  text-align:left;
 }
 </style>
 </head>
@@ -102,75 +82,201 @@ button {
 
 <div class="container">
 
-  <!-- LOGIN -->
-  <div id="loginForm">
-    <h2>Login</h2>
+<!-- LOGIN -->
+<div id="loginForm">
+  <h2>Login</h2>
+  <input id="loginUser" placeholder="Username">
+  <input id="loginPass" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <div class="action-row">
+    <span class="action forgot" onclick="showForgot()">Forgot Password?</span>
+    <span class="action register" onclick="showRegister()">Create Account</span>
+  </div>
+</div>
 
-    <label><i class="fas fa-user"></i> Username</label>
-    <input type="text" placeholder="Enter username">
-
-    <label><i class="fas fa-lock"></i> Password</label>
-    <input type="password" placeholder="Enter password">
-
-    <button>Login</button>
-
+<!-- REGISTER -->
+<div id="registerForm" class="hidden">
+  <h2>Create Account</h2>
+  <div class="box">
+    <input id="regEmail" type="email" placeholder="Email">
+    <input id="regUser" placeholder="Username">
+    <input id="regPass" type="password" placeholder="Password">
+    <button onclick="register()">Create Account</button>
     <div class="action-row">
-      <span class="action forgot" onclick="showForgot()">Forgot Password?</span>
-      <span class="action register" onclick="showRegister()">Create Account</span>
+      <span class="action forgot" onclick="showLogin()">Back</span>
     </div>
   </div>
+</div>
 
-  <!-- REGISTER -->
-  <div id="registerForm" class="hidden">
-    <h2>Create Account</h2>
-
-    <div class="box">
-      <input type="email" placeholder="Email">
-      <input type="text" placeholder="Username">
-      <input type="password" placeholder="Password">
-
-      <button>Create Account</button>
-
-      <div class="action-row">
-        <span class="action forgot" onclick="showLogin()">Back to Login</span>
-      </div>
+<!-- FORGOT -->
+<div id="forgotForm" class="hidden">
+  <h2>Reset Password</h2>
+  <div class="box">
+    <input id="forgotEmail" type="email" placeholder="Registered Email">
+    <button onclick="sendReset()">Send Reset Link</button>
+    <div class="action-row">
+      <span class="action forgot" onclick="showLogin()">Back</span>
     </div>
   </div>
+</div>
 
-  <!-- FORGOT PASSWORD -->
-  <div id="forgotForm" class="hidden">
-    <h2>Reset Password</h2>
+<!-- RESET -->
+<div id="resetForm" class="hidden">
+  <h2>New Password</h2>
+  <input id="newPass" type="password" placeholder="New Password">
+  <button onclick="resetPassword()">Save</button>
+</div>
 
-    <div class="box">
-      <input type="email" placeholder="Enter registered email">
-      <button>Send Reset Link</button>
+<!-- HOME -->
+<div id="home" class="hidden">
+  <h2>Welcome 🎉</h2>
+  <button onclick="logout()">Logout</button>
+  <button onclick="showAdmin()" style="margin-top:10px;background:#1e90ff">Admin</button>
+</div>
 
-      <div class="action-row">
-        <span class="action forgot" onclick="showLogin()">Back to Login</span>
-      </div>
-    </div>
-  </div>
+<!-- ADMIN -->
+<div id="admin" class="hidden">
+  <h2>Registered Users</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Created</th>
+        <th>Last Login</th>
+        <th>Reset Used</th>
+      </tr>
+    </thead>
+    <tbody id="userList"></tbody>
+  </table>
+  <button style="margin-top:15px" onclick="backHome()">Back</button>
+</div>
 
 </div>
 
 <script>
-function showRegister() {
-  loginForm.classList.add("hidden");
-  forgotForm.classList.add("hidden");
-  registerForm.classList.remove("hidden");
-}
+emailjs.init("YOUR_PUBLIC_KEY");
 
-function showForgot() {
+const qs=new URLSearchParams(location.search);
+let resetToken=qs.get("token");
+
+function users(){return JSON.parse(localStorage.getItem("users")||"{}")}
+function saveUsers(u){localStorage.setItem("users",JSON.stringify(u))}
+
+function hideAll(){
   loginForm.classList.add("hidden");
   registerForm.classList.add("hidden");
-  forgotForm.classList.remove("hidden");
+  forgotForm.classList.add("hidden");
+  resetForm.classList.add("hidden");
+  home.classList.add("hidden");
+  admin.classList.add("hidden");
 }
 
-function showLogin() {
-  registerForm.classList.add("hidden");
-  forgotForm.classList.add("hidden");
-  loginForm.classList.remove("hidden");
+function showLogin(){hideAll();loginForm.classList.remove("hidden")}
+function showRegister(){hideAll();registerForm.classList.remove("hidden")}
+function showForgot(){hideAll();forgotForm.classList.remove("hidden")}
+
+/* REGISTER */
+function register(){
+  const u=users();
+  if(u[regUser.value]) return alert("Username already exists");
+
+  u[regUser.value]={
+    email:regEmail.value,
+    password:regPass.value,
+    created:new Date().toLocaleString(),
+    lastLogin:"Never",
+    resetUsed:"No"
+  };
+  saveUsers(u);
+
+  emailjs.send("SERVICE_ID","TEMPLATE_ID",{
+    to_email:"fernandezeljhon84@gmail.com",
+    message:`NEW USER REGISTERED
+Username: ${regUser.value}
+Email: ${regEmail.value}
+Date: ${u[regUser.value].created}`
+  });
+
+  alert("Account created");
+  showLogin();
 }
+
+/* LOGIN */
+function login(){
+  const u=users();
+  const user=u[loginUser.value];
+  if(user && user.password===loginPass.value){
+    user.lastLogin=new Date().toLocaleString();
+    saveUsers(u);
+    sessionStorage.setItem("user",loginUser.value);
+    hideAll();home.classList.remove("hidden");
+  } else alert("Invalid login");
+}
+
+/* LOGOUT */
+function logout(){
+  sessionStorage.clear();
+  showLogin();
+}
+
+/* RESET EMAIL */
+function sendReset(){
+  const u=users();
+  for(const k in u){
+    if(u[k].email===forgotEmail.value){
+      const token=Math.random().toString(36).slice(2);
+      localStorage.setItem("reset_"+token,k);
+      const link=location.origin+location.pathname+"?token="+token;
+
+      emailjs.send("SERVICE_ID","TEMPLATE_ID",{
+        to_email:forgotEmail.value,
+        message:`RESET YOUR PASSWORD\n${link}`
+      });
+
+      alert("Reset link sent");
+      return;
+    }
+  }
+  alert("Email not found");
+}
+
+/* RESET PASSWORD */
+function resetPassword(){
+  const user=localStorage.getItem("reset_"+resetToken);
+  if(!user) return alert("Invalid or expired link");
+
+  const u=users();
+  u[user].password=newPass.value;
+  u[user].resetUsed="Yes";
+  saveUsers(u);
+  localStorage.removeItem("reset_"+resetToken);
+  alert("Password updated");
+  location.href=location.pathname;
+}
+
+/* ADMIN */
+function showAdmin(){
+  hideAll();admin.classList.remove("hidden");
+  userList.innerHTML="";
+  const u=users();
+  for(const k in u){
+    userList.innerHTML+=`
+    <tr>
+      <td>${k}</td>
+      <td>${u[k].email}</td>
+      <td>${u[k].created}</td>
+      <td>${u[k].lastLogin}</td>
+      <td>${u[k].resetUsed}</td>
+    </tr>`;
+  }
+}
+
+function backHome(){hideAll();home.classList.remove("hidden")}
+
+/* AUTO LOAD */
+if(resetToken){hideAll();resetForm.classList.remove("hidden")}
+else if(sessionStorage.getItem("user")){hideAll();home.classList.remove("hidden")}
 </script>
 
 </body>
