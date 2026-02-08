@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Secure Auth System</title>
+<title>Homepage Auth System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Firebase -->
@@ -11,7 +11,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <style>
-*{box-sizing:border-box}
 body{
   margin:0;
   font-family:Segoe UI, -apple-system, BlinkMacSystemFont;
@@ -50,15 +49,6 @@ button{
   cursor:pointer;
 }
 .hidden{display:none}
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:13px;
-}
-th,td{
-  padding:8px;
-  border-bottom:1px solid #ddd;
-}
 </style>
 </head>
 
@@ -87,24 +77,9 @@ th,td{
 
 <!-- HOME -->
 <div id="home" class="hidden">
-  <h2>Welcome 🎉</h2>
-  <button onclick="show('admin')">Admin Panel</button>
-  <button onclick="logout()" style="margin-top:10px">Logout</button>
-</div>
-
-<!-- ADMIN -->
-<div id="admin" class="hidden">
-  <h2>Registered Users</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Email</th>
-        <th>Created</th>
-      </tr>
-    </thead>
-    <tbody id="userTable"></tbody>
-  </table>
-  <button onclick="show('home')" style="margin-top:10px">Back</button>
+  <h2>Welcome to your Homepage 🎉</h2>
+  <p>You are now logged in!</p>
+  <button onclick="logout()">Logout</button>
 </div>
 
 </div>
@@ -112,20 +87,20 @@ th,td{
 <script>
 // 🔴 REPLACE WITH YOUR OWN FIREBASE CONFIG
 const firebaseConfig = {
-  apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
-  authDomain: "website-ab5ea.firebaseapp.com",
-  projectId: "website-ab5ea"
-  storageBucket: "website-ab5ea.firebasestorage.app",
-  messagingSenderId: "1094491609955",
-  appId: "1:1094491609955:web:4ac93d44c03490cd3d5156"
-};
+    apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
+    authDomain: "website-ab5ea.firebaseapp.com",
+    projectId: "website-ab5ea",
+    storageBucket: "website-ab5ea.firebasestorage.app",
+    messagingSenderId: "1094491609955",
+    appId: "1:1094491609955:web:4ac93d44c03490cd3d5156"
+  };
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
 function show(id){
-  ["login","register","home","admin"].forEach(v=>{
+  ["login","register","home"].forEach(v=>{
     document.getElementById(v).classList.add("hidden");
   });
   document.getElementById(id).classList.remove("hidden");
@@ -133,7 +108,10 @@ function show(id){
 
 /* REGISTER */
 function register(){
-  auth.createUserWithEmailAndPassword(regEmail.value, regPass.value)
+  const email = regEmail.value.trim();
+  const pass = regPass.value;
+  if(!email || !pass){ alert("Enter email and password"); return; }
+  auth.createUserWithEmailAndPassword(email, pass)
   .then(cred=>{
     return db.collection("users").doc(cred.user.uid).set({
       email: cred.user.email,
@@ -141,7 +119,7 @@ function register(){
     });
   })
   .then(()=>{
-    alert("Account created");
+    alert("Account created! You can now log in.");
     show("login");
   })
   .catch(e=>alert(e.message));
@@ -149,7 +127,19 @@ function register(){
 
 /* LOGIN */
 function login(){
-  auth.signInWithEmailAndPassword(loginEmail.value, loginPass.value)
+  const email = loginEmail.value.trim();
+  const pass = loginPass.value;
+  if(!email || !pass){ alert("Enter email and password"); return; }
+  auth.signInWithEmailAndPassword(email, pass)
+  .catch(e=>alert(e.message));
+}
+
+/* PASSWORD RESET */
+function resetPassword(){
+  const email = loginEmail.value.trim();
+  if(!email){ alert("Enter your email first"); return; }
+  auth.sendPasswordResetEmail(email)
+  .then(()=>alert("Password reset email sent"))
   .catch(e=>alert(e.message));
 }
 
@@ -158,37 +148,10 @@ function logout(){
   auth.signOut();
 }
 
-/* REAL PASSWORD RESET EMAIL */
-function resetPassword(){
-  if(!loginEmail.value){
-    alert("Enter your email first");
-    return;
-  }
-  auth.sendPasswordResetEmail(loginEmail.value)
-  .then(()=>alert("Password reset email sent"))
-  .catch(e=>alert(e.message));
-}
-
-/* LOAD USERS FOR ADMIN */
-function loadUsers(){
-  userTable.innerHTML="";
-  db.collection("users").get().then(snapshot=>{
-    snapshot.forEach(doc=>{
-      userTable.innerHTML += `
-        <tr>
-          <td>${doc.data().email}</td>
-          <td>${doc.data().created}</td>
-        </tr>
-      `;
-    });
-  });
-}
-
 /* AUTH STATE */
 auth.onAuthStateChanged(user=>{
   if(user){
     show("home");
-    loadUsers();
   } else {
     show("login");
   }
