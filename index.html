@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MySocial Home</title>
+<title>MySocial Pro</title>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -12,24 +12,27 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
 <style>
-body{background:#e9ebee;font-family:Segoe UI;margin:0;}
+body{margin:0;font-family:Segoe UI,sans-serif;background:#f0f2f5;}
 .navbar{width:100%;background:#1877f2;padding:10px 20px;color:white;display:flex;justify-content:space-between;align-items:center;position:fixed;top:0;left:0;z-index:1000;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
-.navbar h1{font-size:22px;font-weight:bold;cursor:pointer;}
+.navbar img{height:40px;cursor:pointer;}
+.navbar h1{margin:0 10px;font-size:24px;font-weight:bold;}
 .navbar button{padding:6px 12px;background:#e60023;color:white;border:none;border-radius:20px;cursor:pointer;font-weight:bold;transition:0.3s;}
 .main-container{display:flex;margin-top:70px;max-width:1200px;margin-left:auto;margin-right:auto;gap:20px;padding:10px;}
 .sidebar-left,.sidebar-right{flex:1;min-width:220px;background:white;border-radius:12px;padding:15px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
 .feed{flex:2;display:flex;flex-direction:column;gap:15px;}
 .post-box,.post{background:white;padding:15px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+.post-box textarea{width:100%;padding:10px;border-radius:12px;border:1px solid #ccc;resize:none;font-size:14px;}
+.post-box button{margin-top:8px;width:100%;background:#1877f2;color:white;padding:10px;font-weight:bold;border-radius:12px;border:none;cursor:pointer;}
 .post-header{display:flex;align-items:center;gap:10px;justify-content:space-between;}
 .post-header img{width:50px;height:50px;border-radius:50%;object-fit:cover;}
-.post-footer span, .post-footer button{cursor:pointer;padding:4px 8px;border-radius:12px;margin-right:5px;transition:0.2s;}
+.post-footer span{cursor:pointer;padding:5px 10px;border-radius:12px;margin-right:5px;transition:0.2s;}
 .post-footer span:hover{background:#f0f2f5;}
+.post-actions span{cursor:pointer;color:#1877f2;margin-right:8px;}
 .comment-section{margin-top:10px;border-top:1px solid #eee;padding-top:10px;}
 .comment{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
 .comment img{width:35px;height:35px;border-radius:50%;object-fit:cover;}
 .comment-content{background:#f0f2f5;padding:8px 10px;border-radius:15px;flex:1;}
-.comment-content span{display:block;}
-.comment-footer span, .comment-footer button{cursor:pointer;padding:2px 6px;border-radius:12px;margin-right:4px;transition:0.2s;}
+.comment-footer span{cursor:pointer;padding:2px 6px;border-radius:12px;margin-right:4px;transition:0.2s;}
 .comment-footer span:hover{background:#ddd;}
 .comment-input{margin-top:5px;width:100%;padding:8px;border-radius:20px;border:1px solid #ccc;}
 .card{width:400px;background:#fff;padding:30px;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,.15);margin:100px auto;}
@@ -64,14 +67,16 @@ button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;
 <!-- HOME -->
 <div id="home" class="hidden">
   <div class="navbar">
-    <h1>MySocial</h1>
+    <div style="display:flex; align-items:center;">
+      <img src="https://via.placeholder.com/40" alt="Logo">
+      <h1>MySocial Pro</h1>
+    </div>
     <button onclick="logout()">Logout</button>
   </div>
-
   <div class="main-container">
     <div class="sidebar-left">
       <h3>Profile</h3>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;" onclick="showProfile()">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
         <img id="userAvatar" src="https://via.placeholder.com/50" alt="Avatar">
         <p id="userEmail"></p>
       </div>
@@ -81,16 +86,16 @@ button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;
         <li onclick="showFeed()">Feed</li>
         <li onclick="showProfile()">My Profile</li>
       </ul>
+      <h3>Follow Users</h3>
+      <ul id="followList"></ul>
     </div>
-
     <div class="feed" id="feedSection">
       <div class="post-box">
-        <textarea id="postText" rows="3" placeholder="What's on your mind?"></textarea>
+        <textarea id="postText" rows="3" placeholder="What's on your mind?" onkeydown="if(event.key==='Enter' && !event.shiftKey){addPost(); event.preventDefault();}"></textarea>
         <button onclick="addPost()">Post</button>
       </div>
       <div id="postsContainer"></div>
     </div>
-
     <div class="sidebar-right">
       <h3>Suggestions</h3>
       <ul id="suggestionsList"></ul>
@@ -98,19 +103,8 @@ button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;
   </div>
 </div>
 
-<!-- PROFILE -->
-<div id="profilePage" class="card hidden">
-  <h2>My Profile</h2>
-  <img id="profileAvatar" src="https://via.placeholder.com/100" style="border-radius:50%; display:block; margin:auto;">
-  <input type="file" id="newAvatar" accept="image/*">
-  <button onclick="updateAvatar()">Update Avatar</button>
-  <button style="margin-top:10px;" onclick="showFeed()">Back to Feed</button>
-  <h3>Following</h3>
-  <ul id="followingList"></ul>
-</div>
-
 <script>
-// 🔴 Firebase config
+// Firebase config
 const firebaseConfig = {
     apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
     authDomain: "website-ab5ea.firebaseapp.com",
@@ -124,48 +118,34 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// Show/hide sections
-function show(id){
-  ["login","register","home","profilePage"].forEach(v=>document.getElementById(v).classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
-}
+// SHOW/HIDE
+function show(id){["login","register","home","profilePage"].forEach(v=>document.getElementById(v)?.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");}
 
 // REGISTER
 function register(){
-  const email = regEmail.value.trim();
-  const pass = regPass.value;
-  const file = regAvatar.files[0];
-  if(!email||!pass){ alert("Enter email and password"); return; }
-
-  auth.createUserWithEmailAndPassword(email, pass)
-  .then(cred=>{
-    let avatarUrl = "https://via.placeholder.com/50";
-    if(file){
-      const ref = storage.ref("avatars/"+cred.user.uid);
-      return ref.put(file).then(()=> ref.getDownloadURL()).then(url=> {
-        avatarUrl = url;
-        return db.collection("users").doc(cred.user.uid).set({email: cred.user.email, created: new Date().toLocaleString(), avatar: avatarUrl, following:[]});
-      });
-    } else {
-      return db.collection("users").doc(cred.user.uid).set({email: cred.user.email, created: new Date().toLocaleString(), avatar: avatarUrl, following:[]});
-    }
-  })
-  .then(()=>{ alert("Account created!"); show("login"); })
-  .catch(e=>alert(e.message));
+  const email = regEmail.value.trim(), pass = regPass.value, file = regAvatar.files[0];
+  if(!email||!pass){alert("Enter email/password"); return;}
+  auth.createUserWithEmailAndPassword(email, pass).then(cred=>{
+    const uid = cred.user.uid;
+    const avatarRef = storage.ref("avatars/"+uid);
+    let upload = file ? avatarRef.put(file).then(()=>avatarRef.getDownloadURL()) : Promise.resolve("https://via.placeholder.com/50");
+    return upload.then(url=>{
+      db.collection("users").doc(uid).set({email,avatar:url,created:new Date().toLocaleString(),following:[]});
+    });
+  }).then(()=>{alert("Account created!"); show("login");}).catch(e=>alert(e.message));
 }
 
 // LOGIN
 function login(){
-  const email = loginEmail.value.trim();
-  const pass = loginPass.value;
-  if(!email||!pass){ alert("Enter email and password"); return; }
-  auth.signInWithEmailAndPassword(email, pass).catch(e=>alert(e.message));
+  const email=loginEmail.value.trim(), pass=loginPass.value;
+  if(!email||!pass){alert("Enter email/password"); return;}
+  auth.signInWithEmailAndPassword(email,pass).catch(e=>alert(e.message));
 }
 
 // PASSWORD RESET
 function resetPassword(){
   const email = loginEmail.value.trim();
-  if(!email){ alert("Enter your email first"); return; }
+  if(!email){alert("Enter email first"); return;}
   auth.sendPasswordResetEmail(email).then(()=>alert("Password reset email sent")).catch(e=>alert(e.message));
 }
 
@@ -176,14 +156,8 @@ function logout(){ auth.signOut(); }
 function showProfile(){
   show("profilePage");
   const user = auth.currentUser;
-  db.collection("users").doc(user.uid).get().then(d=>{
-    document.getElementById("profileAvatar").src=d.data().avatar;
-    loadFollowing(d.data().following || []);
-  });
+  db.collection("users").doc(user.uid).get().then(d=>document.getElementById("profileAvatar").src=d.data().avatar);
 }
-
-// SHOW FEED
-function showFeed(){ show("home"); loadSuggestions(); subscribePosts(); }
 
 // UPDATE AVATAR
 function updateAvatar(){
@@ -191,171 +165,107 @@ function updateAvatar(){
   if(!file) return alert("Choose a file");
   const user = auth.currentUser;
   const ref = storage.ref("avatars/"+user.uid);
-  ref.put(file).then(()=> ref.getDownloadURL()).then(url=>{
+  ref.put(file).then(()=>ref.getDownloadURL()).then(url=>{
     db.collection("users").doc(user.uid).update({avatar:url});
-    document.getElementById("profileAvatar").src=url;
-    document.getElementById("userAvatar").src=url;
+    document.getElementById("profileAvatar").src = url;
+    document.getElementById("userAvatar").src = url;
     alert("Avatar updated!");
   });
 }
 
-// FOLLOW / UNFOLLOW
-function followUser(uid){ const user = auth.currentUser; db.collection("users").doc(user.uid).update({following: firebase.firestore.FieldValue.arrayUnion(uid)}).then(loadSuggestions).then(()=>subscribePosts()); }
-function unfollowUser(uid){ const user = auth.currentUser; db.collection("users").doc(user.uid).update({following: firebase.firestore.FieldValue.arrayRemove(uid)}).then(loadSuggestions).then(()=>subscribePosts()); }
-
-// LOAD FOLLOWING LIST
-function loadFollowing(following){ const list = document.getElementById("followingList"); list.innerHTML=""; following.forEach(uid=>{ db.collection("users").doc(uid).get().then(d=>{ const li = document.createElement("li"); li.innerText = d.data().email; list.appendChild(li); }); }); }
-
-// SUGGESTIONS
-function loadSuggestions(){
+// POSTS
+function addPost(){
+  const text=document.getElementById("postText").value.trim();
+  if(!text) return alert("Write something!");
   const user = auth.currentUser;
-  db.collection("users").get().then(snap=>{
-    const suggestions = document.getElementById("suggestionsList"); suggestions.innerHTML="";
-    snap.forEach(doc=>{
-      if(doc.id===user.uid) return;
-      db.collection("users").doc(user.uid).get().then(uData=>{
-        const following = uData.data().following || [];
-        const li = document.createElement("li");
-        li.innerHTML=`${doc.data().email} ${following.includes(doc.id)?'<button onclick="unfollowUser(\''+doc.id+'\')">Unfollow</button>':'<button onclick="followUser(\''+doc.id+'\')">Follow</button>'}`;
-        suggestions.appendChild(li);
-      });
-    });
+  db.collection("users").doc(user.uid).get().then(d=>{
+    const avatar = d.data().avatar;
+    db.collection("posts").add({text,email:user.email,avatar,uid:user.uid,reactions:{like:0,love:0,haha:0},created:firebase.firestore.FieldValue.serverTimestamp()});
+    document.getElementById("postText").value="";
   });
 }
 
-// ADD POST
-function addPost() {
-  const text = document.getElementById("postText").value.trim();
-  if (!text) return alert("Write something to post!");
-
-  const user = auth.currentUser;
-  if (!user) return alert("You are not logged in!");
-
-  db.collection("users").doc(user.uid).get()
-    .then(doc => {
-      if (!doc.exists) throw new Error("User data not found!");
-      const avatar = doc.data().avatar || "https://via.placeholder.com/50";
-
-      return db.collection("posts").add({
-        text: text,
-        email: user.email,
-        avatar: avatar,
-        uid: user.uid,
-        reactions: { like: 0, love: 0, haha: 0 },
-        created: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    })
-    .then(() => { document.getElementById("postText").value = ""; })
-    .catch(err => alert("Error posting: " + err.message));
-}
-
-// SUBSCRIBE POSTS & COMMENTS
+// REALTIME POSTS & FILTER FOLLOWED USERS
 function subscribePosts(){
   const container = document.getElementById("postsContainer");
   const user = auth.currentUser;
-  db.collection("users").doc(user.uid).onSnapshot(uSnap=>{
-    const following = uSnap.data().following || [];
-    following.push(user.uid); // Include own posts
+  db.collection("users").doc(user.uid).onSnapshot(uDoc=>{
+    const following = uDoc.data().following||[];
     db.collection("posts").orderBy("created","desc").onSnapshot(snap=>{
       container.innerHTML="";
       snap.forEach(doc=>{
-        const d = doc.data();
-        if(!following.includes(d.uid)) return;
-        const time = d.created ? new Date(d.created.seconds*1000).toLocaleString() : "";
-        const isOwner = d.uid===user.uid;
-        container.innerHTML += `
+        const d=doc.data();
+        if(d.uid===user.uid || following.includes(d.uid)){
+          const time=d.created?new Date(d.created.seconds*1000).toLocaleString():"";
+          const isOwn = d.uid===user.uid;
+          container.innerHTML+=`
           <div class="post" id="post-${doc.id}">
-            <div class="post-header">
-              <div style="display:flex;align-items:center;gap:10px;">
-                <img src="${d.avatar}" alt="Avatar">
-                <h3>${d.email}</h3>
-              </div>
-              ${isOwner?`<div>
-                <button onclick="editPost('${doc.id}')">Edit</button>
-                <button onclick="deletePost('${doc.id}')">Delete</button>
-              </div>`:""}
+            <div class="post-header"><div style="display:flex;align-items:center;gap:10px;"><img src="${d.avatar}"><h3>${d.email}</h3></div>
+            <div class="post-actions">
+              ${isOwn?`<span onclick="editPost('${doc.id}')">✏️ Edit</span><span onclick="deletePost('${doc.id}')">🗑️ Delete</span>`:""}
             </div>
-            <p id="postText-${doc.id}">${d.text}</p>
+            </div>
+            <p id="text-${doc.id}">${d.text}</p>
             <div class="post-footer">
               <span onclick="react('${doc.id}','like')">👍 ${d.reactions?.like||0}</span>
               <span onclick="react('${doc.id}','love')">❤️ ${d.reactions?.love||0}</span>
               <span onclick="react('${doc.id}','haha')">😂 ${d.reactions?.haha||0}</span>
             </div>
             <div class="comment-section" id="comments-${doc.id}">
-              <h4>Comments</h4>
-              <div id="commentsContainer-${doc.id}"></div>
               <input class="comment-input" placeholder="Write a comment..." onkeydown="if(event.key==='Enter'){addComment('${doc.id}',this.value); this.value='';}">
+              <div id="commentsContainer-${doc.id}"></div>
             </div>
             <small>${time}</small>
           </div>`;
-        subscribeComments(doc.id);
+          subscribeComments(doc.id);
+        }
       });
     });
   });
 }
 
-// POST EDIT / DELETE
-function editPost(postId){ const newText=prompt("Edit your post:", document.getElementById("postText-"+postId).innerText); if(newText!==null){ db.collection("posts").doc(postId).update({text:newText}); } }
-function deletePost(postId){ if(confirm("Delete this post?")) db.collection("posts").doc(postId).delete(); }
-
-// COMMENT FUNCTIONS
-function addComment(postId,text){
-  const user = auth.currentUser;
-  if(!text.trim()) return;
-  db.collection("users").doc(user.uid).get().then(d=>{
-    const avatar = d.data().avatar || "https://via.placeholder.com/50";
-    db.collection("posts").doc(postId).collection("comments").add({
-      text, email:user.email, avatar, created:firebase.firestore.FieldValue.serverTimestamp(), reactions:{like:0,love:0,haha:0}, uid:user.uid
-    });
-  });
+// EDIT/DELETE POST
+function editPost(postId){
+  const newText = prompt("Edit your post:", document.getElementById(`text-${postId}`).innerText);
+  if(newText) db.collection("posts").doc(postId).update({text:newText});
 }
+function deletePost(postId){if(confirm("Delete this post?")) db.collection("posts").doc(postId).delete();}
 
-function subscribeComments(postId){
-  const container = document.getElementById(`commentsContainer-${postId}`);
-  db.collection("posts").doc(postId).collection("comments").orderBy("created","asc").onSnapshot(snap=>{
-    container.innerHTML="";
+// REACTIONS
+function react(postId,type){const ref=db.collection("posts").doc(postId);db.runTransaction(t=>t.get(ref).then(doc=>{if(!doc.exists)return;const r=doc.data().reactions||{like:0,love:0,haha:0};r[type]=(r[type]||0)+1;t.update(ref,{reactions:r});}));}
+
+// COMMENTS
+function addComment(postId,text){if(!text.trim()) return; const user=auth.currentUser; db.collection("users").doc(user.uid).get().then(d=>{const avatar=d.data().avatar; db.collection("posts").doc(postId).collection("comments").add({text,email:user.email,avatar,created:firebase.firestore.FieldValue.serverTimestamp(),reactions:{like:0,love:0,haha:0},uid:user.uid});});}
+function subscribeComments(postId){const container=document.getElementById(`commentsContainer-${postId}`); db.collection("posts").doc(postId).collection("comments").orderBy("created","asc").onSnapshot(snap=>{container.innerHTML="";snap.forEach(doc=>{const d=doc.data();const time=d.created?new Date(d.created.seconds*1000).toLocaleString():"";container.innerHTML+=`<div class="comment"><img src="${d.avatar}"><div class="comment-content"><strong>${d.email}</strong> <span>${d.text}</span><div class="comment-footer"><span onclick="reactComment('${postId}','${doc.id}','like')">👍 ${d.reactions?.like||0}</span><span onclick="reactComment('${postId}','${doc.id}','love')">❤️ ${d.reactions?.love||0}</span><span onclick="reactComment('${postId}','${doc.id}','haha')">😂 ${d.reactions?.haha||0}</span></div><small>${time}</small></div></div>`;});});}
+function reactComment(postId,commentId,type){const ref=db.collection("posts").doc(postId).collection("comments").doc(commentId);db.runTransaction(t=>t.get(ref).then(doc=>{if(!doc.exists)return;const r=doc.data().reactions||{like:0,love:0,haha:0};r[type]=(r[type]||0)+1;t.update(ref,{reactions:r});}));}
+
+// FOLLOW USERS
+function loadSuggestions(){
+  const user=auth.currentUser;
+  db.collection("users").get().then(snap=>{
+    const suggestions=document.getElementById("followList");
+    suggestions.innerHTML="";
     snap.forEach(doc=>{
-      const d = doc.data();
-      const isOwner = d.uid===auth.currentUser.uid;
-      const time = d.created ? new Date(d.created.seconds*1000).toLocaleString() : "";
-      container.innerHTML += `
-        <div class="comment" id="comment-${doc.id}">
-          <img src="${d.avatar}" alt="Avatar">
-          <div class="comment-content">
-            <strong>${d.email}</strong> <span>${d.text}</span>
-            <div class="comment-footer">
-              <span onclick="reactComment('${postId}','${doc.id}','like')">👍 ${d.reactions?.like||0}</span>
-              <span onclick="reactComment('${postId}','${doc.id}','love')">❤️ ${d.reactions?.love||0}</span>
-              <span onclick="reactComment('${postId}','${doc.id}','haha')">😂 ${d.reactions?.haha||0}</span>
-              ${isOwner?`<button onclick="deleteComment('${postId}','${doc.id}')">Delete</button>`:""}
-            </div>
-            <small>${time}</small>
-          </div>
-        </div>`;
+      if(doc.id===user.uid) return;
+      const li = document.createElement("li");
+      const data=doc.data();
+      const btn = document.createElement("button");
+      btn.innerText="Follow";
+      btn.onclick=()=>{db.collection("users").doc(user.uid).update({following:firebase.firestore.FieldValue.arrayUnion(doc.id)})};
+      li.innerText=data.email + " "; li.appendChild(btn);
+      suggestions.appendChild(li);
     });
   });
 }
 
-function reactComment(postId,commentId,type){
-  const ref = db.collection("posts").doc(postId).collection("comments").doc(commentId);
-  db.runTransaction(t=>t.get(ref).then(doc=>{ if(!doc.exists) return; const r=doc.data().reactions||{like:0,love:0,haha:0}; r[type]=(r[type]||0)+1; t.update(ref,{reactions:r}); }));
-}
-function deleteComment(postId,commentId){ if(confirm("Delete this comment?")) db.collection("posts").doc(postId).collection("comments").doc(commentId).delete(); }
-
-// POST REACTIONS
-function react(postId,type){ const ref=db.collection("posts").doc(postId); db.runTransaction(t=>t.get(ref).then(doc=>{ if(!doc.exists) return; const r=doc.data().reactions||{like:0,love:0,haha:0}; r[type]=(r[type]||0)+1; t.update(ref,{reactions:r}); })); }
-
-// AUTH STATE
+// INIT
 auth.onAuthStateChanged(user=>{
   if(user){
-    showFeed();
-    document.getElementById("userEmail").innerText = user.email;
-    db.collection("users").doc(user.uid).get().then(d=>{
-      document.getElementById("userAvatar").src = d.data().avatar;
-    });
+    document.getElementById("userEmail").innerText=user.email;
+    db.collection("users").doc(user.uid).get().then(d=>document.getElementById("userAvatar").src=d.data().avatar||"https://via.placeholder.com/50");
+    show("home"); subscribePosts(); loadSuggestions();
   } else show("login");
 });
 </script>
-
 </body>
 </html>
