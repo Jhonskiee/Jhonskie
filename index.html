@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MySocial Full Real-Time</title>
+<title>MySocial Chat</title>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -12,37 +12,181 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
 <style>
-body{margin:0;font-family:Segoe UI,sans-serif;background:#f0f2f5;}
+/* ===== BODY ===== */
+body{
+  margin:0;
+  font-family:"Segoe UI",sans-serif;
+  background:#f0f2f5;
+}
+
+/* ===== HIDDEN ===== */
 .hidden{display:none;}
-.navbar{width:100%;background:#1877f2;color:white;display:flex;justify-content:space-between;align-items:center;padding:10px 20px;position:fixed;top:0;z-index:1000;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
-.navbar img{height:40px;}
-.navbar h1{margin-left:10px;font-size:22px;}
-.navbar button{padding:6px 14px;border:none;background:#e60023;color:white;border-radius:20px;cursor:pointer;}
-.main-container{display:flex;margin-top:70px;max-width:1200px;margin:auto;gap:20px;padding:10px;}
-.sidebar-left,.sidebar-right{flex:1;min-width:220px;background:white;padding:15px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-.feed{flex:2;display:flex;flex-direction:column;gap:15px;}
-.post-box, .post{background:white;padding:15px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
-.post-box textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:12px;resize:none;font-size:14px;}
-.post-box button{margin-top:8px;width:100%;padding:10px;background:#1877f2;color:white;border:none;font-weight:bold;border-radius:12px;cursor:pointer;}
-.post-header{display:flex;align-items:center;gap:10px;justify-content:space-between;}
-.post-header img{width:50px;height:50px;border-radius:50%;object-fit:cover;}
-.post-actions span,.post-footer span{cursor:pointer;margin-right:8px;padding:5px 10px;border-radius:12px;transition:0.2s;}
-.post-actions span:hover,.post-footer span:hover{background:#f0f2f5;}
-.comment-section{margin-top:10px;border-top:1px solid #eee;padding-top:10px;}
-.comment{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
-.comment img{width:35px;height:35px;border-radius:50%;object-fit:cover;}
-.comment-content{background:#f0f2f5;padding:8px 10px;border-radius:15px;flex:1;}
-.comment-input{margin-top:5px;width:100%;padding:8px;border-radius:20px;border:1px solid #ccc;}
-.card{width:400px;background:#fff;padding:30px;margin:100px auto;box-shadow:0 20px 40px rgba(0,0,0,0.15);}
-input,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:12px;}
-button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;border-radius:12px;}
-.link{display:block;text-align:center;margin-top:10px;color:#1877f2;cursor:pointer;}
-ul{list-style:none;padding-left:0;}
-li{margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
-.friend-btn{margin-left:5px;padding:3px 8px;border-radius:8px;background:#1877f2;color:white;cursor:pointer;}
-.chat-window{background:#f9f9f9;padding:10px;border-radius:12px;height:300px;overflow-y:auto;}
-.chat-input{width:100%;padding:10px;margin-top:5px;border-radius:12px;border:1px solid #ccc;}
-@media(max-width:900px){.main-container{flex-direction:column;}.sidebar-left,.sidebar-right{order:2;}.feed{order:1;}}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  width:100%;
+  background:#1877f2;
+  color:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 20px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
+}
+.navbar img{
+  height:40px;
+  border-radius:8px;
+}
+.navbar h1{
+  margin-left:10px;
+  font-size:22px;
+  font-weight:600;
+}
+.navbar button{
+  padding:6px 14px;
+  border:none;
+  background:#e60023;
+  color:white;
+  border-radius:20px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.main-container{
+  display:flex;
+  max-width:1200px;
+  margin:80px auto 20px auto;
+  gap:20px;
+  padding:0 10px;
+}
+.sidebar{
+  flex:1;
+  min-width:250px;
+  background:white;
+  padding:20px;
+  border-radius:16px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.08);
+}
+.chat-container{
+  flex:2;
+  display:flex;
+  flex-direction:column;
+  background:white;
+  border-radius:16px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.08);
+  padding:20px;
+  height:600px;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar h3{
+  margin-top:0;
+  font-weight:600;
+  color:#333;
+}
+ul{
+  list-style:none;
+  padding:0;
+}
+li{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 0;
+  border-bottom:1px solid #eee;
+}
+.friend-btn{
+  padding:4px 10px;
+  border:none;
+  border-radius:12px;
+  background:#1877f2;
+  color:white;
+  cursor:pointer;
+  font-size:12px;
+}
+
+/* ===== CHAT ===== */
+#chatWindow{
+  flex:1;
+  overflow-y:auto;
+  padding-bottom:10px;
+  display:flex;
+  flex-direction:column;
+}
+.message{
+  padding:10px 14px;
+  margin:6px 0;
+  border-radius:20px;
+  max-width:70%;
+  word-wrap:break-word;
+}
+.message.self{
+  background:#1877f2;
+  color:white;
+  align-self:flex-end;
+}
+.message.friend{
+  background:#f0f0f0;
+  color:#333;
+  align-self:flex-start;
+}
+#chatInput{
+  width:100%;
+  padding:12px;
+  border-radius:20px;
+  border:1px solid #ccc;
+  margin-top:10px;
+  font-size:14px;
+  outline:none;
+}
+#sendBtn{
+  margin-top:8px;
+  padding:10px;
+  border:none;
+  background:#1877f2;
+  color:white;
+  border-radius:20px;
+  width:100%;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* ===== LOGIN/REGISTER CARD ===== */
+.card{
+  width:400px;
+  background:#fff;
+  padding:30px;
+  margin:100px auto;
+  box-shadow:0 15px 40px rgba(0,0,0,0.15);
+  border-radius:16px;
+}
+input{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:12px;
+  font-size:14px;
+}
+button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  background:#1877f2;
+  color:white;
+  font-weight:600;
+  border-radius:12px;
+  cursor:pointer;
+}
+.link{
+  display:block;
+  text-align:center;
+  margin-top:10px;
+  color:#1877f2;
+  cursor:pointer;
+}
 </style>
 </head>
 <body>
@@ -62,7 +206,6 @@ li{margin-bottom:8px;display:flex;justify-content:space-between;align-items:cent
   <h2>Create Account</h2>
   <input id="regEmail" placeholder="Email">
   <input id="regPass" type="password" placeholder="Password">
-  <input id="regAvatar" type="file" accept="image/*">
   <button onclick="register()">Register</button>
   <div class="link" onclick="show('login')">Back</div>
 </div>
@@ -72,218 +215,135 @@ li{margin-bottom:8px;display:flex;justify-content:space-between;align-items:cent
   <div class="navbar">
     <div style="display:flex;align-items:center;">
       <img src="https://via.placeholder.com/40" alt="Logo">
-      <h1>MySocial</h1>
+      <h1>MySocial Chat</h1>
     </div>
     <button onclick="logout()">Logout</button>
   </div>
 
   <div class="main-container">
-    <!-- LEFT SIDEBAR -->
-    <div class="sidebar-left">
-      <h3>Profile</h3>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-        <img id="userAvatar" src="https://via.placeholder.com/50" alt="Avatar">
-        <p id="userEmail">User Email</p>
-      </div>
-      <hr>
+    <!-- FRIENDS SIDEBAR -->
+    <div class="sidebar">
       <h3>Friends & Requests</h3>
       <ul id="friendsList"></ul>
-      <hr>
-      <h3>Relationship</h3>
-      <p id="relationshipStatus">Status: Single <button onclick="changeRelationship()">Change</button></p>
     </div>
 
-    <!-- CENTER FEED -->
-    <div class="feed">
-      <div class="post-box">
-        <textarea id="postText" rows="3" placeholder="What's on your mind?" onkeydown="if(event.key==='Enter'&&!event.shiftKey){addPost();event.preventDefault();}"></textarea>
-        <button onclick="addPost()">Post</button>
-      </div>
-      <div id="postsContainer"></div>
-    </div>
-
-    <!-- RIGHT SIDEBAR -->
-    <div class="sidebar-right">
-      <h3>Chat</h3>
-      <div class="chat-window" id="chatWindow"></div>
-      <input class="chat-input" id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter'){sendMessage();}">
+    <!-- CHAT -->
+    <div class="chat-container">
+      <div id="chatWindow"></div>
+      <input id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter'){sendMessage();}">
+      <button id="sendBtn" onclick="sendMessage()">Send</button>
     </div>
   </div>
 </div>
 
 <script>
-// ==== FIREBASE CONFIG ====
+// ===== FIREBASE CONFIG =====
 const firebaseConfig = {
-    apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
-    authDomain: "website-ab5ea.firebaseapp.com",
-    projectId: "website-ab5ea",
-    storageBucket: "website-ab5ea.firebasestorage.app",
-    messagingSenderId: "1094491609955",
-    appId: "1:1094491609955:web:4ac93d44c03490cd3d5156"
-  };
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "XXXX",
+  appId: "X:XXXX:web:XXXX"
+};
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-const storage = firebase.storage();
 
-// ==== SHOW/HIDE ====
-function show(id){["login","register","home"].forEach(v=>document.getElementById(v)?.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");}
+// ===== SHOW/HIDE =====
+function show(id){
+  ["login","register","home"].forEach(v=>document.getElementById(v)?.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
 
-// ==== REGISTER ====
+// ===== REGISTER =====
 function register(){
-  const email=regEmail.value.trim(),pass=regPass.value,file=regAvatar.files[0];
+  const email=regEmail.value.trim(),pass=regPass.value;
   if(!email||!pass){alert("Enter email/password"); return;}
   auth.createUserWithEmailAndPassword(email,pass).then(cred=>{
     const uid=cred.user.uid;
-    const avatarRef=storage.ref("avatars/"+uid);
-    let upload=file?avatarRef.put(file).then(()=>avatarRef.getDownloadURL()):Promise.resolve("https://via.placeholder.com/50");
-    return upload.then(url=>db.collection("users").doc(uid).set({
-      email,avatar:url,friends:[],friendRequests:[],blocked:[],relationship:"Single"
-    }));
+    return db.collection("users").doc(uid).set({email,friends:[],friendRequests:[]});
   }).then(()=>{alert("Account created!"); show("login");}).catch(e=>alert(e.message));
 }
 
-// ==== LOGIN ====
+// ===== LOGIN =====
 function login(){
   const email=loginEmail.value.trim(),pass=loginPass.value;
   if(!email||!pass){alert("Enter email/password"); return;}
   auth.signInWithEmailAndPassword(email,pass).catch(e=>alert(e.message));
 }
 
-// ==== PASSWORD RESET ====
+// ===== PASSWORD RESET =====
 function resetPassword(){
   const email=loginEmail.value.trim();
   if(!email){alert("Enter email first"); return;}
   auth.sendPasswordResetEmail(email).then(()=>alert("Password reset email sent")).catch(e=>alert(e.message));
 }
 
-// ==== LOGOUT ====
+// ===== LOGOUT =====
 function logout(){ auth.signOut(); }
 
-// ==== AUTH STATE ====
+// ===== AUTH STATE =====
 let currentUser;
 auth.onAuthStateChanged(user=>{
   if(user){
     currentUser=user;
     show("home");
-    loadUserData(user.uid);
-    subscribePosts();
     loadFriends();
     subscribeChat();
   } else show("login");
 });
 
-// ==== LOAD USER DATA ====
-function loadUserData(uid){
-  db.collection("users").doc(uid).get().then(doc=>{
-    const data=doc.data();
-    document.getElementById("userEmail").innerText=data.email;
-    document.getElementById("userAvatar").src=data.avatar||"https://via.placeholder.com/50";
-    document.getElementById("relationshipStatus").innerText="Status: "+data.relationship;
-  });
-}
-
-// ==== CHANGE RELATIONSHIP ====
-function changeRelationship(){
-  const status=prompt("Enter relationship status (Single, In a relationship, Married, etc.)");
-  if(!status) return;
-  db.collection("users").doc(currentUser.uid).update({relationship:status});
-}
-
-// ==== POSTS ====
-function addPost(){
-  const text=postText.value.trim();
-  if(!text) return;
-  db.collection("posts").add({
-    uid:currentUser.uid,
-    text,
-    created:firebase.firestore.FieldValue.serverTimestamp()
-  });
-  postText.value="";
-}
-function subscribePosts(){
-  db.collection("posts").orderBy("created","desc").onSnapshot(snapshot=>{
-    const container=document.getElementById("postsContainer");
-    container.innerHTML="";
-    snapshot.forEach(doc=>{
-      const data=doc.data();
-      db.collection("users").doc(data.uid).get().then(u=>{
-        const userData=u.data();
-        const postDiv=document.createElement("div");
-        postDiv.classList.add("post");
-        postDiv.innerHTML=`
-        <div class="post-header">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <img src="${userData.avatar}" alt="Avatar">
-            <h3>${userData.email}</h3>
-          </div>
-        </div>
-        <p>${data.text}</p>
-        <div class="post-footer">
-          <span onclick="alert('Like!')">👍</span>
-          <span onclick="alert('Love!')">❤️</span>
-          <span onclick="alert('Haha!')">😂</span>
-        </div>`;
-        container.appendChild(postDiv);
-      });
-    });
-  });
-}
-
-// ==== FRIENDS + ACCEPT/REJECT ====
+// ===== FRIENDS =====
 function loadFriends(){
   const list=document.getElementById("friendsList");
   db.collection("users").onSnapshot(snapshot=>{
     list.innerHTML="";
     snapshot.forEach(doc=>{
       const data=doc.data();
-      const uid = doc.id;
+      const uid=doc.id;
       if(uid===currentUser.uid) return;
       const li=document.createElement("li");
-      li.innerHTML=`<span>${data.email}</span>`;
+      li.textContent=data.email;
+      const btn=document.createElement("button");
+      btn.classList.add("friend-btn");
       if(data.friendRequests && data.friendRequests.includes(currentUser.uid)){
-        const acceptBtn=document.createElement("button");
-        acceptBtn.classList.add("friend-btn"); acceptBtn.textContent="Accept";
-        acceptBtn.onclick=()=>acceptFriend(uid);
-        li.appendChild(acceptBtn);
-        const rejectBtn=document.createElement("button");
-        rejectBtn.classList.add("friend-btn"); rejectBtn.style.background="#e60023"; rejectBtn.textContent="Reject";
-        rejectBtn.onclick=()=>rejectFriend(uid);
-        li.appendChild(rejectBtn);
+        btn.textContent="Accept"; btn.onclick=()=>acceptFriend(uid);
       } else{
-        const btn=document.createElement("button"); btn.classList.add("friend-btn"); btn.textContent="Add Friend";
-        btn.onclick=()=>sendFriendRequest(uid); li.appendChild(btn);
+        btn.textContent="Add Friend"; btn.onclick=()=>sendFriendRequest(uid);
       }
+      li.appendChild(btn);
       list.appendChild(li);
     });
   });
 }
 
 function sendFriendRequest(uid){
-  db.collection("users").doc(uid).update({friendRequests:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)})
-  .then(()=>alert("Friend request sent!"));
+  db.collection("users").doc(uid).update({friendRequests:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)});
 }
 
 function acceptFriend(uid){
   db.collection("users").doc(currentUser.uid).update({friends:firebase.firestore.FieldValue.arrayUnion(uid),friendRequests:firebase.firestore.FieldValue.arrayRemove(uid)});
-  db.collection("users").doc(uid).update({friends:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)}).then(()=>alert("Friend added!"));
+  db.collection("users").doc(uid).update({friends:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)});
 }
 
-function rejectFriend(uid){
-  db.collection("users").doc(currentUser.uid).update({friendRequests:firebase.firestore.FieldValue.arrayRemove(uid)}).then(()=>alert("Request rejected"));
-}
-
-// ==== CHAT PLACEHOLDER ====
+// ===== CHAT =====
 function subscribeChat(){
   const chatWindow=document.getElementById("chatWindow");
-  db.collection("chats").where("participants","array-contains",currentUser.uid).orderBy("timestamp").onSnapshot(snapshot=>{
+  db.collection("chats").orderBy("timestamp").onSnapshot(snapshot=>{
     chatWindow.innerHTML="";
     snapshot.forEach(doc=>{
       const data=doc.data();
-      const p=data.sender===currentUser.uid?"You":"Friend";
-      const div=document.createElement("div");
-      div.textContent=`${p}: ${data.message}`;
-      chatWindow.appendChild(div);
+      // Only show messages if sender or recipient is friend
+      db.collection("users").doc(data.sender).get().then(u=>{
+        const userData=u.data();
+        if(currentUser.uid===data.sender || (userData.friends && userData.friends.includes(currentUser.uid))){
+          const div=document.createElement("div");
+          div.classList.add("message",data.sender===currentUser.uid?"self":"friend");
+          div.textContent=data.sender===currentUser.uid?"You: "+data.message:data.message;
+          chatWindow.appendChild(div);
+        }
+      });
     });
     chatWindow.scrollTop=chatWindow.scrollHeight;
   });
@@ -293,9 +353,8 @@ function sendMessage(){
   const msg=document.getElementById("chatInput").value.trim();
   if(!msg) return;
   db.collection("chats").add({
-    participants:[currentUser.uid],
-    sender:currentUser.uid,
     message:msg,
+    sender:currentUser.uid,
     timestamp:firebase.firestore.FieldValue.serverTimestamp()
   });
   document.getElementById("chatInput").value="";
