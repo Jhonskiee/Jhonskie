@@ -12,8 +12,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
 <style>
-body{background:#e9ebee;font-family:Segoe UI;}
-.navbar{width:100%;background:#1877f2;padding:10px 20px;color:white;display:flex;justify-content:space-between;align-items:center;position:fixed;top:0;left:0;z-index:1000;}
+body{background:#e9ebee;font-family:Segoe UI;margin:0;}
+.navbar{width:100%;background:#1877f2;padding:10px 20px;color:white;display:flex;justify-content:space-between;align-items:center;position:fixed;top:0;left:0;z-index:1000;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
 .navbar h1{font-size:22px;font-weight:bold;cursor:pointer;}
 .navbar button{padding:6px 12px;background:#e60023;color:white;border:none;border-radius:20px;cursor:pointer;font-weight:bold;transition:0.3s;}
 .main-container{display:flex;margin-top:70px;max-width:1200px;margin-left:auto;margin-right:auto;gap:20px;padding:10px;}
@@ -22,10 +22,15 @@ body{background:#e9ebee;font-family:Segoe UI;}
 .post-box,.post{background:white;padding:15px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
 .post-header{display:flex;align-items:center;gap:10px;justify-content:space-between;}
 .post-header img{width:50px;height:50px;border-radius:50%;object-fit:cover;}
-.post-footer span, .post-footer button{cursor:pointer;padding:4px 8px;border-radius:12px;margin-right:5px;}
+.post-footer span, .post-footer button{cursor:pointer;padding:4px 8px;border-radius:12px;margin-right:5px;transition:0.2s;}
+.post-footer span:hover{background:#f0f2f5;}
 .comment-section{margin-top:10px;border-top:1px solid #eee;padding-top:10px;}
 .comment{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
 .comment img{width:35px;height:35px;border-radius:50%;object-fit:cover;}
+.comment-content{background:#f0f2f5;padding:8px 10px;border-radius:15px;flex:1;}
+.comment-content span{display:block;}
+.comment-footer span, .comment-footer button{cursor:pointer;padding:2px 6px;border-radius:12px;margin-right:4px;transition:0.2s;}
+.comment-footer span:hover{background:#ddd;}
 .comment-input{margin-top:5px;width:100%;padding:8px;border-radius:20px;border:1px solid #ccc;}
 .card{width:400px;background:#fff;padding:30px;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,.15);margin:100px auto;}
 input,button,textarea{width:100%;padding:12px;margin:8px 0;border-radius:10px;font-size:14px;}
@@ -106,7 +111,7 @@ button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;
 
 <script>
 // 🔴 Firebase config
- const firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
     authDomain: "website-ab5ea.firebaseapp.com",
     projectId: "website-ab5ea",
@@ -138,20 +143,10 @@ function register(){
       const ref = storage.ref("avatars/"+cred.user.uid);
       return ref.put(file).then(()=> ref.getDownloadURL()).then(url=> {
         avatarUrl = url;
-        return db.collection("users").doc(cred.user.uid).set({
-          email: cred.user.email,
-          created: new Date().toLocaleString(),
-          avatar: avatarUrl,
-          following:[]
-        });
+        return db.collection("users").doc(cred.user.uid).set({email: cred.user.email, created: new Date().toLocaleString(), avatar: avatarUrl, following:[]});
       });
     } else {
-      return db.collection("users").doc(cred.user.uid).set({
-        email: cred.user.email,
-        created: new Date().toLocaleString(),
-        avatar: avatarUrl,
-        following:[]
-      });
+      return db.collection("users").doc(cred.user.uid).set({email: cred.user.email, created: new Date().toLocaleString(), avatar: avatarUrl, following:[]});
     }
   })
   .then(()=>{ alert("Account created!"); show("login"); })
@@ -234,13 +229,11 @@ function addPost(){
   const user = auth.currentUser;
   db.collection("users").doc(user.uid).get().then(d=>{
     const avatar = d.data().avatar || "https://via.placeholder.com/50";
-    db.collection("posts").add({
-      text, email: user.email, avatar, uid:user.uid, reactions:{like:0,love:0,haha:0}, created: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(()=>{ document.getElementById("postText").value=""; });
+    db.collection("posts").add({text,email: user.email, avatar, uid:user.uid,reactions:{like:0,love:0,haha:0}, created: firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{ document.getElementById("postText").value=""; });
   });
 }
 
-// REAL-TIME FEED (FOLLOWING ONLY + EDIT/DELETE)
+// REAL-TIME FEED
 function subscribePosts(){
   const container = document.getElementById("postsContainer");
   const user = auth.currentUser;
@@ -272,52 +265,64 @@ function subscribePosts(){
             <span onclick="react('${doc.id}','love')">❤️ ${d.reactions?.love||0}</span>
             <span onclick="react('${doc.id}','haha')">😂 ${d.reactions?.haha||0}</span>
           </div>
-          <div class="comment-section" id="comments-${doc.id}"></div>
-          <input class="comment-input" placeholder="Write a comment..." onkeydown="if(event.key==='Enter'){addComment('${doc.id}',this.value); this.value='';}">
+          <div class="comment-section" id="comments-${doc.id}">
+            <h4>Comments</h4>
+            <div id="commentsContainer-${doc.id}"></div>
+            <input class="comment-input" placeholder="Write a comment..." onkeydown="if(event.key==='Enter'){addComment('${doc.id}',this.value); this.value='';}">
+          </div>
           <small>${time}</small>
         </div>`;
+        subscribeComments(doc.id);
       });
     });
   });
 }
 
-// EDIT POST
-function editPost(postId){
-  const newText = prompt("Edit your post:", document.getElementById("postText-"+postId).innerText);
-  if(newText!==null){
-    db.collection("posts").doc(postId).update({text:newText});
-  }
-}
+// EDIT / DELETE POST
+function editPost(postId){const newText=prompt("Edit your post:", document.getElementById("postText-"+postId).innerText);if(newText!==null){db.collection("posts").doc(postId).update({text:newText});}}
+function deletePost(postId){if(confirm("Delete this post?")) db.collection("posts").doc(postId).delete();}
 
-// DELETE POST
-function deletePost(postId){
-  if(confirm("Delete this post?")) db.collection("posts").doc(postId).delete();
-}
-
-// COMMENT FUNCTIONS
+// COMMENT FUNCTIONS WITH REACTIONS
 function addComment(postId,text){
   const user = auth.currentUser;
   if(!text.trim()) return;
   db.collection("users").doc(user.uid).get().then(d=>{
     const avatar = d.data().avatar||"https://via.placeholder.com/50";
     db.collection("posts").doc(postId).collection("comments").add({
-      text,email:user.email,avatar,created:firebase.firestore.FieldValue.serverTimestamp()
+      text,email:user.email,avatar,created:firebase.firestore.FieldValue.serverTimestamp(),reactions:{like:0,love:0,haha:0},uid:user.uid
     });
   });
 }
+function subscribeComments(postId){
+  const container = document.getElementById(`commentsContainer-${postId}`);
+  db.collection("posts").doc(postId).collection("comments").orderBy("created","asc").onSnapshot(snap=>{
+    container.innerHTML="";
+    snap.forEach(doc=>{
+      const d = doc.data();
+      const isOwner = d.uid===auth.currentUser.uid;
+      const time = d.created ? new Date(d.created.seconds*1000).toLocaleString() : "";
+      container.innerHTML += `
+      <div class="comment" id="comment-${doc.id}">
+        <img src="${d.avatar}" alt="Avatar">
+        <div class="comment-content">
+          <strong>${d.email}</strong> <span>${d.text}</span>
+          <div class="comment-footer">
+            <span onclick="reactComment('${postId}','${doc.id}','like')">👍 ${d.reactions?.like||0}</span>
+            <span onclick="reactComment('${postId}','${doc.id}','love')">❤️ ${d.reactions?.love||0}</span>
+            <span onclick="reactComment('${postId}','${doc.id}','haha')">😂 ${d.reactions?.haha||0}</span>
+            ${isOwner?`<button onclick="deleteComment('${postId}','${doc.id}')">Delete</button>`:""}
+          </div>
+          <small>${time}</small>
+        </div>
+      </div>`;
+    });
+  });
+}
+function reactComment(postId,commentId,type){const commentRef=db.collection("posts").doc(postId).collection("comments").doc(commentId);db.runTransaction(t=>t.get(commentRef).then(doc=>{if(!doc.exists) return;const reactions=doc.data().reactions||{like:0,love:0,haha:0};reactions[type]=(reactions[type]||0)+1;t.update(commentRef,{reactions});}));}
+function deleteComment(postId,commentId){if(confirm("Delete this comment?")) db.collection("posts").doc(postId).collection("comments").doc(commentId).delete();}
 
-// REACTIONS
-function react(postId,type){
-  const postRef = db.collection("posts").doc(postId);
-  db.runTransaction(transaction=>{
-    return transaction.get(postRef).then(doc=>{
-      if(!doc.exists) return;
-      const reactions = doc.data().reactions||{like:0,love:0,haha:0};
-      reactions[type] = (reactions[type]||0)+1;
-      transaction.update(postRef,{reactions});
-    });
-  });
-}
+// POST REACTIONS
+function react(postId,type){const postRef=db.collection("posts").doc(postId);db.runTransaction(transaction=>transaction.get(postRef).then(doc=>{if(!doc.exists) return;const reactions=doc.data().reactions||{like:0,love:0,haha:0};reactions[type]=(reactions[type]||0)+1;transaction.update(postRef,{reactions});}));}
 
 // AUTH STATE
 auth.onAuthStateChanged(user=>{
