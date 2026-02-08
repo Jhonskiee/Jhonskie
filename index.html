@@ -246,29 +246,33 @@ const db = firebase.firestore();
 
 // ===== SHOW/HIDE =====
 function show(id){
-  ["login","register","home"].forEach(v=>document.getElementById(v)?.classList.add("hidden"));
+  ["login","register","home"].forEach(v=>document.getElementById(v).classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 }
 
 // ===== REGISTER =====
 function register(){
-  const email=regEmail.value.trim(),pass=regPass.value;
+  const email=regEmail.value.trim(), pass=regPass.value;
   if(!email||!pass){alert("Enter email/password"); return;}
   auth.createUserWithEmailAndPassword(email,pass)
-    .then(cred=>{
-      const uid=cred.user.uid;
-      return db.collection("users").doc(uid).set({email,friends:[],friendRequests:[],profilePic:"https://via.placeholder.com/40"});
-    })
-    .then(()=>{alert("Account created!"); show("login");})
-    .catch(e=>alert(e.message));
+      .then(cred=>{
+          const uid = cred.user.uid;
+          return db.collection("users").doc(uid).set({
+            email,
+            friends:[],
+            friendRequests:[],
+            profilePic:"https://via.placeholder.com/40"
+          });
+      }).then(()=>{alert("Account created!"); show("login");})
+      .catch(e=>alert(e.message));
 }
 
 // ===== LOGIN =====
 function login(){
-  const email=loginEmail.value.trim(),pass=loginPass.value;
+  const email=loginEmail.value.trim(), pass=loginPass.value;
   if(!email||!pass){alert("Enter email/password"); return;}
   auth.signInWithEmailAndPassword(email,pass)
-    .catch(e=>alert(e.message));
+      .catch(e=>alert(e.message));
 }
 
 // ===== PASSWORD RESET =====
@@ -276,22 +280,23 @@ function resetPassword(){
   const email=loginEmail.value.trim();
   if(!email){alert("Enter email first"); return;}
   auth.sendPasswordResetEmail(email)
-    .then(()=>alert("Password reset email sent"))
-    .catch(e=>alert(e.message));
+      .then(()=>alert("Password reset email sent"))
+      .catch(e=>alert(e.message));
 }
 
 // ===== LOGOUT =====
 function logout(){ auth.signOut(); }
 
 // ===== AUTH STATE =====
-let currentUser;
+let currentUser = null;
 auth.onAuthStateChanged(user=>{
   if(user){
     currentUser=user;
     show("home");
     loadFriends();
     subscribeChat();
-  } else {
+  }else{
+    currentUser=null;
     show("login");
   }
 });
@@ -330,17 +335,19 @@ function loadFriends(){
     });
   });
 }
-
 function sendFriendRequest(uid){
-  db.collection("users").doc(uid).update({friendRequests:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)});
+  db.collection("users").doc(uid).update({
+    friendRequests:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+  });
 }
-
 function acceptFriend(uid){
   db.collection("users").doc(currentUser.uid).update({
     friends:firebase.firestore.FieldValue.arrayUnion(uid),
     friendRequests:firebase.firestore.FieldValue.arrayRemove(uid)
   });
-  db.collection("users").doc(uid).update({friends:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)});
+  db.collection("users").doc(uid).update({
+    friends:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+  });
 }
 
 // ===== CHAT =====
@@ -352,10 +359,9 @@ function subscribeChat(){
       const data=doc.data();
       db.collection("users").doc(data.sender).get().then(u=>{
         const userData=u.data();
-        // show messages only if self or friends
         if(currentUser.uid===data.sender || (userData.friends && userData.friends.includes(currentUser.uid))){
           const div=document.createElement("div");
-          div.classList.add("message",data.sender===currentUser.uid?"self":"friend");
+          div.classList.add("message", data.sender===currentUser.uid?"self":"friend");
 
           const img=document.createElement("img");
           img.src=userData.profilePic || "https://via.placeholder.com/32";
@@ -374,9 +380,9 @@ function subscribeChat(){
 }
 
 function sendMessage(){
+  if(!currentUser){alert("You must login first"); return;}
   const msg=document.getElementById("chatInput").value.trim();
   if(!msg) return;
-  if(!currentUser) return alert("Login first");
   db.collection("chats").add({
     message:msg,
     sender:currentUser.uid,
