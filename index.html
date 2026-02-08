@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MySocial Pro Feed</title>
+<title>MySocial Full Real-Time</title>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -12,61 +12,37 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
 <style>
-/* GENERAL */
-body {margin:0;font-family:Segoe UI,sans-serif;background:#f0f2f5;}
+body{margin:0;font-family:Segoe UI,sans-serif;background:#f0f2f5;}
 .hidden{display:none;}
-.card,input,button,textarea{border-radius:12px;}
-button{cursor:pointer;outline:none;}
-textarea{resize:none;}
-
-/* NAVBAR */
-.navbar{
-  width:100%;position:fixed;top:0;left:0;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:10px 20px;background:#1877f2;color:white;z-index:1000;
-  box-shadow:0 2px 5px rgba(0,0,0,0.2);
-}
+.navbar{width:100%;background:#1877f2;color:white;display:flex;justify-content:space-between;align-items:center;padding:10px 20px;position:fixed;top:0;z-index:1000;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
 .navbar img{height:40px;}
 .navbar h1{margin-left:10px;font-size:22px;}
-.navbar button{padding:6px 14px;border:none;background:#e60023;color:white;border-radius:20px;}
-
-/* LAYOUT */
+.navbar button{padding:6px 14px;border:none;background:#e60023;color:white;border-radius:20px;cursor:pointer;}
 .main-container{display:flex;margin-top:70px;max-width:1200px;margin:auto;gap:20px;padding:10px;}
-.sidebar-left,.sidebar-right{flex:1;min-width:220px;background:white;padding:15px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+.sidebar-left,.sidebar-right{flex:1;min-width:220px;background:white;padding:15px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
 .feed{flex:2;display:flex;flex-direction:column;gap:15px;}
-
-/* POST BOX */
-.post-box, .post{background:white;padding:15px;box-shadow:0 2px 12px rgba(0,0,0,0.1);}
-.post-box textarea{width:100%;padding:12px;border:1px solid #ccc;font-size:14px;}
-.post-box button{margin-top:8px;width:100%;padding:10px;background:#1877f2;color:white;border:none;font-weight:bold;}
-
-/* POST CARD */
+.post-box, .post{background:white;padding:15px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+.post-box textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:12px;resize:none;font-size:14px;}
+.post-box button{margin-top:8px;width:100%;padding:10px;background:#1877f2;color:white;border:none;font-weight:bold;border-radius:12px;cursor:pointer;}
 .post-header{display:flex;align-items:center;gap:10px;justify-content:space-between;}
 .post-header img{width:50px;height:50px;border-radius:50%;object-fit:cover;}
-.post-footer span{cursor:pointer;padding:5px 10px;border-radius:12px;margin-right:5px;transition:0.2s;}
-.post-footer span:hover{background:#f0f2f5;}
-.post-actions span{cursor:pointer;color:#1877f2;margin-right:8px;}
-
-/* COMMENTS */
+.post-actions span,.post-footer span{cursor:pointer;margin-right:8px;padding:5px 10px;border-radius:12px;transition:0.2s;}
+.post-actions span:hover,.post-footer span:hover{background:#f0f2f5;}
 .comment-section{margin-top:10px;border-top:1px solid #eee;padding-top:10px;}
 .comment{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
 .comment img{width:35px;height:35px;border-radius:50%;object-fit:cover;}
 .comment-content{background:#f0f2f5;padding:8px 10px;border-radius:15px;flex:1;}
-.comment-footer span{cursor:pointer;padding:2px 6px;border-radius:12px;margin-right:4px;transition:0.2s;}
-.comment-footer span:hover{background:#ddd;}
-.comment-input{margin-top:5px;width:100%;padding:8px;border:1px solid #ccc;border-radius:20px;}
-
-/* LOGIN/REGISTER CARDS */
+.comment-input{margin-top:5px;width:100%;padding:8px;border-radius:20px;border:1px solid #ccc;}
 .card{width:400px;background:#fff;padding:30px;margin:100px auto;box-shadow:0 20px 40px rgba(0,0,0,0.15);}
-input,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;}
+input,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:12px;}
+button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;border-radius:12px;}
 .link{display:block;text-align:center;margin-top:10px;color:#1877f2;cursor:pointer;}
-
-/* RESPONSIVE */
-@media(max-width:900px){
-  .main-container{flex-direction:column;}
-  .sidebar-left,.sidebar-right{order:2;}
-  .feed{order:1;}
-}
+ul{list-style:none;padding-left:0;}
+li{margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.friend-btn{margin-left:5px;padding:3px 8px;border-radius:8px;background:#1877f2;color:white;cursor:pointer;}
+.chat-window{background:#f9f9f9;padding:10px;border-radius:12px;height:300px;overflow-y:auto;}
+.chat-input{width:100%;padding:10px;margin-top:5px;border-radius:12px;border:1px solid #ccc;}
+@media(max-width:900px){.main-container{flex-direction:column;}.sidebar-left,.sidebar-right{order:2;}.feed{order:1;}}
 </style>
 </head>
 <body>
@@ -96,21 +72,28 @@ input,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;}
   <div class="navbar">
     <div style="display:flex;align-items:center;">
       <img src="https://via.placeholder.com/40" alt="Logo">
-      <h1>MySocial Pro</h1>
+      <h1>MySocial</h1>
     </div>
     <button onclick="logout()">Logout</button>
   </div>
+
   <div class="main-container">
+    <!-- LEFT SIDEBAR -->
     <div class="sidebar-left">
       <h3>Profile</h3>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
         <img id="userAvatar" src="https://via.placeholder.com/50" alt="Avatar">
-        <p id="userEmail"></p>
+        <p id="userEmail">User Email</p>
       </div>
       <hr>
-      <h3>Follow Users</h3>
-      <ul id="followList"></ul>
+      <h3>Friends & Requests</h3>
+      <ul id="friendsList"></ul>
+      <hr>
+      <h3>Relationship</h3>
+      <p id="relationshipStatus">Status: Single <button onclick="changeRelationship()">Change</button></p>
     </div>
+
+    <!-- CENTER FEED -->
     <div class="feed">
       <div class="post-box">
         <textarea id="postText" rows="3" placeholder="What's on your mind?" onkeydown="if(event.key==='Enter'&&!event.shiftKey){addPost();event.preventDefault();}"></textarea>
@@ -118,15 +101,18 @@ input,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;}
       </div>
       <div id="postsContainer"></div>
     </div>
+
+    <!-- RIGHT SIDEBAR -->
     <div class="sidebar-right">
-      <h3>Suggestions</h3>
-      <ul id="suggestionsList"></ul>
+      <h3>Chat</h3>
+      <div class="chat-window" id="chatWindow"></div>
+      <input class="chat-input" id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter'){sendMessage();}">
     </div>
   </div>
 </div>
 
 <script>
-// Firebase config
+// ==== FIREBASE CONFIG ====
 const firebaseConfig = {
     apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
     authDomain: "website-ab5ea.firebaseapp.com",
@@ -140,10 +126,10 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// Show/hide
+// ==== SHOW/HIDE ====
 function show(id){["login","register","home"].forEach(v=>document.getElementById(v)?.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");}
 
-// REGISTER
+// ==== REGISTER ====
 function register(){
   const email=regEmail.value.trim(),pass=regPass.value,file=regAvatar.files[0];
   if(!email||!pass){alert("Enter email/password"); return;}
@@ -151,38 +137,169 @@ function register(){
     const uid=cred.user.uid;
     const avatarRef=storage.ref("avatars/"+uid);
     let upload=file?avatarRef.put(file).then(()=>avatarRef.getDownloadURL()):Promise.resolve("https://via.placeholder.com/50");
-    return upload.then(url=>db.collection("users").doc(uid).set({email,avatar:url,created:new Date().toLocaleString(),following:[]}));
+    return upload.then(url=>db.collection("users").doc(uid).set({
+      email,avatar:url,friends:[],friendRequests:[],blocked:[],relationship:"Single"
+    }));
   }).then(()=>{alert("Account created!"); show("login");}).catch(e=>alert(e.message));
 }
 
-// LOGIN
+// ==== LOGIN ====
 function login(){
   const email=loginEmail.value.trim(),pass=loginPass.value;
   if(!email||!pass){alert("Enter email/password"); return;}
   auth.signInWithEmailAndPassword(email,pass).catch(e=>alert(e.message));
 }
 
-// PASSWORD RESET
+// ==== PASSWORD RESET ====
 function resetPassword(){
   const email=loginEmail.value.trim();
   if(!email){alert("Enter email first"); return;}
   auth.sendPasswordResetEmail(email).then(()=>alert("Password reset email sent")).catch(e=>alert(e.message));
 }
 
-// LOGOUT
+// ==== LOGOUT ====
 function logout(){ auth.signOut(); }
 
-// POST & COMMENTS functions here same as previous code with reactions, edit/delete
-
-// INIT
+// ==== AUTH STATE ====
+let currentUser;
 auth.onAuthStateChanged(user=>{
   if(user){
-    document.getElementById("userEmail").innerText=user.email;
-    db.collection("users").doc(user.uid).get().then(d=>document.getElementById("userAvatar").src=d.data().avatar||"https://via.placeholder.com/50");
+    currentUser=user;
     show("home");
-    // call your subscribePosts() and loadSuggestions() here
+    loadUserData(user.uid);
+    subscribePosts();
+    loadFriends();
+    subscribeChat();
   } else show("login");
 });
+
+// ==== LOAD USER DATA ====
+function loadUserData(uid){
+  db.collection("users").doc(uid).get().then(doc=>{
+    const data=doc.data();
+    document.getElementById("userEmail").innerText=data.email;
+    document.getElementById("userAvatar").src=data.avatar||"https://via.placeholder.com/50";
+    document.getElementById("relationshipStatus").innerText="Status: "+data.relationship;
+  });
+}
+
+// ==== CHANGE RELATIONSHIP ====
+function changeRelationship(){
+  const status=prompt("Enter relationship status (Single, In a relationship, Married, etc.)");
+  if(!status) return;
+  db.collection("users").doc(currentUser.uid).update({relationship:status});
+}
+
+// ==== POSTS ====
+function addPost(){
+  const text=postText.value.trim();
+  if(!text) return;
+  db.collection("posts").add({
+    uid:currentUser.uid,
+    text,
+    created:firebase.firestore.FieldValue.serverTimestamp()
+  });
+  postText.value="";
+}
+function subscribePosts(){
+  db.collection("posts").orderBy("created","desc").onSnapshot(snapshot=>{
+    const container=document.getElementById("postsContainer");
+    container.innerHTML="";
+    snapshot.forEach(doc=>{
+      const data=doc.data();
+      db.collection("users").doc(data.uid).get().then(u=>{
+        const userData=u.data();
+        const postDiv=document.createElement("div");
+        postDiv.classList.add("post");
+        postDiv.innerHTML=`
+        <div class="post-header">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <img src="${userData.avatar}" alt="Avatar">
+            <h3>${userData.email}</h3>
+          </div>
+        </div>
+        <p>${data.text}</p>
+        <div class="post-footer">
+          <span onclick="alert('Like!')">👍</span>
+          <span onclick="alert('Love!')">❤️</span>
+          <span onclick="alert('Haha!')">😂</span>
+        </div>`;
+        container.appendChild(postDiv);
+      });
+    });
+  });
+}
+
+// ==== FRIENDS + ACCEPT/REJECT ====
+function loadFriends(){
+  const list=document.getElementById("friendsList");
+  db.collection("users").onSnapshot(snapshot=>{
+    list.innerHTML="";
+    snapshot.forEach(doc=>{
+      const data=doc.data();
+      const uid = doc.id;
+      if(uid===currentUser.uid) return;
+      const li=document.createElement("li");
+      li.innerHTML=`<span>${data.email}</span>`;
+      if(data.friendRequests && data.friendRequests.includes(currentUser.uid)){
+        const acceptBtn=document.createElement("button");
+        acceptBtn.classList.add("friend-btn"); acceptBtn.textContent="Accept";
+        acceptBtn.onclick=()=>acceptFriend(uid);
+        li.appendChild(acceptBtn);
+        const rejectBtn=document.createElement("button");
+        rejectBtn.classList.add("friend-btn"); rejectBtn.style.background="#e60023"; rejectBtn.textContent="Reject";
+        rejectBtn.onclick=()=>rejectFriend(uid);
+        li.appendChild(rejectBtn);
+      } else{
+        const btn=document.createElement("button"); btn.classList.add("friend-btn"); btn.textContent="Add Friend";
+        btn.onclick=()=>sendFriendRequest(uid); li.appendChild(btn);
+      }
+      list.appendChild(li);
+    });
+  });
+}
+
+function sendFriendRequest(uid){
+  db.collection("users").doc(uid).update({friendRequests:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)})
+  .then(()=>alert("Friend request sent!"));
+}
+
+function acceptFriend(uid){
+  db.collection("users").doc(currentUser.uid).update({friends:firebase.firestore.FieldValue.arrayUnion(uid),friendRequests:firebase.firestore.FieldValue.arrayRemove(uid)});
+  db.collection("users").doc(uid).update({friends:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)}).then(()=>alert("Friend added!"));
+}
+
+function rejectFriend(uid){
+  db.collection("users").doc(currentUser.uid).update({friendRequests:firebase.firestore.FieldValue.arrayRemove(uid)}).then(()=>alert("Request rejected"));
+}
+
+// ==== CHAT PLACEHOLDER ====
+function subscribeChat(){
+  const chatWindow=document.getElementById("chatWindow");
+  db.collection("chats").where("participants","array-contains",currentUser.uid).orderBy("timestamp").onSnapshot(snapshot=>{
+    chatWindow.innerHTML="";
+    snapshot.forEach(doc=>{
+      const data=doc.data();
+      const p=data.sender===currentUser.uid?"You":"Friend";
+      const div=document.createElement("div");
+      div.textContent=`${p}: ${data.message}`;
+      chatWindow.appendChild(div);
+    });
+    chatWindow.scrollTop=chatWindow.scrollHeight;
+  });
+}
+
+function sendMessage(){
+  const msg=document.getElementById("chatInput").value.trim();
+  if(!msg) return;
+  db.collection("chats").add({
+    participants:[currentUser.uid],
+    sender:currentUser.uid,
+    message:msg,
+    timestamp:firebase.firestore.FieldValue.serverTimestamp()
+  });
+  document.getElementById("chatInput").value="";
+}
 </script>
 </body>
 </html>
