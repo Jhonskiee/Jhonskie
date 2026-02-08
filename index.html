@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Homepage Auth System</title>
+<title>My Social Homepage</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Firebase -->
@@ -11,59 +11,43 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Segoe UI, -apple-system, BlinkMacSystemFont;
-  background:#f2f2f2;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-.card{
-  width:480px;
-  background:#fff;
-  border-radius:16px;
-  padding:40px;
-  box-shadow:0 20px 40px rgba(0,0,0,.15);
-}
-h2{text-align:center;margin-bottom:20px}
-input,button{
-  width:100%;
-  padding:12px;
-  margin:8px 0;
-  border-radius:10px;
-  font-size:14px;
-}
-input{border:1.5px solid #000}
-button{
-  border:none;
-  background:#8b0000;
-  color:#fff;
-  cursor:pointer;
-  font-weight:600;
-}
-.link{
-  text-align:center;
-  margin-top:10px;
-  color:#1e90ff;
-  cursor:pointer;
-  display:block;
-}
-.hidden{display:none}
-.home-content{
-  text-align:center;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,-apple-system,BlinkMacSystemFont,sans-serif;}
+body{background:#f0f2f5;min-height:100vh;display:flex;justify-content:center;}
+.container{width:100%;max-width:1000px;margin:20px;display:flex;flex-direction:column;}
+
+/* Navbar */
+.navbar{background:#fff;padding:10px 20px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+.navbar h1{font-size:20px;color:#1877f2;}
+.navbar button{padding:6px 12px;background:#e60023;color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:600;}
+
+/* Main layout */
+.main{display:flex;margin-top:20px;gap:20px;}
+.sidebar{flex:1;background:#fff;border-radius:10px;padding:15px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+.feed{flex:2;display:flex;flex-direction:column;gap:15px;}
+
+/* Post box */
+.post-box{background:#fff;padding:15px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+.post-box textarea{width:100%;border:1px solid #ccc;border-radius:8px;padding:10px;font-size:14px;resize:none;}
+
+/* Post card */
+.post{background:#fff;padding:15px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
+.post h3{font-size:16px;color:#1877f2;margin-bottom:5px;}
+.post p{font-size:14px;line-height:1.4;}
+
+/* Forms */
+.card{width:400px;background:#fff;padding:30px;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,.15);margin:50px auto;}
+input,button{width:100%;padding:12px;margin:8px 0;border-radius:10px;font-size:14px;}
+input{border:1.5px solid #000;}
+button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;}
+.link{display:block;text-align:center;margin-top:10px;color:#1877f2;cursor:pointer;}
+.hidden{display:none;}
 </style>
 </head>
 
 <body>
 
-<div class="card">
-
 <!-- LOGIN -->
-<div id="login">
+<div id="login" class="card">
   <h2>Login</h2>
   <input id="loginEmail" placeholder="Email">
   <input id="loginPass" type="password" placeholder="Password">
@@ -73,7 +57,7 @@ button{
 </div>
 
 <!-- REGISTER -->
-<div id="register" class="hidden">
+<div id="register" class="card hidden">
   <h2>Create Account</h2>
   <input id="regEmail" placeholder="Email">
   <input id="regPass" type="password" placeholder="Password">
@@ -83,18 +67,39 @@ button{
 
 <!-- HOME -->
 <div id="home" class="hidden">
-  <h2>Welcome to Your Homepage 🎉</h2>
-  <div class="home-content">
-    <p>You are now logged in!</p>
-    <p>Use this homepage for your content, links, or dashboard.</p>
+  <div class="navbar">
+    <h1>MySocial</h1>
     <button onclick="logout()">Logout</button>
+  </div>
+  <div class="container">
+    <div class="main">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <h3>Profile</h3>
+        <p id="userEmail"></p>
+        <hr>
+        <h3>Links</h3>
+        <ul>
+          <li>My Posts</li>
+          <li>Friends</li>
+          <li>Settings</li>
+        </ul>
+      </div>
+      
+      <!-- Feed -->
+      <div class="feed">
+        <div class="post-box">
+          <textarea id="postText" rows="3" placeholder="What's on your mind?"></textarea>
+          <button onclick="addPost()">Post</button>
+        </div>
+        <div id="postsContainer"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-</div>
-
 <script>
-// 🔴 REPLACE WITH YOUR OWN FIREBASE CONFIG
+// 🔴 Replace with your Firebase config
  const firebaseConfig = {
     apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
     authDomain: "website-ab5ea.firebaseapp.com",
@@ -109,42 +114,36 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 function show(id){
-  ["login","register","home"].forEach(v=>{
-    document.getElementById(v).classList.add("hidden");
-  });
+  ["login","register","home"].forEach(v=>document.getElementById(v).classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 }
 
-/* REGISTER */
+// REGISTER
 function register(){
   const email = regEmail.value.trim();
   const pass = regPass.value;
-  if(!email || !pass){ alert("Enter email and password"); return; }
+  if(!email||!pass){ alert("Enter email and password"); return; }
   auth.createUserWithEmailAndPassword(email, pass)
   .then(cred=>{
-    // Save user to Firestore for monitoring
     return db.collection("users").doc(cred.user.uid).set({
       email: cred.user.email,
       created: new Date().toLocaleString()
     });
   })
-  .then(()=>{
-    alert("Account created! You can now log in.");
-    show("login");
-  })
+  .then(()=>{ alert("Account created!"); show("login"); })
   .catch(e=>alert(e.message));
 }
 
-/* LOGIN */
+// LOGIN
 function login(){
   const email = loginEmail.value.trim();
   const pass = loginPass.value;
-  if(!email || !pass){ alert("Enter email and password"); return; }
+  if(!email||!pass){ alert("Enter email and password"); return; }
   auth.signInWithEmailAndPassword(email, pass)
   .catch(e=>alert(e.message));
 }
 
-/* PASSWORD RESET */
+// PASSWORD RESET
 function resetPassword(){
   const email = loginEmail.value.trim();
   if(!email){ alert("Enter your email first"); return; }
@@ -153,19 +152,40 @@ function resetPassword(){
   .catch(e=>alert(e.message));
 }
 
-/* LOGOUT */
-function logout(){
-  auth.signOut();
-}
+// LOGOUT
+function logout(){ auth.signOut(); }
 
-/* AUTH STATE */
+// AUTH STATE
 auth.onAuthStateChanged(user=>{
   if(user){
     show("home");
-  } else {
-    show("login");
-  }
+    document.getElementById("userEmail").innerText = user.email;
+    loadPosts();
+  } else show("login");
 });
+
+// POSTS
+function addPost(){
+  const text = document.getElementById("postText").value.trim();
+  if(!text) return;
+  const user = auth.currentUser;
+  db.collection("posts").add({
+    text,
+    email: user.email,
+    created: new Date().toLocaleString()
+  }).then(()=>{ document.getElementById("postText").value=""; loadPosts(); });
+}
+
+function loadPosts(){
+  const container = document.getElementById("postsContainer");
+  container.innerHTML="";
+  db.collection("posts").orderBy("created","desc").get().then(snap=>{
+    snap.forEach(doc=>{
+      const d = doc.data();
+      container.innerHTML += `<div class="post"><h3>${d.email}</h3><p>${d.text}</p><small>${d.created}</small></div>`;
+    });
+  });
+}
 </script>
 
 </body>
