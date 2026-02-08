@@ -12,154 +12,25 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
 <style>
-/* ===== BODY ===== */
 body{
   margin:0;
   font-family:"Segoe UI",sans-serif;
   background:#f0f2f5;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
 }
-
-/* ===== HIDDEN ===== */
 .hidden{display:none;}
-
-/* ===== NAVBAR ===== */
-.navbar{
-  width:100%;
-  background:#1877f2;
-  color:white;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 20px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.15);
-}
-.navbar img{
-  height:40px;
-  border-radius:8px;
-}
-.navbar h1{
-  margin-left:10px;
-  font-size:22px;
-  font-weight:600;
-}
-.navbar button{
-  padding:6px 14px;
-  border:none;
-  background:#e60023;
-  color:white;
-  border-radius:20px;
-  cursor:pointer;
-  font-weight:600;
-}
-
-/* ===== MAIN CONTAINER ===== */
-.main-container{
-  display:flex;
-  max-width:1200px;
-  margin:80px auto 20px auto;
-  gap:20px;
-  padding:0 10px;
-}
-.sidebar{
-  flex:1;
-  min-width:250px;
-  background:white;
-  padding:20px;
-  border-radius:16px;
-  box-shadow:0 4px 15px rgba(0,0,0,0.08);
-}
-.chat-container{
-  flex:2;
-  display:flex;
-  flex-direction:column;
-  background:white;
-  border-radius:16px;
-  box-shadow:0 4px 15px rgba(0,0,0,0.08);
-  padding:20px;
-  height:600px;
-}
-
-/* ===== SIDEBAR ===== */
-.sidebar h3{
-  margin-top:0;
-  font-weight:600;
-  color:#333;
-}
-ul{
-  list-style:none;
-  padding:0;
-}
-li{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:8px 0;
-  border-bottom:1px solid #eee;
-}
-.friend-btn{
-  padding:4px 10px;
-  border:none;
-  border-radius:12px;
-  background:#1877f2;
-  color:white;
-  cursor:pointer;
-  font-size:12px;
-}
-
-/* ===== CHAT ===== */
-#chatWindow{
-  flex:1;
-  overflow-y:auto;
-  padding-bottom:10px;
-  display:flex;
-  flex-direction:column;
-}
-.message{
-  padding:10px 14px;
-  margin:6px 0;
-  border-radius:20px;
-  max-width:70%;
-  word-wrap:break-word;
-}
-.message.self{
-  background:#1877f2;
-  color:white;
-  align-self:flex-end;
-}
-.message.friend{
-  background:#f0f0f0;
-  color:#333;
-  align-self:flex-start;
-}
-#chatInput{
-  width:100%;
-  padding:12px;
-  border-radius:20px;
-  border:1px solid #ccc;
-  margin-top:10px;
-  font-size:14px;
-  outline:none;
-}
-#sendBtn{
-  margin-top:8px;
-  padding:10px;
-  border:none;
-  background:#1877f2;
-  color:white;
-  border-radius:20px;
-  width:100%;
-  cursor:pointer;
-  font-weight:600;
-}
 
 /* ===== LOGIN/REGISTER CARD ===== */
 .card{
-  width:400px;
+  width:350px;
   background:#fff;
   padding:30px;
-  margin:100px auto;
-  box-shadow:0 15px 40px rgba(0,0,0,0.15);
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
   border-radius:16px;
+  text-align:center;
 }
 input{
   width:100%;
@@ -182,10 +53,143 @@ button{
 }
 .link{
   display:block;
-  text-align:center;
   margin-top:10px;
   color:#1877f2;
   cursor:pointer;
+}
+
+/* ===== HOME ===== */
+#home{
+  display:flex;
+  flex-direction:column;
+  width:90%;
+  max-width:1000px;
+  height:90vh;
+}
+.navbar{
+  background:#1877f2;
+  color:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 20px;
+  border-radius:12px;
+}
+.navbar h1{margin:0;font-size:22px;font-weight:600;}
+.navbar button{
+  padding:6px 14px;
+  border:none;
+  border-radius:20px;
+  background:#e60023;
+  color:white;
+  cursor:pointer;
+  font-weight:600;
+}
+.main-container{
+  flex:1;
+  display:flex;
+  gap:20px;
+  margin-top:15px;
+  height:calc(100% - 60px);
+}
+
+/* SIDEBAR */
+.sidebar{
+  flex:1;
+  background:white;
+  padding:20px;
+  border-radius:16px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.08);
+  overflow-y:auto;
+}
+.sidebar h3{margin-top:0;color:#333;}
+ul{list-style:none;padding:0;margin:0;}
+li{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 0;
+  border-bottom:1px solid #eee;
+}
+.friend-btn{
+  padding:4px 10px;
+  border:none;
+  border-radius:12px;
+  background:#1877f2;
+  color:white;
+  cursor:pointer;
+  font-size:12px;
+}
+.friend-pic{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  margin-right:8px;
+}
+
+/* CHAT */
+.chat-container{
+  flex:2;
+  display:flex;
+  flex-direction:column;
+  background:white;
+  border-radius:16px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.08);
+  padding:20px;
+  height:100%;
+}
+#chatWindow{
+  flex:1;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding-bottom:10px;
+}
+.message{
+  padding:10px 14px;
+  margin:6px 0;
+  border-radius:20px;
+  max-width:70%;
+  word-wrap:break-word;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.message.self{
+  background:#1877f2;
+  color:white;
+  align-self:flex-end;
+}
+.message.friend{
+  background:#f0f0f0;
+  color:#333;
+  align-self:flex-start;
+}
+.message img{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+}
+#chatInput{
+  width:100%;
+  padding:12px;
+  border-radius:20px;
+  border:1px solid #ccc;
+  margin-top:10px;
+  font-size:14px;
+  outline:none;
+}
+#sendBtn{
+  margin-top:8px;
+  padding:10px;
+  border:none;
+  background:#1877f2;
+  color:white;
+  border-radius:20px;
+  width:100%;
+  cursor:pointer;
+  font-weight:600;
 }
 </style>
 </head>
@@ -213,21 +217,16 @@ button{
 <!-- HOME -->
 <div id="home" class="hidden">
   <div class="navbar">
-    <div style="display:flex;align-items:center;">
-      <img src="https://via.placeholder.com/40" alt="Logo">
-      <h1>MySocial Chat</h1>
-    </div>
+    <h1>MySocial Chat</h1>
     <button onclick="logout()">Logout</button>
   </div>
 
   <div class="main-container">
-    <!-- FRIENDS SIDEBAR -->
     <div class="sidebar">
       <h3>Friends & Requests</h3>
       <ul id="friendsList"></ul>
     </div>
 
-    <!-- CHAT -->
     <div class="chat-container">
       <div id="chatWindow"></div>
       <input id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter'){sendMessage();}">
@@ -249,6 +248,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+const storage = firebase.storage();
 
 // ===== SHOW/HIDE =====
 function show(id){
@@ -262,7 +262,8 @@ function register(){
   if(!email||!pass){alert("Enter email/password"); return;}
   auth.createUserWithEmailAndPassword(email,pass).then(cred=>{
     const uid=cred.user.uid;
-    return db.collection("users").doc(uid).set({email,friends:[],friendRequests:[]});
+    // default profile pic
+    return db.collection("users").doc(uid).set({email,friends:[],friendRequests:[],profilePic:"https://via.placeholder.com/40"});
   }).then(()=>{alert("Account created!"); show("login");}).catch(e=>alert(e.message));
 }
 
@@ -304,7 +305,18 @@ function loadFriends(){
       const uid=doc.id;
       if(uid===currentUser.uid) return;
       const li=document.createElement("li");
-      li.textContent=data.email;
+
+      const span=document.createElement("span");
+      span.style.display="flex";
+      span.style.alignItems="center";
+      const img=document.createElement("img");
+      img.src=data.profilePic || "https://via.placeholder.com/32";
+      img.classList.add("friend-pic");
+      span.appendChild(img);
+      const text=document.createTextNode(data.email);
+      span.appendChild(text);
+      li.appendChild(span);
+
       const btn=document.createElement("button");
       btn.classList.add("friend-btn");
       if(data.friendRequests && data.friendRequests.includes(currentUser.uid)){
@@ -334,13 +346,20 @@ function subscribeChat(){
     chatWindow.innerHTML="";
     snapshot.forEach(doc=>{
       const data=doc.data();
-      // Only show messages if sender or recipient is friend
       db.collection("users").doc(data.sender).get().then(u=>{
         const userData=u.data();
         if(currentUser.uid===data.sender || (userData.friends && userData.friends.includes(currentUser.uid))){
           const div=document.createElement("div");
           div.classList.add("message",data.sender===currentUser.uid?"self":"friend");
-          div.textContent=data.sender===currentUser.uid?"You: "+data.message:data.message;
+
+          const img=document.createElement("img");
+          img.src=userData.profilePic || "https://via.placeholder.com/32";
+
+          const span=document.createElement("span");
+          span.textContent=data.sender===currentUser.uid?"You: "+data.message:data.message;
+
+          div.appendChild(img);
+          div.appendChild(span);
           chatWindow.appendChild(div);
         }
       });
