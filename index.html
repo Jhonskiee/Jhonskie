@@ -2,281 +2,176 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Auth System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <style>
-*{box-sizing:border-box}
 body{
   margin:0;
-  min-height:100vh;
-  font-family:"Segoe UI",Calibri,sans-serif;
+  font-family:Segoe UI, sans-serif;
   background:#f2f2f2;
   display:flex;
   justify-content:center;
   align-items:center;
+  min-height:100vh;
 }
-.container{
+.card{
   width:420px;
   background:#fff;
   border-radius:14px;
   padding:30px;
   box-shadow:0 15px 35px rgba(0,0,0,.2);
 }
-h2{text-align:center;margin-bottom:20px}
-input{
-  width:100%;
-  padding:10px;
-  margin:8px 0 14px;
-  border-radius:8px;
-  border:1.8px solid #000;
-}
-button{
+h2{text-align:center}
+input,button{
   width:100%;
   padding:11px;
+  margin:10px 0;
   border-radius:8px;
+}
+input{border:1.5px solid #000}
+button{
   border:none;
-  background:brown;
+  background:#8b0000;
   color:#fff;
   font-size:15px;
   cursor:pointer;
 }
-.action-row{
-  display:flex;
-  justify-content:space-between;
-  margin-top:15px;
-}
-.action{
-  padding:6px 14px;
-  border-radius:20px;
-  font-size:13px;
-  font-weight:600;
+.link{
+  text-align:center;
+  color:#1e90ff;
   cursor:pointer;
-}
-.forgot{background:#ffe5dc;color:#d14a00}
-.register{background:#eaf3ff;color:#1e90ff}
-.box{
-  padding:15px;
-  background:#f9f9f9;
-  border-radius:10px;
-  border:1.5px solid #1e90ff;
 }
 .hidden{display:none}
 table{
   width:100%;
-  border-collapse:collapse;
   font-size:13px;
+  border-collapse:collapse;
 }
 th,td{
-  padding:8px;
   border-bottom:1px solid #ddd;
-  text-align:left;
+  padding:6px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="card">
 
 <!-- LOGIN -->
-<div id="loginForm">
-  <h2>Login</h2>
-  <input id="loginUser" placeholder="Username">
-  <input id="loginPass" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <div class="action-row">
-    <span class="action forgot" onclick="showForgot()">Forgot Password?</span>
-    <span class="action register" onclick="showRegister()">Create Account</span>
-  </div>
+<div id="login">
+<h2>Login</h2>
+<input id="loginEmail" placeholder="Email">
+<input id="loginPass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<div class="link" onclick="show('register')">Create Account</div>
+<div class="link" onclick="reset()">Forgot Password</div>
 </div>
 
 <!-- REGISTER -->
-<div id="registerForm" class="hidden">
-  <h2>Create Account</h2>
-  <div class="box">
-    <input id="regEmail" type="email" placeholder="Email">
-    <input id="regUser" placeholder="Username">
-    <input id="regPass" type="password" placeholder="Password">
-    <button onclick="register()">Create Account</button>
-    <div class="action-row">
-      <span class="action forgot" onclick="showLogin()">Back</span>
-    </div>
-  </div>
-</div>
-
-<!-- FORGOT -->
-<div id="forgotForm" class="hidden">
-  <h2>Reset Password</h2>
-  <div class="box">
-    <input id="forgotEmail" type="email" placeholder="Registered Email">
-    <button onclick="sendReset()">Send Reset Link</button>
-    <div class="action-row">
-      <span class="action forgot" onclick="showLogin()">Back</span>
-    </div>
-  </div>
-</div>
-
-<!-- RESET -->
-<div id="resetForm" class="hidden">
-  <h2>New Password</h2>
-  <input id="newPass" type="password" placeholder="New Password">
-  <button onclick="resetPassword()">Save</button>
+<div id="register" class="hidden">
+<h2>Create Account</h2>
+<input id="regEmail" placeholder="Email">
+<input id="regPass" type="password" placeholder="Password">
+<button onclick="register()">Register</button>
+<div class="link" onclick="show('login')">Back</div>
 </div>
 
 <!-- HOME -->
 <div id="home" class="hidden">
-  <h2>Welcome 🎉</h2>
-  <button onclick="logout()">Logout</button>
-  <button onclick="showAdmin()" style="margin-top:10px;background:#1e90ff">Admin</button>
+<h2>Welcome 🎉</h2>
+<button onclick="show('admin')">Admin Panel</button>
+<button onclick="logout()">Logout</button>
 </div>
 
 <!-- ADMIN -->
 <div id="admin" class="hidden">
-  <h2>Registered Users</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Created</th>
-        <th>Last Login</th>
-        <th>Reset Used</th>
-      </tr>
-    </thead>
-    <tbody id="userList"></tbody>
-  </table>
-  <button style="margin-top:15px" onclick="backHome()">Back</button>
+<h2>Users</h2>
+<table>
+<thead>
+<tr><th>Email</th><th>Created</th></tr>
+</thead>
+<tbody id="users"></tbody>
+</table>
+<button onclick="show('home')">Back</button>
 </div>
 
 </div>
 
 <script>
-emailjs.init("YOUR_PUBLIC_KEY");
+const firebaseConfig = {
+  apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
+  authDomain: "website-ab5ea.firebaseapp.com",
+  projectId: "website-ab5ea",
+};
 
-const qs=new URLSearchParams(location.search);
-let resetToken=qs.get("token");
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-function users(){return JSON.parse(localStorage.getItem("users")||"{}")}
-function saveUsers(u){localStorage.setItem("users",JSON.stringify(u))}
-
-function hideAll(){
-  loginForm.classList.add("hidden");
-  registerForm.classList.add("hidden");
-  forgotForm.classList.add("hidden");
-  resetForm.classList.add("hidden");
-  home.classList.add("hidden");
-  admin.classList.add("hidden");
-}
-
-function showLogin(){hideAll();loginForm.classList.remove("hidden")}
-function showRegister(){hideAll();registerForm.classList.remove("hidden")}
-function showForgot(){hideAll();forgotForm.classList.remove("hidden")}
-
-/* REGISTER */
-function register(){
-  const u=users();
-  if(u[regUser.value]) return alert("Username already exists");
-
-  u[regUser.value]={
-    email:regEmail.value,
-    password:regPass.value,
-    created:new Date().toLocaleString(),
-    lastLogin:"Never",
-    resetUsed:"No"
-  };
-  saveUsers(u);
-
-  emailjs.send("SERVICE_ID","TEMPLATE_ID",{
-    to_email:"fernandezeljhon84@gmail.com",
-    message:`NEW USER REGISTERED
-Username: ${regUser.value}
-Email: ${regEmail.value}
-Date: ${u[regUser.value].created}`
+function show(id){
+  ["login","register","home","admin"].forEach(x=>{
+    document.getElementById(x).classList.add("hidden")
   });
-
-  alert("Account created");
-  showLogin();
+  document.getElementById(id).classList.remove("hidden");
 }
 
-/* LOGIN */
+function register(){
+  auth.createUserWithEmailAndPassword(
+    regEmail.value, regPass.value
+  ).then(cred=>{
+    db.collection("users").doc(cred.user.uid).set({
+      email: cred.user.email,
+      created: new Date().toLocaleString()
+    });
+    alert("Account created");
+    show("login");
+  }).catch(e=>alert(e.message));
+}
+
 function login(){
-  const u=users();
-  const user=u[loginUser.value];
-  if(user && user.password===loginPass.value){
-    user.lastLogin=new Date().toLocaleString();
-    saveUsers(u);
-    sessionStorage.setItem("user",loginUser.value);
-    hideAll();home.classList.remove("hidden");
-  } else alert("Invalid login");
+  auth.signInWithEmailAndPassword(
+    loginEmail.value, loginPass.value
+  ).then(()=>show("home"))
+  .catch(e=>alert(e.message));
 }
 
-/* LOGOUT */
+function reset(){
+  auth.sendPasswordResetEmail(loginEmail.value)
+  .then(()=>alert("Reset email sent"))
+  .catch(e=>alert(e.message));
+}
+
 function logout(){
-  sessionStorage.clear();
-  showLogin();
+  auth.signOut();
+  show("login");
 }
 
-/* RESET EMAIL */
-function sendReset(){
-  const u=users();
-  for(const k in u){
-    if(u[k].email===forgotEmail.value){
-      const token=Math.random().toString(36).slice(2);
-      localStorage.setItem("reset_"+token,k);
-      const link=location.origin+location.pathname+"?token="+token;
-
-      emailjs.send("SERVICE_ID","TEMPLATE_ID",{
-        to_email:forgotEmail.value,
-        message:`RESET YOUR PASSWORD\n${link}`
-      });
-
-      alert("Reset link sent");
-      return;
-    }
-  }
-  alert("Email not found");
+function loadUsers(){
+  users.innerHTML="";
+  db.collection("users").get().then(snap=>{
+    snap.forEach(doc=>{
+      users.innerHTML+=`
+      <tr>
+        <td>${doc.data().email}</td>
+        <td>${doc.data().created}</td>
+      </tr>`;
+    });
+  });
 }
 
-/* RESET PASSWORD */
-function resetPassword(){
-  const user=localStorage.getItem("reset_"+resetToken);
-  if(!user) return alert("Invalid or expired link");
-
-  const u=users();
-  u[user].password=newPass.value;
-  u[user].resetUsed="Yes";
-  saveUsers(u);
-  localStorage.removeItem("reset_"+resetToken);
-  alert("Password updated");
-  location.href=location.pathname;
-}
-
-/* ADMIN */
-function showAdmin(){
-  hideAll();admin.classList.remove("hidden");
-  userList.innerHTML="";
-  const u=users();
-  for(const k in u){
-    userList.innerHTML+=`
-    <tr>
-      <td>${k}</td>
-      <td>${u[k].email}</td>
-      <td>${u[k].created}</td>
-      <td>${u[k].lastLogin}</td>
-      <td>${u[k].resetUsed}</td>
-    </tr>`;
-  }
-}
-
-function backHome(){hideAll();home.classList.remove("hidden")}
-
-/* AUTO LOAD */
-if(resetToken){hideAll();resetForm.classList.remove("hidden")}
-else if(sessionStorage.getItem("user")){hideAll();home.classList.remove("hidden")}
+auth.onAuthStateChanged(user=>{
+  if(user){
+    show("home");
+    loadUsers();
+  } else show("login");
+});
 </script>
 
 </body>
