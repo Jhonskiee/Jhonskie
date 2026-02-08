@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Social Feed Realtime</title>
+<title>Social Feed Homepage</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Firebase -->
@@ -11,10 +11,11 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <style>
+/* General */
 *{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,-apple-system,BlinkMacSystemFont,sans-serif;}
 body{background:#f0f2f5;}
 
-/* Top Navbar */
+/* Navbar */
 .navbar{
   width:100%;
   background:#1877f2;
@@ -24,15 +25,14 @@ body{background:#f0f2f5;}
   justify-content:space-between;
   align-items:center;
   position:fixed;
-  top:0;
-  left:0;
+  top:0; left:0;
   z-index:1000;
   box-shadow:0 2px 5px rgba(0,0,0,0.1);
 }
 .navbar h1{font-size:22px;font-weight:bold;cursor:pointer;}
 .navbar button{padding:6px 12px;background:#e60023;color:white;border:none;border-radius:5px;cursor:pointer;}
 
-/* Main layout */
+/* Layout */
 .main-container{
   display:flex;
   margin-top:70px;
@@ -43,8 +43,8 @@ body{background:#f0f2f5;}
   padding:10px;
 }
 
-/* Left Sidebar */
-.sidebar-left{
+/* Sidebars */
+.sidebar-left, .sidebar-right{
   flex:1;
   min-width:200px;
   background:white;
@@ -76,16 +76,37 @@ body{background:#f0f2f5;}
   resize:none;
 }
 
-/* Post Card */
+/* Post Cards */
 .post{
   background:white;
   padding:15px;
   border-radius:10px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.05);
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
 }
-.post h3{color:#1877f2;font-size:16px;margin-bottom:5px;}
+.post-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.post-header img{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+}
+.post h3{color:#1877f2;font-size:16px;margin:0;}
 .post p{font-size:14px;line-height:1.4;}
-.post small{color:#555;}
+.post-footer{
+  display:flex;
+  justify-content:flex-start;
+  gap:15px;
+  font-size:14px;
+  color:#555;
+  cursor:pointer;
+}
+.post-footer span:hover{color:#1877f2;}
 
 /* Forms */
 .card{
@@ -96,14 +117,13 @@ body{background:#f0f2f5;}
   box-shadow:0 20px 40px rgba(0,0,0,.15);
   margin:100px auto;
 }
-input,button{width:100%;padding:12px;margin:8px 0;border-radius:10px;font-size:14px;}
-input{border:1.5px solid #000;}
+input,button,textarea{width:100%;padding:12px;margin:8px 0;border-radius:10px;font-size:14px;}
+input,textarea{border:1.5px solid #000;}
 button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;}
 .link{display:block;text-align:center;margin-top:10px;color:#1877f2;cursor:pointer;}
 .hidden{display:none;}
 </style>
 </head>
-
 <body>
 
 <!-- LOGIN -->
@@ -139,7 +159,10 @@ button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;
     <!-- Left Sidebar -->
     <div class="sidebar-left">
       <h3>Profile</h3>
-      <p id="userEmail"></p>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <img src="https://via.placeholder.com/40" alt="Avatar">
+        <p id="userEmail"></p>
+      </div>
       <hr>
       <h3>Links</h3>
       <ul>
@@ -158,8 +181,8 @@ button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;
       <div id="postsContainer"></div>
     </div>
 
-    <!-- Right Sidebar (optional) -->
-    <div class="sidebar-left">
+    <!-- Right Sidebar -->
+    <div class="sidebar-right">
       <h3>Suggestions</h3>
       <p>Coming soon...</p>
     </div>
@@ -177,7 +200,6 @@ button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;
     messagingSenderId: "1094491609955",
     appId: "1:1094491609955:web:4ac93d44c03490cd3d5156"
   };
-
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
@@ -229,7 +251,7 @@ auth.onAuthStateChanged(user=>{
   if(user){
     show("home");
     document.getElementById("userEmail").innerText = user.email;
-    subscribePosts(); // Real-time feed
+    subscribePosts();
   } else show("login");
 });
 
@@ -241,6 +263,7 @@ function addPost(){
   db.collection("posts").add({
     text,
     email: user.email,
+    avatar: "https://via.placeholder.com/40", // default avatar
     created: firebase.firestore.FieldValue.serverTimestamp()
   }).then(()=>{ document.getElementById("postText").value=""; });
 }
@@ -254,9 +277,25 @@ function subscribePosts(){
       snapshot.forEach(doc=>{
         const d = doc.data();
         const time = d.created ? new Date(d.created.seconds*1000).toLocaleString() : "";
-        container.innerHTML += `<div class="post"><h3>${d.email}</h3><p>${d.text}</p><small>${time}</small></div>`;
+        container.innerHTML += `
+        <div class="post">
+          <div class="post-header">
+            <img src="${d.avatar}" alt="Avatar">
+            <h3>${d.email}</h3>
+          </div>
+          <p>${d.text}</p>
+          <div class="post-footer">
+            <span onclick="likePost('${doc.id}')">👍 Like</span>
+          </div>
+          <small>${time}</small>
+        </div>`;
       });
     });
+}
+
+// Simple like function (optional)
+function likePost(postId){
+  alert("You liked post: "+postId);
 }
 </script>
 
