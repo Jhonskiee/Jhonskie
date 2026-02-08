@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>My Social Homepage</title>
+<title>Social Feed Realtime</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Firebase -->
@@ -12,30 +12,90 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,-apple-system,BlinkMacSystemFont,sans-serif;}
-body{background:#f0f2f5;min-height:100vh;display:flex;justify-content:center;}
-.container{width:100%;max-width:1000px;margin:20px;display:flex;flex-direction:column;}
+body{background:#f0f2f5;}
 
-/* Navbar */
-.navbar{background:#fff;padding:10px 20px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-.navbar h1{font-size:20px;color:#1877f2;}
-.navbar button{padding:6px 12px;background:#e60023;color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:600;}
+/* Top Navbar */
+.navbar{
+  width:100%;
+  background:#1877f2;
+  padding:10px 20px;
+  color:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:1000;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+.navbar h1{font-size:22px;font-weight:bold;cursor:pointer;}
+.navbar button{padding:6px 12px;background:#e60023;color:white;border:none;border-radius:5px;cursor:pointer;}
 
 /* Main layout */
-.main{display:flex;margin-top:20px;gap:20px;}
-.sidebar{flex:1;background:#fff;border-radius:10px;padding:15px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-.feed{flex:2;display:flex;flex-direction:column;gap:15px;}
+.main-container{
+  display:flex;
+  margin-top:70px;
+  max-width:1200px;
+  margin-left:auto;
+  margin-right:auto;
+  gap:20px;
+  padding:10px;
+}
 
-/* Post box */
-.post-box{background:#fff;padding:15px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-.post-box textarea{width:100%;border:1px solid #ccc;border-radius:8px;padding:10px;font-size:14px;resize:none;}
+/* Left Sidebar */
+.sidebar-left{
+  flex:1;
+  min-width:200px;
+  background:white;
+  border-radius:10px;
+  padding:15px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
 
-/* Post card */
-.post{background:#fff;padding:15px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
-.post h3{font-size:16px;color:#1877f2;margin-bottom:5px;}
+/* Feed */
+.feed{
+  flex:2;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+/* Post Box */
+.post-box{
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+.post-box textarea{
+  width:100%;
+  border-radius:8px;
+  border:1px solid #ccc;
+  padding:10px;
+  resize:none;
+}
+
+/* Post Card */
+.post{
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.05);
+}
+.post h3{color:#1877f2;font-size:16px;margin-bottom:5px;}
 .post p{font-size:14px;line-height:1.4;}
+.post small{color:#555;}
 
 /* Forms */
-.card{width:400px;background:#fff;padding:30px;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,.15);margin:50px auto;}
+.card{
+  width:400px;
+  background:#fff;
+  padding:30px;
+  border-radius:16px;
+  box-shadow:0 20px 40px rgba(0,0,0,.15);
+  margin:100px auto;
+}
 input,button{width:100%;padding:12px;margin:8px 0;border-radius:10px;font-size:14px;}
 input{border:1.5px solid #000;}
 button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;}
@@ -67,34 +127,43 @@ button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;
 
 <!-- HOME -->
 <div id="home" class="hidden">
+
+  <!-- Navbar -->
   <div class="navbar">
     <h1>MySocial</h1>
     <button onclick="logout()">Logout</button>
   </div>
-  <div class="container">
-    <div class="main">
-      <!-- Sidebar -->
-      <div class="sidebar">
-        <h3>Profile</h3>
-        <p id="userEmail"></p>
-        <hr>
-        <h3>Links</h3>
-        <ul>
-          <li>My Posts</li>
-          <li>Friends</li>
-          <li>Settings</li>
-        </ul>
-      </div>
-      
-      <!-- Feed -->
-      <div class="feed">
-        <div class="post-box">
-          <textarea id="postText" rows="3" placeholder="What's on your mind?"></textarea>
-          <button onclick="addPost()">Post</button>
-        </div>
-        <div id="postsContainer"></div>
-      </div>
+
+  <div class="main-container">
+
+    <!-- Left Sidebar -->
+    <div class="sidebar-left">
+      <h3>Profile</h3>
+      <p id="userEmail"></p>
+      <hr>
+      <h3>Links</h3>
+      <ul>
+        <li>My Posts</li>
+        <li>Friends</li>
+        <li>Settings</li>
+      </ul>
     </div>
+
+    <!-- Feed -->
+    <div class="feed">
+      <div class="post-box">
+        <textarea id="postText" rows="3" placeholder="What's on your mind?"></textarea>
+        <button onclick="addPost()">Post</button>
+      </div>
+      <div id="postsContainer"></div>
+    </div>
+
+    <!-- Right Sidebar (optional) -->
+    <div class="sidebar-left">
+      <h3>Suggestions</h3>
+      <p>Coming soon...</p>
+    </div>
+
   </div>
 </div>
 
@@ -160,7 +229,7 @@ auth.onAuthStateChanged(user=>{
   if(user){
     show("home");
     document.getElementById("userEmail").innerText = user.email;
-    loadPosts();
+    subscribePosts(); // Real-time feed
   } else show("login");
 });
 
@@ -172,19 +241,22 @@ function addPost(){
   db.collection("posts").add({
     text,
     email: user.email,
-    created: new Date().toLocaleString()
-  }).then(()=>{ document.getElementById("postText").value=""; loadPosts(); });
+    created: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(()=>{ document.getElementById("postText").value=""; });
 }
 
-function loadPosts(){
+// REAL-TIME FEED
+function subscribePosts(){
   const container = document.getElementById("postsContainer");
-  container.innerHTML="";
-  db.collection("posts").orderBy("created","desc").get().then(snap=>{
-    snap.forEach(doc=>{
-      const d = doc.data();
-      container.innerHTML += `<div class="post"><h3>${d.email}</h3><p>${d.text}</p><small>${d.created}</small></div>`;
+  db.collection("posts").orderBy("created","desc")
+    .onSnapshot(snapshot=>{
+      container.innerHTML="";
+      snapshot.forEach(doc=>{
+        const d = doc.data();
+        const time = d.created ? new Date(d.created.seconds*1000).toLocaleString() : "";
+        container.innerHTML += `<div class="post"><h3>${d.email}</h3><p>${d.text}</p><small>${time}</small></div>`;
+      });
     });
-  });
 }
 </script>
 
