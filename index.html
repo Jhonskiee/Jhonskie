@@ -21,8 +21,6 @@ body{
   height:100vh;
 }
 .hidden{display:none;}
-
-/* LOGIN/REGISTER CARD */
 .card{
   width:350px;
   background:#fff;
@@ -56,8 +54,6 @@ button{
   color:#1877f2;
   cursor:pointer;
 }
-
-/* HOME */
 #home{
   display:flex;
   flex-direction:column;
@@ -91,8 +87,6 @@ button{
   margin-top:15px;
   height:calc(100% - 60px);
 }
-
-/* SIDEBAR */
 .sidebar{
   flex:1;
   background:white;
@@ -125,8 +119,6 @@ li{
   border-radius:50%;
   margin-right:8px;
 }
-
-/* CHAT */
 .chat-container{
   flex:2;
   display:flex;
@@ -194,6 +186,7 @@ li{
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login" class="card">
   <h2>Login</h2>
   <input id="loginEmail" placeholder="Email">
@@ -203,6 +196,7 @@ li{
   <div class="link" onclick="resetPassword()">Forgot password?</div>
 </div>
 
+<!-- REGISTER -->
 <div id="register" class="card hidden">
   <h2>Create Account</h2>
   <input id="regEmail" placeholder="Email">
@@ -211,6 +205,7 @@ li{
   <div class="link" onclick="show('login')">Back</div>
 </div>
 
+<!-- HOME/CHAT -->
 <div id="home" class="hidden">
   <div class="navbar">
     <h1>MySocial Chat</h1>
@@ -244,10 +239,10 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// ===== SHOW/HIDE =====
+// ===== SHOW/HIDE UI =====
 function show(id){
-  ["login","register","home"].forEach(v=>document.getElementById(v).classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
+  ['login','register','home'].forEach(v=>document.getElementById(v).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
 }
 
 // ===== REGISTER =====
@@ -255,32 +250,30 @@ function register(){
   const email=regEmail.value.trim(), pass=regPass.value;
   if(!email||!pass){alert("Enter email/password"); return;}
   auth.createUserWithEmailAndPassword(email,pass)
-      .then(cred=>{
-          const uid = cred.user.uid;
-          return db.collection("users").doc(uid).set({
-            email,
-            friends:[],
-            friendRequests:[],
-            profilePic:"https://via.placeholder.com/40"
-          });
-      }).then(()=>{alert("Account created!"); show("login");})
+      .then(cred=>db.collection('users').doc(cred.user.uid).set({
+        email,
+        friends:[],
+        friendRequests:[],
+        profilePic:'https://via.placeholder.com/40'
+      }))
+      .then(()=>{alert('Account created!'); show('login');})
       .catch(e=>alert(e.message));
 }
 
 // ===== LOGIN =====
 function login(){
   const email=loginEmail.value.trim(), pass=loginPass.value;
-  if(!email||!pass){alert("Enter email/password"); return;}
+  if(!email||!pass){alert('Enter email/password'); return;}
   auth.signInWithEmailAndPassword(email,pass)
       .catch(e=>alert(e.message));
 }
 
-// ===== PASSWORD RESET =====
+// ===== RESET PASSWORD =====
 function resetPassword(){
   const email=loginEmail.value.trim();
-  if(!email){alert("Enter email first"); return;}
+  if(!email){alert('Enter email first'); return;}
   auth.sendPasswordResetEmail(email)
-      .then(()=>alert("Password reset email sent"))
+      .then(()=>alert('Password reset email sent'))
       .catch(e=>alert(e.message));
 }
 
@@ -292,86 +285,61 @@ let currentUser = null;
 auth.onAuthStateChanged(user=>{
   if(user){
     currentUser=user;
-    show("home");
+    show('home');
     loadFriends();
     subscribeChat();
-  }else{
+  } else {
     currentUser=null;
-    show("login");
+    show('login');
   }
 });
 
 // ===== FRIENDS =====
 function loadFriends(){
-  const list=document.getElementById("friendsList");
-  db.collection("users").onSnapshot(snapshot=>{
-    list.innerHTML="";
+  const list=document.getElementById('friendsList');
+  db.collection('users').onSnapshot(snapshot=>{
+    list.innerHTML='';
     snapshot.forEach(doc=>{
-      const data=doc.data();
-      const uid=doc.id;
+      const data=doc.data(); const uid=doc.id;
       if(uid===currentUser.uid) return;
-      const li=document.createElement("li");
+      const li=document.createElement('li');
 
-      const span=document.createElement("span");
-      span.style.display="flex";
-      span.style.alignItems="center";
-      const img=document.createElement("img");
-      img.src=data.profilePic || "https://via.placeholder.com/32";
-      img.classList.add("friend-pic");
-      span.appendChild(img);
-      const text=document.createTextNode(data.email);
-      span.appendChild(text);
+      const span=document.createElement('span'); span.style.display='flex'; span.style.alignItems='center';
+      const img=document.createElement('img'); img.src=data.profilePic||'https://via.placeholder.com/32'; img.classList.add('friend-pic');
+      span.appendChild(img); span.appendChild(document.createTextNode(data.email));
       li.appendChild(span);
 
-      const btn=document.createElement("button");
-      btn.classList.add("friend-btn");
-      if(data.friendRequests && data.friendRequests.includes(currentUser.uid)){
-        btn.textContent="Accept"; btn.onclick=()=>acceptFriend(uid);
-      } else{
-        btn.textContent="Add Friend"; btn.onclick=()=>sendFriendRequest(uid);
-      }
+      const btn=document.createElement('button'); btn.classList.add('friend-btn');
+      if(data.friendRequests?.includes(currentUser.uid)){btn.textContent='Accept'; btn.onclick=()=>acceptFriend(uid);}
+      else{btn.textContent='Add Friend'; btn.onclick=()=>sendFriendRequest(uid);}
       li.appendChild(btn);
       list.appendChild(li);
     });
   });
 }
-function sendFriendRequest(uid){
-  db.collection("users").doc(uid).update({
-    friendRequests:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
-  });
-}
+function sendFriendRequest(uid){db.collection('users').doc(uid).update({friendRequests:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)});}
 function acceptFriend(uid){
-  db.collection("users").doc(currentUser.uid).update({
+  db.collection('users').doc(currentUser.uid).update({
     friends:firebase.firestore.FieldValue.arrayUnion(uid),
     friendRequests:firebase.firestore.FieldValue.arrayRemove(uid)
   });
-  db.collection("users").doc(uid).update({
-    friends:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
-  });
+  db.collection('users').doc(uid).update({friends:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)});
 }
 
 // ===== CHAT =====
 function subscribeChat(){
-  const chatWindow=document.getElementById("chatWindow");
-  db.collection("chats").orderBy("timestamp").onSnapshot(snapshot=>{
-    chatWindow.innerHTML="";
+  const chatWindow=document.getElementById('chatWindow');
+  db.collection('chats').orderBy('timestamp').onSnapshot(snapshot=>{
+    chatWindow.innerHTML='';
     snapshot.forEach(doc=>{
       const data=doc.data();
-      db.collection("users").doc(data.sender).get().then(u=>{
+      db.collection('users').doc(data.sender).get().then(u=>{
         const userData=u.data();
-        if(currentUser.uid===data.sender || (userData.friends && userData.friends.includes(currentUser.uid))){
-          const div=document.createElement("div");
-          div.classList.add("message", data.sender===currentUser.uid?"self":"friend");
-
-          const img=document.createElement("img");
-          img.src=userData.profilePic || "https://via.placeholder.com/32";
-
-          const span=document.createElement("span");
-          span.textContent=data.sender===currentUser.uid?"You: "+data.message:data.message;
-
-          div.appendChild(img);
-          div.appendChild(span);
-          chatWindow.appendChild(div);
+        if(currentUser.uid===data.sender || userData.friends?.includes(currentUser.uid)){
+          const div=document.createElement('div'); div.classList.add('message', data.sender===currentUser.uid?'self':'friend');
+          const img=document.createElement('img'); img.src=userData.profilePic||'https://via.placeholder.com/32';
+          const span=document.createElement('span'); span.textContent=data.sender===currentUser.uid?'You: '+data.message:data.message;
+          div.appendChild(img); div.appendChild(span); chatWindow.appendChild(div);
         }
       });
     });
@@ -380,14 +348,14 @@ function subscribeChat(){
 }
 
 function sendMessage(){
-  if(!currentUser){alert("You must login first"); return;}
-  const msg=document.getElementById("chatInput").value.trim();
+  if(!currentUser){alert("Please login first"); return;}
+  const msg=document.getElementById('chatInput').value.trim();
   if(!msg) return;
-  db.collection("chats").add({
+  db.collection('chats').add({
     message:msg,
     sender:currentUser.uid,
     timestamp:firebase.firestore.FieldValue.serverTimestamp()
-  }).then(()=>document.getElementById("chatInput").value="");
+  }).then(()=>document.getElementById('chatInput').value='');
 }
 </script>
 </body>
