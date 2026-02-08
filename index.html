@@ -2,126 +2,36 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Social Feed Homepage</title>
+<title>MySocial - Home</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
 <style>
-/* General */
-*{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,-apple-system,BlinkMacSystemFont,sans-serif;}
-body{background:#f0f2f5;}
-
-/* Navbar */
-.navbar{
-  width:100%;
-  background:#1877f2;
-  padding:10px 20px;
-  color:white;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  position:fixed;
-  top:0; left:0;
-  z-index:1000;
-  box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
+body{background:#e9ebee;font-family:Segoe UI;}
+.navbar{width:100%;background:#1877f2;padding:10px 20px;color:white;display:flex;justify-content:space-between;align-items:center;position:fixed;top:0;left:0;z-index:1000;}
 .navbar h1{font-size:22px;font-weight:bold;cursor:pointer;}
-.navbar button{padding:6px 12px;background:#e60023;color:white;border:none;border-radius:5px;cursor:pointer;}
-
-/* Layout */
-.main-container{
-  display:flex;
-  margin-top:70px;
-  max-width:1200px;
-  margin-left:auto;
-  margin-right:auto;
-  gap:20px;
-  padding:10px;
-}
-
-/* Sidebars */
-.sidebar-left, .sidebar-right{
-  flex:1;
-  min-width:200px;
-  background:white;
-  border-radius:10px;
-  padding:15px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
-
-/* Feed */
-.feed{
-  flex:2;
-  display:flex;
-  flex-direction:column;
-  gap:15px;
-}
-
-/* Post Box */
-.post-box{
-  background:white;
-  padding:15px;
-  border-radius:10px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
-.post-box textarea{
-  width:100%;
-  border-radius:8px;
-  border:1px solid #ccc;
-  padding:10px;
-  resize:none;
-}
-
-/* Post Cards */
-.post{
-  background:white;
-  padding:15px;
-  border-radius:10px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.1);
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.post-header{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.post-header img{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-}
-.post h3{color:#1877f2;font-size:16px;margin:0;}
-.post p{font-size:14px;line-height:1.4;}
-.post-footer{
-  display:flex;
-  justify-content:flex-start;
-  gap:15px;
-  font-size:14px;
-  color:#555;
-  cursor:pointer;
-}
-.post-footer span:hover{color:#1877f2;}
-
-/* Forms */
-.card{
-  width:400px;
-  background:#fff;
-  padding:30px;
-  border-radius:16px;
-  box-shadow:0 20px 40px rgba(0,0,0,.15);
-  margin:100px auto;
-}
+.navbar button{padding:6px 12px;background:#e60023;color:white;border:none;border-radius:20px;cursor:pointer;font-weight:bold;transition:0.3s;}
+.main-container{display:flex;margin-top:70px;max-width:1200px;margin-left:auto;margin-right:auto;gap:20px;padding:10px;}
+.sidebar-left,.sidebar-right{flex:1;min-width:220px;background:white;border-radius:12px;padding:15px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+.feed{flex:2;display:flex;flex-direction:column;gap:15px;}
+.post-box,.post{background:white;padding:15px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+.post-header{display:flex;align-items:center;gap:10px;justify-content:space-between;}
+.post-header img{width:50px;height:50px;border-radius:50%;object-fit:cover;}
+.post-footer span, .post-footer button{cursor:pointer;padding:4px 8px;border-radius:12px;margin-right:5px;}
+.comment-section{margin-top:10px;border-top:1px solid #eee;padding-top:10px;}
+.comment{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
+.comment img{width:35px;height:35px;border-radius:50%;object-fit:cover;}
+.comment-input{margin-top:5px;width:100%;padding:8px;border-radius:20px;border:1px solid #ccc;}
+.card{width:400px;background:#fff;padding:30px;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,.15);margin:100px auto;}
 input,button,textarea{width:100%;padding:12px;margin:8px 0;border-radius:10px;font-size:14px;}
-input,textarea{border:1.5px solid #000;}
 button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;}
-.link{display:block;text-align:center;margin-top:10px;color:#1877f2;cursor:pointer;}
 .hidden{display:none;}
+.link{display:block;text-align:center;margin-top:10px;color:#1877f2;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -141,39 +51,34 @@ button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;
   <h2>Create Account</h2>
   <input id="regEmail" placeholder="Email">
   <input id="regPass" type="password" placeholder="Password">
+  <input id="regAvatar" type="file" accept="image/*">
   <button onclick="register()">Register</button>
   <div class="link" onclick="show('login')">Back</div>
 </div>
 
 <!-- HOME -->
 <div id="home" class="hidden">
-
-  <!-- Navbar -->
   <div class="navbar">
     <h1>MySocial</h1>
     <button onclick="logout()">Logout</button>
   </div>
 
   <div class="main-container">
-
-    <!-- Left Sidebar -->
     <div class="sidebar-left">
       <h3>Profile</h3>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-        <img src="https://via.placeholder.com/40" alt="Avatar">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;" onclick="showProfile()">
+        <img id="userAvatar" src="https://via.placeholder.com/50" alt="Avatar">
         <p id="userEmail"></p>
       </div>
       <hr>
       <h3>Links</h3>
       <ul>
-        <li>My Posts</li>
-        <li>Friends</li>
-        <li>Settings</li>
+        <li onclick="showFeed()">Feed</li>
+        <li onclick="showProfile()">My Profile</li>
       </ul>
     </div>
 
-    <!-- Feed -->
-    <div class="feed">
+    <div class="feed" id="feedSection">
       <div class="post-box">
         <textarea id="postText" rows="3" placeholder="What's on your mind?"></textarea>
         <button onclick="addPost()">Post</button>
@@ -181,17 +86,26 @@ button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;
       <div id="postsContainer"></div>
     </div>
 
-    <!-- Right Sidebar -->
     <div class="sidebar-right">
       <h3>Suggestions</h3>
-      <p>Coming soon...</p>
+      <ul id="suggestionsList"></ul>
     </div>
-
   </div>
 </div>
 
+<!-- PROFILE PAGE -->
+<div id="profilePage" class="card hidden">
+  <h2>My Profile</h2>
+  <img id="profileAvatar" src="https://via.placeholder.com/100" style="border-radius:50%; display:block; margin:auto;">
+  <input type="file" id="newAvatar" accept="image/*">
+  <button onclick="updateAvatar()">Update Avatar</button>
+  <button style="margin-top:10px;" onclick="showFeed()">Back to Feed</button>
+  <h3>Following</h3>
+  <ul id="followingList"></ul>
+</div>
+
 <script>
-// 🔴 Replace with your Firebase config
+// 🔴 Firebase config
  const firebaseConfig = {
     apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
     authDomain: "website-ab5ea.firebaseapp.com",
@@ -203,9 +117,10 @@ button{border:none;background:#1877f2;color:#fff;cursor:pointer;font-weight:600;
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+const storage = firebase.storage();
 
 function show(id){
-  ["login","register","home"].forEach(v=>document.getElementById(v).classList.add("hidden"));
+  ["login","register","home","profilePage"].forEach(v=>document.getElementById(v).classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 }
 
@@ -213,13 +128,31 @@ function show(id){
 function register(){
   const email = regEmail.value.trim();
   const pass = regPass.value;
+  const file = regAvatar.files[0];
   if(!email||!pass){ alert("Enter email and password"); return; }
+
   auth.createUserWithEmailAndPassword(email, pass)
   .then(cred=>{
-    return db.collection("users").doc(cred.user.uid).set({
-      email: cred.user.email,
-      created: new Date().toLocaleString()
-    });
+    let avatarUrl = "https://via.placeholder.com/50";
+    if(file){
+      const ref = storage.ref("avatars/"+cred.user.uid);
+      return ref.put(file).then(()=> ref.getDownloadURL()).then(url=> {
+        avatarUrl = url;
+        return db.collection("users").doc(cred.user.uid).set({
+          email: cred.user.email,
+          created: new Date().toLocaleString(),
+          avatar: avatarUrl,
+          following:[]
+        });
+      });
+    } else {
+      return db.collection("users").doc(cred.user.uid).set({
+        email: cred.user.email,
+        created: new Date().toLocaleString(),
+        avatar: avatarUrl,
+        following:[]
+      });
+    }
   })
   .then(()=>{ alert("Account created!"); show("login"); })
   .catch(e=>alert(e.message));
@@ -230,73 +163,171 @@ function login(){
   const email = loginEmail.value.trim();
   const pass = loginPass.value;
   if(!email||!pass){ alert("Enter email and password"); return; }
-  auth.signInWithEmailAndPassword(email, pass)
-  .catch(e=>alert(e.message));
+  auth.signInWithEmailAndPassword(email, pass).catch(e=>alert(e.message));
 }
 
 // PASSWORD RESET
 function resetPassword(){
   const email = loginEmail.value.trim();
   if(!email){ alert("Enter your email first"); return; }
-  auth.sendPasswordResetEmail(email)
-  .then(()=>alert("Password reset email sent"))
-  .catch(e=>alert(e.message));
+  auth.sendPasswordResetEmail(email).then(()=>alert("Password reset email sent")).catch(e=>alert(e.message));
 }
 
 // LOGOUT
 function logout(){ auth.signOut(); }
 
-// AUTH STATE
-auth.onAuthStateChanged(user=>{
-  if(user){
-    show("home");
-    document.getElementById("userEmail").innerText = user.email;
-    subscribePosts();
-  } else show("login");
-});
+// SHOW PROFILE
+function showProfile(){
+  show("profilePage");
+  const user = auth.currentUser;
+  db.collection("users").doc(user.uid).get().then(d=>{
+    document.getElementById("profileAvatar").src=d.data().avatar;
+    loadFollowing(d.data().following || []);
+  });
+}
+
+// SHOW FEED
+function showFeed(){ show("home"); loadSuggestions(); subscribePosts(); }
+
+// UPDATE AVATAR
+function updateAvatar(){
+  const file = document.getElementById("newAvatar").files[0];
+  if(!file) return alert("Choose a file");
+  const user = auth.currentUser;
+  const ref = storage.ref("avatars/"+user.uid);
+  ref.put(file).then(()=> ref.getDownloadURL()).then(url=>{
+    db.collection("users").doc(user.uid).update({avatar:url});
+    document.getElementById("profileAvatar").src=url;
+    document.getElementById("userAvatar").src=url;
+    alert("Avatar updated!");
+  });
+}
+
+// FOLLOW / UNFOLLOW
+function followUser(uid){ const user = auth.currentUser; db.collection("users").doc(user.uid).update({following: firebase.firestore.FieldValue.arrayUnion(uid)}).then(loadSuggestions).then(()=>subscribePosts()); }
+function unfollowUser(uid){ const user = auth.currentUser; db.collection("users").doc(user.uid).update({following: firebase.firestore.FieldValue.arrayRemove(uid)}).then(loadSuggestions).then(()=>subscribePosts()); }
+
+// LOAD FOLLOWING LIST
+function loadFollowing(following){ const list = document.getElementById("followingList"); list.innerHTML=""; following.forEach(uid=>{ db.collection("users").doc(uid).get().then(d=>{ const li = document.createElement("li"); li.innerText = d.data().email; list.appendChild(li); }); }); }
+
+// SUGGESTIONS
+function loadSuggestions(){
+  const user = auth.currentUser;
+  db.collection("users").get().then(snap=>{
+    const suggestions = document.getElementById("suggestionsList"); suggestions.innerHTML="";
+    snap.forEach(doc=>{
+      if(doc.id===user.uid) return;
+      db.collection("users").doc(user.uid).get().then(uData=>{
+        const following = uData.data().following || [];
+        const li = document.createElement("li");
+        li.innerHTML=`${doc.data().email} ${following.includes(doc.id)?'<button onclick="unfollowUser(\''+doc.id+'\')">Unfollow</button>':'<button onclick="followUser(\''+doc.id+'\')">Follow</button>'}`;
+        suggestions.appendChild(li);
+      });
+    });
+  });
+}
 
 // POSTS
 function addPost(){
   const text = document.getElementById("postText").value.trim();
   if(!text) return;
   const user = auth.currentUser;
-  db.collection("posts").add({
-    text,
-    email: user.email,
-    avatar: "https://via.placeholder.com/40", // default avatar
-    created: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(()=>{ document.getElementById("postText").value=""; });
+  db.collection("users").doc(user.uid).get().then(d=>{
+    const avatar = d.data().avatar || "https://via.placeholder.com/50";
+    db.collection("posts").add({
+      text, email: user.email, avatar, uid:user.uid, reactions:{like:0,love:0,haha:0}, created: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(()=>{ document.getElementById("postText").value=""; });
+  });
 }
 
-// REAL-TIME FEED
+// REAL-TIME FEED (FOLLOWING ONLY + EDIT/DELETE)
 function subscribePosts(){
   const container = document.getElementById("postsContainer");
-  db.collection("posts").orderBy("created","desc")
-    .onSnapshot(snapshot=>{
+  const user = auth.currentUser;
+  db.collection("users").doc(user.uid).onSnapshot(uSnap=>{
+    const following = uSnap.data().following || [];
+    following.push(user.uid);
+    db.collection("posts").orderBy("created","desc").onSnapshot(snap=>{
       container.innerHTML="";
-      snapshot.forEach(doc=>{
+      snap.forEach(doc=>{
         const d = doc.data();
+        if(!following.includes(d.uid)) return;
         const time = d.created ? new Date(d.created.seconds*1000).toLocaleString() : "";
+        const isOwner = d.uid===user.uid;
         container.innerHTML += `
-        <div class="post">
+        <div class="post" id="post-${doc.id}">
           <div class="post-header">
-            <img src="${d.avatar}" alt="Avatar">
-            <h3>${d.email}</h3>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <img src="${d.avatar}" alt="Avatar">
+              <h3>${d.email}</h3>
+            </div>
+            ${isOwner?`<div>
+              <button onclick="editPost('${doc.id}')">Edit</button>
+              <button onclick="deletePost('${doc.id}')">Delete</button>
+            </div>`:""}
           </div>
-          <p>${d.text}</p>
+          <p id="postText-${doc.id}">${d.text}</p>
           <div class="post-footer">
-            <span onclick="likePost('${doc.id}')">👍 Like</span>
+            <span onclick="react('${doc.id}','like')">👍 ${d.reactions?.like||0}</span>
+            <span onclick="react('${doc.id}','love')">❤️ ${d.reactions?.love||0}</span>
+            <span onclick="react('${doc.id}','haha')">😂 ${d.reactions?.haha||0}</span>
           </div>
+          <div class="comment-section" id="comments-${doc.id}"></div>
+          <input class="comment-input" placeholder="Write a comment..." onkeydown="if(event.key==='Enter'){addComment('${doc.id}',this.value); this.value='';}">
           <small>${time}</small>
         </div>`;
       });
     });
+  });
 }
 
-// Simple like function (optional)
-function likePost(postId){
-  alert("You liked post: "+postId);
+// EDIT POST
+function editPost(postId){
+  const newText = prompt("Edit your post:", document.getElementById("postText-"+postId).innerText);
+  if(newText!==null){
+    db.collection("posts").doc(postId).update({text:newText});
+  }
 }
+
+// DELETE POST
+function deletePost(postId){
+  if(confirm("Delete this post?")) db.collection("posts").doc(postId).delete();
+}
+
+// COMMENT FUNCTIONS
+function addComment(postId,text){
+  const user = auth.currentUser;
+  if(!text.trim()) return;
+  db.collection("users").doc(user.uid).get().then(d=>{
+    const avatar = d.data().avatar||"https://via.placeholder.com/50";
+    db.collection("posts").doc(postId).collection("comments").add({
+      text,email:user.email,avatar,created:firebase.firestore.FieldValue.serverTimestamp()
+    });
+  });
+}
+
+// REACTIONS
+function react(postId,type){
+  const postRef = db.collection("posts").doc(postId);
+  db.runTransaction(transaction=>{
+    return transaction.get(postRef).then(doc=>{
+      if(!doc.exists) return;
+      const reactions = doc.data().reactions||{like:0,love:0,haha:0};
+      reactions[type] = (reactions[type]||0)+1;
+      transaction.update(postRef,{reactions});
+    });
+  });
+}
+
+// AUTH STATE
+auth.onAuthStateChanged(user=>{
+  if(user){
+    showFeed();
+    document.getElementById("userEmail").innerText = user.email;
+    db.collection("users").doc(user.uid).get().then(d=> document.getElementById("userAvatar").src=d.data().avatar);
+    loadSuggestions();
+  } else show("login");
+});
 </script>
 
 </body>
