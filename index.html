@@ -1,188 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MySocial</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Next Level Realtime Chat</title>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#eef2f7;
-}
-
-/* ---------- CENTER LOGIN ---------- */
-.centerWrap{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-.card{
-  width:360px;
-  background:#fff;
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 20px 40px rgba(0,0,0,.12);
-  text-align:center;
-}
-
-.hidden{display:none}
-
-input{
-  width:100%;
-  padding:13px;
-  margin:8px 0;
-  border-radius:14px;
-  border:1px solid #ddd;
-}
-
-button{
-  width:100%;
-  padding:13px;
-  border:none;
-  border-radius:14px;
-  background:#1877f2;
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-}
-
-.link{
-  margin-top:10px;
-  color:#1877f2;
-  cursor:pointer;
-}
-
-/* ---------- HOME ---------- */
-#home{
-  display:flex;
-  flex-direction:column;
-  height:100vh;
-}
-
-.navbar{
-  background:#1877f2;
-  color:#fff;
-  padding:14px 22px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.main{
-  flex:1;
-  display:flex;
-  gap:14px;
-  padding:14px;
-}
-
-/* ---------- SIDEBAR ---------- */
-.sidebar{
-  width:260px;
-  background:#fff;
-  border-radius:16px;
-  padding:14px;
-  overflow:auto;
-}
-
-/* ---------- CHAT ---------- */
-.chat{
-  flex:1;
-  background:#fff;
-  border-radius:16px;
-  padding:14px;
-  display:flex;
-  flex-direction:column;
-}
-
-#chatWindow{
-  flex:1;
-  overflow:auto;
-  display:flex;
-  flex-direction:column;
-}
-
-.msg{
-  padding:10px 14px;
-  border-radius:16px;
-  margin:6px 0;
-  max-width:70%;
-}
-
-.self{
-  background:#1877f2;
-  color:#fff;
-  align-self:flex-end;
-}
-
-.other{
-  background:#e4e6eb;
-  align-self:flex-start;
-}
-
-.reactBtn{
-  cursor:pointer;
-  margin-right:6px;
-}
-</style>
+  <!-- Firebase SDKs (compat for simplicity) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
-<body>
 
-<!-- LOGIN -->
-<div id="loginWrap" class="centerWrap">
-  <div class="card">
-    <h2>Login</h2>
-    <input id="loginEmail" placeholder="Email">
-    <input id="loginPass" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <div class="link" onclick="showRegister()">Create account</div>
-  </div>
-</div>
+<body class="bg-gradient-to-br from-slate-100 to-slate-200 min-h-screen flex items-center justify-center">
 
-<!-- REGISTER -->
-<div id="registerWrap" class="centerWrap hidden">
-  <div class="card">
-    <h2>Create Account</h2>
-    <input id="regEmail" placeholder="Email">
-    <input id="regPass" type="password" placeholder="Password">
-    <button onclick="register()">Register</button>
-    <div class="link" onclick="showLogin()">Back to login</div>
-  </div>
-</div>
+  <!-- LOGIN CARD -->
+  <div id="loginView" class="w-full max-w-md">
+    <div class="bg-white rounded-2xl shadow-xl p-8 text-center">
+      <h1 class="text-2xl font-bold mb-2">Realtime Social Chat</h1>
+      <p class="text-gray-500 mb-6">Sign in to continue</p>
 
-<!-- HOME -->
-<div id="home" class="hidden">
-  <div class="navbar">
-    <strong>MySocial</strong>
-    <button style="width:auto;background:#ff3b30;padding:6px 14px" onclick="logout()">Logout</button>
-  </div>
+      <input id="email" type="email" placeholder="Email"
+        class="w-full mb-3 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-  <div class="main">
-    <div class="sidebar">
-      <h3>Find Friends</h3>
-      <input id="searchEmail" placeholder="Search email">
-      <button onclick="searchUser()">Search</button>
-      <div id="searchResult"></div>
-    </div>
+      <input id="password" type="password" placeholder="Password"
+        class="w-full mb-4 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-    <div class="chat">
-      <div id="chatWindow"></div>
-      <input id="chatInput" placeholder="Type message and press Enter">
-      <button onclick="sendMessage()">Send</button>
+      <button onclick="login()"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold mb-3">
+        Login
+      </button>
+
+      <button onclick="register()"
+        class="w-full bg-gray-800 hover:bg-black text-white py-3 rounded-xl font-semibold">
+        Create Account
+      </button>
+
+      <p id="authStatus" class="text-sm mt-4 text-red-500"></p>
     </div>
   </div>
-</div>
+
+  <!-- CHAT APP -->
+  <div id="appView" class="hidden w-full h-screen flex">
+
+    <!-- SIDEBAR -->
+    <div class="w-72 bg-white border-r flex flex-col">
+      <div class="p-4 border-b">
+        <h2 class="font-bold text-lg">Chats</h2>
+        <p id="userEmail" class="text-xs text-gray-500"></p>
+      </div>
+
+      <div class="p-3 border-b">
+        <input id="roomInput" placeholder="Room name (e.g. general)"
+          class="w-full px-3 py-2 border rounded-lg" />
+        <button onclick="joinRoom()"
+          class="w-full mt-2 bg-blue-600 text-white py-2 rounded-lg">Join Room</button>
+      </div>
+
+      <button onclick="logout()"
+        class="m-3 mt-auto bg-red-500 text-white py-2 rounded-lg">Logout</button>
+    </div>
+
+    <!-- MAIN CHAT -->
+    <div class="flex-1 flex flex-col">
+
+      <!-- HEADER -->
+      <div class="bg-white border-b p-4 font-semibold" id="roomTitle">No room joined</div>
+
+      <!-- MESSAGES -->
+      <div id="messages"
+        class="flex-1 overflow-y-auto p-6 space-y-3 bg-slate-50"></div>
+
+      <!-- INPUT -->
+      <div class="bg-white border-t p-4 flex gap-2">
+        <input id="messageInput" placeholder="Type message and press Enter..."
+          class="flex-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button onclick="sendMessage()"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-xl">Send</button>
+      </div>
+    </div>
+  </div>
 
 <script>
-// 🔴 PUT YOUR REAL FIREBASE CONFIG
- const firebaseConfig = {
+  // 🔥 TODO: PUT YOUR FIREBASE CONFIG HERE
+  const firebaseConfig = {
     apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
     authDomain: "website-ab5ea.firebaseapp.com",
     projectId: "website-ab5ea",
@@ -190,129 +93,158 @@ button{
     messagingSenderId: "1094491609955",
     appId: "1:1094491609955:web:4ac93d44c03490cd3d5156"
   };
-firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
-const auth=firebase.auth();
-const db=firebase.firestore();
+  let currentRoom = null;
+  let unsubscribe = null;
 
-let currentUser=null;
-let unsubscribeChat=null;
+  // ================= AUTH =================
 
-/* ---------- NAV ---------- */
-function showRegister(){
-  loginWrap.classList.add("hidden");
-  registerWrap.classList.remove("hidden");
-}
-function showLogin(){
-  registerWrap.classList.add("hidden");
-  loginWrap.classList.remove("hidden");
-}
+  function register() {
+    const email = emailInput();
+    const pass = passInput();
 
-/* ---------- AUTH ---------- */
-function register(){
-  auth.createUserWithEmailAndPassword(regEmail.value,regPass.value)
-  .then(cred=>{
-    return db.collection("users").doc(cred.user.uid).set({
-      email:regEmail.value
-    });
-  })
-  .then(()=>alert("Account created"))
-  .catch(e=>alert(e.message));
-}
-
-function login(){
-  auth.signInWithEmailAndPassword(loginEmail.value,loginPass.value)
-  .catch(e=>alert(e.message));
-}
-
-function logout(){
-  if(unsubscribeChat) unsubscribeChat();
-  auth.signOut();
-}
-
-auth.onAuthStateChanged(user=>{
-  if(user){
-    currentUser=user;
-    loginWrap.classList.add("hidden");
-    registerWrap.classList.add("hidden");
-    home.classList.remove("hidden");
-    startChat();
-  }else{
-    home.classList.add("hidden");
-    loginWrap.classList.remove("hidden");
-    if(unsubscribeChat) unsubscribeChat();
-  }
-});
-
-/* ---------- CHAT ---------- */
-function sendMessage(){
-  const text=chatInput.value.trim();
-  if(!text || !currentUser) return;
-
-  db.collection("messages").add({
-    uid:currentUser.uid,
-    text:text,
-    reactions:{},
-    time:Date.now()
-  });
-
-  chatInput.value="";
-}
-
-chatInput.addEventListener("keydown",e=>{
-  if(e.key==="Enter") sendMessage();
-});
-
-function startChat(){
-  unsubscribeChat=db.collection("messages")
-  .orderBy("time")
-  .onSnapshot(snap=>{
-    chatWindow.innerHTML="";
-    snap.forEach(doc=>{
-      const m=doc.data();
-      const r=m.reactions||{};
-      const div=document.createElement("div");
-      div.className="msg "+(m.uid===currentUser.uid?"self":"other");
-      div.innerHTML=`
-        <div>${m.text}</div>
-        <small>
-          👍 ${r.like||0}
-          ❤️ ${r.love||0}
-          😂 ${r.laugh||0}
-        </small><br>
-        <span class="reactBtn" onclick="react('${doc.id}','like')">👍</span>
-        <span class="reactBtn" onclick="react('${doc.id}','love')">❤️</span>
-        <span class="reactBtn" onclick="react('${doc.id}','laugh')">😂</span>
-      `;
-      chatWindow.appendChild(div);
-    });
-    chatWindow.scrollTop=chatWindow.scrollHeight;
-  });
-}
-
-function react(id,type){
-  const ref=db.collection("messages").doc(id);
-  db.runTransaction(async t=>{
-    const doc=await t.get(ref);
-    const r=doc.data().reactions||{};
-    r[type]=(r[type]||0)+1;
-    t.update(ref,{reactions:r});
-  });
-}
-
-/* ---------- SEARCH USER ---------- */
-async function searchUser(){
-  const email=searchEmail.value.trim();
-  const snap=await db.collection("users")
-    .where("email","==",email).get();
-
-  if(snap.empty){
-    searchResult.innerHTML="User not found";
-    return;
+    auth.createUserWithEmailAndPassword(email, pass)
+      .then(() => setStatus("Account created!", true))
+      .catch(e => setStatus(e.message));
   }
 
-  searchResult.innerHTML="User found ✅";
-}
+  function login() {
+    const email = emailInput();
+    const pass = passInput();
+
+    auth.signInWithEmailAndPassword(email, pass)
+      .catch(e => setStatus(e.message));
+  }
+
+  function logout() {
+    auth.signOut();
+  }
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      loginView.classList.add("hidden");
+      appView.classList.remove("hidden");
+      userEmail.textContent = user.email;
+    } else {
+      appView.classList.add("hidden");
+      loginView.classList.remove("hidden");
+      if (unsubscribe) unsubscribe();
+    }
+  });
+
+  // ================= ROOMS =================
+
+  function joinRoom() {
+    const room = roomInput.value.trim();
+    if (!room) return;
+
+    currentRoom = room;
+    roomTitle.textContent = "Room: " + room;
+    messages.innerHTML = "";
+
+    if (unsubscribe) unsubscribe();
+
+    unsubscribe = db.collection("rooms")
+      .doc(room)
+      .collection("messages")
+      .orderBy("time")
+      .onSnapshot(snapshot => {
+        messages.innerHTML = "";
+        snapshot.forEach(doc => renderMessage(doc.id, doc.data()));
+        scrollBottom();
+      });
+  }
+
+  // ================= SEND =================
+
+  function sendMessage() {
+    if (!currentRoom) return alert("Join a room first");
+
+    const text = messageInput.value.trim();
+    if (!text) return;
+
+    const user = auth.currentUser;
+
+    db.collection("rooms")
+      .doc(currentRoom)
+      .collection("messages")
+      .add({
+        text,
+        user: user.email,
+        time: firebase.firestore.FieldValue.serverTimestamp(),
+        reactions: {}
+      });
+
+    messageInput.value = "";
+  }
+
+  // ENTER KEY SEND
+  document.addEventListener("keydown", e => {
+    if (e.key === "Enter" && document.activeElement === messageInput) {
+      sendMessage();
+    }
+  });
+
+  // ================= REACTIONS =================
+
+  function react(msgId, emoji) {
+    const ref = db.collection("rooms")
+      .doc(currentRoom)
+      .collection("messages")
+      .doc(msgId);
+
+    db.runTransaction(async t => {
+      const doc = await t.get(ref);
+      const data = doc.data();
+      const reactions = data.reactions || {};
+
+      reactions[emoji] = (reactions[emoji] || 0) + 1;
+      t.update(ref, { reactions });
+    });
+  }
+
+  // ================= UI =================
+
+  function renderMessage(id, data) {
+    const div = document.createElement("div");
+    div.className = "bg-white p-3 rounded-xl shadow";
+
+    const reacts = data.reactions || {};
+
+    div.innerHTML = `
+      <div class="text-xs text-gray-500">${data.user}</div>
+      <div class="text-sm mb-2">${escapeHtml(data.text)}</div>
+      <div class="flex gap-2 text-sm">
+        <button onclick="react('${id}','👍')">👍 ${reacts['👍']||0}</button>
+        <button onclick="react('${id}','❤️')">❤️ ${reacts['❤️']||0}</button>
+        <button onclick="react('${id}','😂')">😂 ${reacts['😂']||0}</button>
+      </div>
+    `;
+
+    messages.appendChild(div);
+  }
+
+  function scrollBottom() {
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function setStatus(msg, ok=false) {
+    authStatus.textContent = msg;
+    authStatus.className = ok ? "text-green-600" : "text-red-500";
+  }
+
+  function emailInput() { return document.getElementById("email").value; }
+  function passInput() { return document.getElementById("password").value; }
+
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
 </script>
+
 </body>
 </html>
