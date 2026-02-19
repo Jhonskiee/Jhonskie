@@ -13,14 +13,17 @@
 body{
   margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#f2f5f9;
+  background:#eef2f7;
+}
+
+/* ---------- CENTER LOGIN ---------- */
+.centerWrap{
   min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
 }
 
-/* ---------- CARDS ---------- */
 .card{
   width:360px;
   background:#fff;
@@ -29,6 +32,8 @@ body{
   box-shadow:0 20px 40px rgba(0,0,0,.12);
   text-align:center;
 }
+
+.hidden{display:none}
 
 input{
   width:100%;
@@ -43,7 +48,7 @@ button{
   padding:13px;
   border:none;
   border-radius:14px;
-  background:#007aff;
+  background:#1877f2;
   color:#fff;
   font-weight:600;
   cursor:pointer;
@@ -51,26 +56,21 @@ button{
 
 .link{
   margin-top:10px;
-  color:#007aff;
+  color:#1877f2;
   cursor:pointer;
 }
 
-.hidden{display:none}
-
 /* ---------- HOME ---------- */
 #home{
-  width:95%;
-  max-width:1000px;
-  height:92vh;
   display:flex;
   flex-direction:column;
+  height:100vh;
 }
 
 .navbar{
-  background:#007aff;
+  background:#1877f2;
   color:#fff;
   padding:14px 22px;
-  border-radius:18px;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -78,10 +78,26 @@ button{
 
 .main{
   flex:1;
+  display:flex;
+  gap:14px;
+  padding:14px;
+}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar{
+  width:260px;
   background:#fff;
-  border-radius:18px;
-  margin-top:14px;
-  padding:18px;
+  border-radius:16px;
+  padding:14px;
+  overflow:auto;
+}
+
+/* ---------- CHAT ---------- */
+.chat{
+  flex:1;
+  background:#fff;
+  border-radius:16px;
+  padding:14px;
   display:flex;
   flex-direction:column;
 }
@@ -94,25 +110,24 @@ button{
 }
 
 .msg{
-  max-width:70%;
   padding:10px 14px;
-  border-radius:18px;
+  border-radius:16px;
   margin:6px 0;
-  font-size:14px;
+  max-width:70%;
 }
 
 .self{
-  background:#007aff;
+  background:#1877f2;
   color:#fff;
   align-self:flex-end;
 }
 
 .other{
-  background:#eee;
+  background:#e4e6eb;
   align-self:flex-start;
 }
 
-.emoji{
+.reactBtn{
   cursor:pointer;
   margin-right:6px;
 }
@@ -121,21 +136,25 @@ button{
 <body>
 
 <!-- LOGIN -->
-<div id="loginCard" class="card">
-  <h2>Login</h2>
-  <input id="loginEmail" placeholder="Email">
-  <input id="loginPass" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <div class="link" onclick="showRegister()">Create account</div>
+<div id="loginWrap" class="centerWrap">
+  <div class="card">
+    <h2>Login</h2>
+    <input id="loginEmail" placeholder="Email">
+    <input id="loginPass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <div class="link" onclick="showRegister()">Create account</div>
+  </div>
 </div>
 
 <!-- REGISTER -->
-<div id="registerCard" class="card hidden">
-  <h2>Create Account</h2>
-  <input id="regEmail" placeholder="Email">
-  <input id="regPass" type="password" placeholder="Password">
-  <button onclick="register()">Register</button>
-  <div class="link" onclick="showLogin()">Back to login</div>
+<div id="registerWrap" class="centerWrap hidden">
+  <div class="card">
+    <h2>Create Account</h2>
+    <input id="regEmail" placeholder="Email">
+    <input id="regPass" type="password" placeholder="Password">
+    <button onclick="register()">Register</button>
+    <div class="link" onclick="showLogin()">Back to login</div>
+  </div>
 </div>
 
 <!-- HOME -->
@@ -146,14 +165,23 @@ button{
   </div>
 
   <div class="main">
-    <div id="chatWindow"></div>
-    <input id="chatInput" placeholder="Type message and press Enter">
-    <button onclick="sendMessage()">Send</button>
+    <div class="sidebar">
+      <h3>Find Friends</h3>
+      <input id="searchEmail" placeholder="Search email">
+      <button onclick="searchUser()">Search</button>
+      <div id="searchResult"></div>
+    </div>
+
+    <div class="chat">
+      <div id="chatWindow"></div>
+      <input id="chatInput" placeholder="Type message and press Enter">
+      <button onclick="sendMessage()">Send</button>
+    </div>
   </div>
 </div>
 
 <script>
-// 🔴 PUT YOUR REAL FIREBASE CONFIG HERE
+// 🔴 PUT YOUR REAL FIREBASE CONFIG
  const firebaseConfig = {
     apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
     authDomain: "website-ab5ea.firebaseapp.com",
@@ -162,141 +190,128 @@ button{
     messagingSenderId: "1094491609955",
     appId: "1:1094491609955:web:4ac93d44c03490cd3d5156"
   };
-
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
 
-let currentUser = null;
-let unsubscribeChat = null;
+const auth=firebase.auth();
+const db=firebase.firestore();
 
-/* NAV */
+let currentUser=null;
+let unsubscribeChat=null;
+
+/* ---------- NAV ---------- */
 function showRegister(){
-  registerCard.classList.remove("hidden");
-  loginCard.classList.add("hidden");
+  loginWrap.classList.add("hidden");
+  registerWrap.classList.remove("hidden");
 }
 function showLogin(){
-  loginCard.classList.remove("hidden");
-  registerCard.classList.add("hidden");
+  registerWrap.classList.add("hidden");
+  loginWrap.classList.remove("hidden");
 }
 
-/* REGISTER */
+/* ---------- AUTH ---------- */
 function register(){
-  auth.createUserWithEmailAndPassword(regEmail.value, regPass.value)
-    .then(()=>alert("Account created"))
-    .catch(e=>alert(e.message));
+  auth.createUserWithEmailAndPassword(regEmail.value,regPass.value)
+  .then(cred=>{
+    return db.collection("users").doc(cred.user.uid).set({
+      email:regEmail.value
+    });
+  })
+  .then(()=>alert("Account created"))
+  .catch(e=>alert(e.message));
 }
 
-/* LOGIN */
 function login(){
-  auth.signInWithEmailAndPassword(loginEmail.value, loginPass.value)
-    .catch(e=>alert(e.message));
+  auth.signInWithEmailAndPassword(loginEmail.value,loginPass.value)
+  .catch(e=>alert(e.message));
 }
 
-/* LOGOUT */
 function logout(){
   if(unsubscribeChat) unsubscribeChat();
   auth.signOut();
 }
 
-/* AUTH STATE — HARD FIX */
 auth.onAuthStateChanged(user=>{
   if(user){
-    currentUser = user;
-
-    loginCard.classList.add("hidden");
-    registerCard.classList.add("hidden");
+    currentUser=user;
+    loginWrap.classList.add("hidden");
+    registerWrap.classList.add("hidden");
     home.classList.remove("hidden");
-
-    startChat(); // only starts AFTER login
+    startChat();
   }else{
-    currentUser = null;
-
     home.classList.add("hidden");
-    loginCard.classList.remove("hidden");
-
+    loginWrap.classList.remove("hidden");
     if(unsubscribeChat) unsubscribeChat();
   }
 });
 
-/* SEND MESSAGE — HARD FIX */
+/* ---------- CHAT ---------- */
 function sendMessage(){
-  if(!currentUser){
-    alert("You must login first");
-    return;
-  }
-
-  const text = chatInput.value.trim();
-  if(!text) return;
+  const text=chatInput.value.trim();
+  if(!text || !currentUser) return;
 
   db.collection("messages").add({
-    uid: currentUser.uid,
-    text: text,
-    reactions: {},
-    time: Date.now()
-  }).then(()=>{
-    chatInput.value="";
-  }).catch(e=>{
-    alert("Send failed: "+e.message);
+    uid:currentUser.uid,
+    text:text,
+    reactions:{},
+    time:Date.now()
   });
+
+  chatInput.value="";
 }
 
-/* ENTER KEY */
-chatInput.addEventListener("keydown", e=>{
+chatInput.addEventListener("keydown",e=>{
   if(e.key==="Enter") sendMessage();
 });
 
-/* REALTIME CHAT — HARD FIX */
 function startChat(){
-  if(!currentUser) return;
-
-  if(unsubscribeChat) unsubscribeChat();
-
-  unsubscribeChat = db.collection("messages")
-    .orderBy("time")
-    .onSnapshot(snapshot=>{
-      chatWindow.innerHTML="";
-
-      snapshot.forEach(doc=>{
-        const m = doc.data();
-
-        const div=document.createElement("div");
-        div.className="msg "+(m.uid===currentUser.uid?"self":"other");
-
-        const r=m.reactions||{};
-
-        div.innerHTML=`
-          <div>${m.text}</div>
-          <div>
-            👍 ${r.like||0}
-            ❤️ ${r.love||0}
-            😂 ${r.laugh||0}
-          </div>
-          <div>
-            <span class="emoji" onclick="react('${doc.id}','like')">👍</span>
-            <span class="emoji" onclick="react('${doc.id}','love')">❤️</span>
-            <span class="emoji" onclick="react('${doc.id}','laugh')">😂</span>
-          </div>
-        `;
-
-        chatWindow.appendChild(div);
-      });
-
-      chatWindow.scrollTop = chatWindow.scrollHeight;
+  unsubscribeChat=db.collection("messages")
+  .orderBy("time")
+  .onSnapshot(snap=>{
+    chatWindow.innerHTML="";
+    snap.forEach(doc=>{
+      const m=doc.data();
+      const r=m.reactions||{};
+      const div=document.createElement("div");
+      div.className="msg "+(m.uid===currentUser.uid?"self":"other");
+      div.innerHTML=`
+        <div>${m.text}</div>
+        <small>
+          👍 ${r.like||0}
+          ❤️ ${r.love||0}
+          😂 ${r.laugh||0}
+        </small><br>
+        <span class="reactBtn" onclick="react('${doc.id}','like')">👍</span>
+        <span class="reactBtn" onclick="react('${doc.id}','love')">❤️</span>
+        <span class="reactBtn" onclick="react('${doc.id}','laugh')">😂</span>
+      `;
+      chatWindow.appendChild(div);
     });
+    chatWindow.scrollTop=chatWindow.scrollHeight;
+  });
 }
 
-/* REACT */
 function react(id,type){
   const ref=db.collection("messages").doc(id);
-
   db.runTransaction(async t=>{
     const doc=await t.get(ref);
-    const data=doc.data();
-    const r=data.reactions||{};
+    const r=doc.data().reactions||{};
     r[type]=(r[type]||0)+1;
     t.update(ref,{reactions:r});
   });
+}
+
+/* ---------- SEARCH USER ---------- */
+async function searchUser(){
+  const email=searchEmail.value.trim();
+  const snap=await db.collection("users")
+    .where("email","==",email).get();
+
+  if(snap.empty){
+    searchResult.innerHTML="User not found";
+    return;
+  }
+
+  searchResult.innerHTML="User found ✅";
 }
 </script>
 </body>
