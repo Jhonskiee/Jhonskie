@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MySocial Realtime</title>
+<title>MySocial</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -14,17 +14,17 @@ body{
   margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:#f2f5f9;
-  height:100vh;
+  min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
 }
 
-/* ---------- LOGIN CARD ---------- */
+/* ---------- CARDS ---------- */
 .card{
   width:360px;
   background:#fff;
-  padding:32px;
+  padding:30px;
   border-radius:20px;
   box-shadow:0 20px 40px rgba(0,0,0,.12);
   text-align:center;
@@ -53,7 +53,6 @@ button{
   margin-top:10px;
   color:#007aff;
   cursor:pointer;
-  font-size:14px;
 }
 
 .hidden{display:none}
@@ -113,11 +112,6 @@ button{
   align-self:flex-start;
 }
 
-.reactions{
-  font-size:12px;
-  margin-top:4px;
-}
-
 .emoji{
   cursor:pointer;
   margin-right:6px;
@@ -147,7 +141,7 @@ button{
 <!-- HOME -->
 <div id="home" class="hidden">
   <div class="navbar">
-    <h2>MySocial</h2>
+    <strong>MySocial</strong>
     <button style="width:auto;background:#ff3b30;padding:6px 14px" onclick="logout()">Logout</button>
   </div>
 
@@ -159,7 +153,7 @@ button{
 </div>
 
 <script>
-// 🔴 REPLACE WITH YOUR REAL CONFIG
+// 🔴 PUT YOUR REAL FIREBASE CONFIG HERE
  const firebaseConfig = {
     apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
     authDomain: "website-ab5ea.firebaseapp.com",
@@ -168,6 +162,7 @@ button{
     messagingSenderId: "1094491609955",
     appId: "1:1094491609955:web:4ac93d44c03490cd3d5156"
   };
+
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
@@ -175,64 +170,75 @@ const db = firebase.firestore();
 let currentUser = null;
 let unsubscribeChat = null;
 
-/* ---------- NAV ---------- */
-function showLogin(){
-  loginCard.classList.remove("hidden");
-  registerCard.classList.add("hidden");
-}
+/* NAV */
 function showRegister(){
   registerCard.classList.remove("hidden");
   loginCard.classList.add("hidden");
 }
+function showLogin(){
+  loginCard.classList.remove("hidden");
+  registerCard.classList.add("hidden");
+}
 
-/* ---------- REGISTER ---------- */
+/* REGISTER */
 function register(){
   auth.createUserWithEmailAndPassword(regEmail.value, regPass.value)
     .then(()=>alert("Account created"))
     .catch(e=>alert(e.message));
 }
 
-/* ---------- LOGIN ---------- */
+/* LOGIN */
 function login(){
   auth.signInWithEmailAndPassword(loginEmail.value, loginPass.value)
     .catch(e=>alert(e.message));
 }
 
-/* ---------- LOGOUT ---------- */
+/* LOGOUT */
 function logout(){
   if(unsubscribeChat) unsubscribeChat();
   auth.signOut();
 }
 
-/* ---------- AUTH STATE ---------- */
+/* AUTH STATE — HARD FIX */
 auth.onAuthStateChanged(user=>{
   if(user){
     currentUser = user;
+
     loginCard.classList.add("hidden");
     registerCard.classList.add("hidden");
     home.classList.remove("hidden");
-    startChat();
+
+    startChat(); // only starts AFTER login
   }else{
     currentUser = null;
+
     home.classList.add("hidden");
     loginCard.classList.remove("hidden");
+
+    if(unsubscribeChat) unsubscribeChat();
   }
 });
 
-/* ---------- SEND MESSAGE ---------- */
+/* SEND MESSAGE — HARD FIX */
 function sendMessage(){
+  if(!currentUser){
+    alert("You must login first");
+    return;
+  }
+
   const text = chatInput.value.trim();
-  if(!text || !currentUser) return;
+  if(!text) return;
 
   db.collection("messages").add({
     uid: currentUser.uid,
-    email: currentUser.email,
     text: text,
     reactions: {},
     time: Date.now()
+  }).then(()=>{
+    chatInput.value="";
+  }).catch(e=>{
+    alert("Send failed: "+e.message);
   });
-
-  chatInput.value = "";
 }
 
 /* ENTER KEY */
@@ -240,27 +246,31 @@ chatInput.addEventListener("keydown", e=>{
   if(e.key==="Enter") sendMessage();
 });
 
-/* ---------- REALTIME CHAT ---------- */
+/* REALTIME CHAT — HARD FIX */
 function startChat(){
+  if(!currentUser) return;
+
   if(unsubscribeChat) unsubscribeChat();
 
   unsubscribeChat = db.collection("messages")
     .orderBy("time")
     .onSnapshot(snapshot=>{
       chatWindow.innerHTML="";
+
       snapshot.forEach(doc=>{
         const m = doc.data();
-        const div = document.createElement("div");
-        div.className = "msg " + (m.uid===currentUser.uid ? "self":"other");
 
-        const reacts = m.reactions || {};
+        const div=document.createElement("div");
+        div.className="msg "+(m.uid===currentUser.uid?"self":"other");
 
-        div.innerHTML = `
+        const r=m.reactions||{};
+
+        div.innerHTML=`
           <div>${m.text}</div>
-          <div class="reactions">
-            👍 ${reacts.like||0}
-            ❤️ ${reacts.love||0}
-            😂 ${reacts.laugh||0}
+          <div>
+            👍 ${r.like||0}
+            ❤️ ${r.love||0}
+            😂 ${r.laugh||0}
           </div>
           <div>
             <span class="emoji" onclick="react('${doc.id}','like')">👍</span>
@@ -276,15 +286,15 @@ function startChat(){
     });
 }
 
-/* ---------- REACT ---------- */
+/* REACT */
 function react(id,type){
-  const ref = db.collection("messages").doc(id);
+  const ref=db.collection("messages").doc(id);
 
   db.runTransaction(async t=>{
-    const doc = await t.get(ref);
-    const data = doc.data();
-    const r = data.reactions || {};
-    r[type] = (r[type]||0) + 1;
+    const doc=await t.get(ref);
+    const data=doc.data();
+    const r=data.reactions||{};
+    r[type]=(r[type]||0)+1;
     t.update(ref,{reactions:r});
   });
 }
