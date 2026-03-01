@@ -1,50 +1,45 @@
 <!DOCTYPE html>
+<html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Next Level Realtime Chat</title>
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Firebase SDKs (compat for simplicity) -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<meta charset="UTF-8">
+<title>Mega Social</title>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>MySocial Pro Chat</title>
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pro Social Chat</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 <style>
+body{margin:0;font-family:Arial;background:#f0f2f5}
+.nav{background:#1877f2;color:white;padding:12px}
+.container{max-width:900px;margin:auto;padding:20px}
+.card{background:white;padding:15px;border-radius:10px;margin-bottom:15px}
+button{padding:6px 12px;margin-top:5px;cursor:pointer}
+input,textarea{width:100%;padding:8px;margin:5px 0}
+img{max-width:100%;border-radius:8px}
+*{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Segoe UI,Arial;
-  background:#f0f2f5;
-}
-/* LOGIN */
-#authBox{
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  font-family:"Segoe UI",Calibri,sans-serif;
+  background:#eef2f7;
   height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 .card{
+  width:420px;
   background:#fff;
   padding:30px;
   border-radius:16px;
-  width:320px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
-  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,.15);
 }
+.hidden{display:none}
 input,textarea{
   width:100%;
-  padding:12px;
+  padding:11px;
   margin:8px 0;
   border-radius:10px;
-  border:1px solid #ddd;
+  border:1.5px solid #ccc;
   font-size:14px;
 }
 button{
@@ -57,160 +52,172 @@ button{
   font-weight:600;
   cursor:pointer;
 }
-button:hover{background:#166fe0}
-/* APP */
-#app{display:none;height:100vh;flex-direction:column}
+/* ===== HOME ===== */
+#home{
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  background:#f0f2f5;
+}
 .topbar{
   background:#1877f2;
   color:#fff;
   padding:14px 20px;
+  font-size:20px;
+  font-weight:700;
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
-.main{
+.layout{
   flex:1;
-  display:flex;
-  overflow:hidden;
+  display:grid;
+  grid-template-columns:260px 1fr 320px;
+  gap:16px;
+  padding:16px;
 }
-.sidebar{
-  width:260px;
+.panel{
   background:#fff;
-  border-right:1px solid #ddd;
-  padding:10px;
-  overflow-y:auto;
+  border-radius:14px;
+  padding:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+  overflow:auto;
 }
-.friend{
+.feed-post{
+  border:1px solid #eee;
+  border-radius:12px;
   padding:10px;
-  border-radius:10px;
+  margin-bottom:10px;
+}
+.reactions span{
   cursor:pointer;
+  margin-right:10px;
+  font-size:18px;
+}
+.chat-box{
+  height:320px;
+  overflow:auto;
+  border:1px solid #eee;
+  border-radius:10px;
+  padding:8px;
+  margin-bottom:8px;
+  background:#fafafa;
+}
+.friend-item{
+  padding:8px;
+  border-bottom:1px solid #eee;
   display:flex;
   justify-content:space-between;
 }
-.friend:hover{background:#f0f2f5}
-.online{color:green;font-size:12px}
-.offline{color:#999;font-size:12px}
-.chatArea{
-  flex:1;
-  display:flex;
-  flex-direction:column;
+.center-text{
+  text-align:center;
 }
-.messages{
-  flex:1;
-  overflow-y:auto;
-  padding:20px;
-}
-.msg{
-  max-width:70%;
-  padding:10px 14px;
-  border-radius:16px;
-  margin-bottom:10px;
-  position:relative;
-}
-.me{background:#1877f2;color:#fff;margin-left:auto}
-.other{background:#e4e6eb}
-.reactions{font-size:12px;margin-top:4px}
-.inputBar{
-  padding:10px;
-  background:#fff;
-  border-top:1px solid #ddd;
-  display:flex;
-  gap:8px;
-}
-.inputBar input{flex:1;margin:0}
-.smallBtn{width:auto;padding:10px}
 </style>
 </head>
-<body class="bg-gradient-to-br from-slate-100 to-slate-200 min-h-screen flex items-center justify-center">
-  <!-- LOGIN CARD -->
-  <div id="loginView" class="w-full max-w-md">
-    <div class="bg-white rounded-2xl shadow-xl p-8 text-center">
-      <h1 class="text-2xl font-bold mb-2">Realtime Social Chat</h1>
-      <p class="text-gray-500 mb-6">Sign in to continue</p>
-      <input id="email" type="email" placeholder="Email"
-        class="w-full mb-3 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <input id="password" type="password" placeholder="Password"
-        class="w-full mb-4 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <button onclick="login()"
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold mb-3">
-        Login
-      </button>
-      <button onclick="register()"
-        class="w-full bg-gray-800 hover:bg-black text-white py-3 rounded-xl font-semibold">
-        Create Account
-      </button>
-      <p id="authStatus" class="text-sm mt-4 text-red-500"></p>
-    </div>
 <body>
+
+<div class="nav">Mega Social</div>
+<div id="auth" class="container">
+<h3>Login / Signup</h3>
+<input id="name" placeholder="Name">
+<input id="email" placeholder="Email">
+<input id="pass" type="password" placeholder="Password">
+<button onclick="signup()">Signup</button>
+<button onclick="login()">Login</button>
 <!-- LOGIN -->
-<div id="authBox">
-  <div class="card">
-    <h2>MySocial</h2>
-    <input id="email" placeholder="Email" />
-    <input id="pass" type="password" placeholder="Password" />
-    <button onclick="login()">Login</button>
-    <button onclick="register()" style="margin-top:6px;background:#42b72a">Create account</button>
-  </div>
+<div id="login" class="card">
+  <h2 class="center-text">Login</h2>
+  <input id="email" placeholder="Email" />
+  <input id="password" type="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
+  <button style="margin-top:8px;background:#42b72a" onclick="register()">Create Account</button>
 </div>
 
-  <!-- CHAT APP -->
-  <div id="appView" class="hidden w-full h-screen flex">
-    <!-- SIDEBAR -->
-    <div class="w-72 bg-white border-r flex flex-col">
-      <div class="p-4 border-b">
-        <h2 class="font-bold text-lg">Chats</h2>
-        <p id="userEmail" class="text-xs text-gray-500"></p>
-      </div>
-      <div class="p-3 border-b">
-        <input id="roomInput" placeholder="Room name (e.g. general)"
-          class="w-full px-3 py-2 border rounded-lg" />
-        <button onclick="joinRoom()"
-          class="w-full mt-2 bg-blue-600 text-white py-2 rounded-lg">Join Room</button>
-      </div>
-<!-- APP -->
-<div id="app">
+<div id="app" style="display:none" class="container">
+<button onclick="logout()">Logout</button>
+<!-- HOME -->
+<div id="home" class="hidden">
   <div class="topbar">
-    <b>MySocial Pro</b>
-    <button class="smallBtn" onclick="logout()" style="background:#ff4d4f">Logout</button>
+    <div>Pro Social</div>
+    <button style="width:auto;padding:6px 12px;background:#fff;color:#1877f2" onclick="logout()">Logout</button>
   </div>
 
-      <button onclick="logout()"
-        class="m-3 mt-auto bg-red-500 text-white py-2 rounded-lg">Logout</button>
-  <div class="main">
-    <div class="sidebar">
-      <input id="searchUser" placeholder="Search users..." />
-      <div id="friends"></div>
+<div class="card">
+<h3>Create Post</h3>
+<textarea id="postText" placeholder="What's on your mind?"></textarea>
+<input type="file" id="postImage">
+<button onclick="createPost()">Post</button>
+</div>
+  <div class="layout">
+
+<div id="feed"></div>
+    <!-- FRIENDS -->
+    <div class="panel">
+      <h3>Find Friends</h3>
+      <input id="searchUser" placeholder="Search email" oninput="searchUsers()" />
+      <div id="searchResults"></div>
+
+<div class="card">
+<h3>Private Chat</h3>
+<input id="chatUser" placeholder="Other User UID">
+<div id="messages"></div>
+<input id="chatText" placeholder="Message">
+<button onclick="sendMessage()">Send</button>
+</div>
+      <h3 style="margin-top:12px">My Friends</h3>
+      <div id="friendsList"></div>
     </div>
 
-    <!-- MAIN CHAT -->
-    <div class="flex-1 flex flex-col">
-      <!-- HEADER -->
-      <div class="bg-white border-b p-4 font-semibold" id="roomTitle">No room joined</div>
-      <!-- MESSAGES -->
-      <div id="messages"
-        class="flex-1 overflow-y-auto p-6 space-y-3 bg-slate-50"></div>
-      <!-- INPUT -->
-      <div class="bg-white border-t p-4 flex gap-2">
-        <input id="messageInput" placeholder="Type message and press Enter..."
-          class="flex-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        <button onclick="sendMessage()"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-xl">Send</button>
-    <div class="chatArea">
-      <div id="messages" class="messages"></div>
-      <div class="inputBar">
-        <input id="msgBox" placeholder="Type message + Enter" />
-        <input type="file" id="imgUpload" />
-        <button class="smallBtn" onclick="sendMsg()">Send</button>
-      </div>
+</div>
+    <!-- FEED -->
+    <div class="panel">
+      <h3>Create Post</h3>
+      <textarea id="postText" placeholder="What's on your mind?"></textarea>
+      <button onclick="createPost()">Post</button>
+
+<script type="module">
+      <h3 style="margin-top:14px">Realtime Feed</h3>
+      <div id="feed"></div>
     </div>
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword,
+signInWithEmailAndPassword, signOut, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    <!-- CHAT -->
+    <div class="panel">
+      <h3>Realtime Chat</h3>
+      <div id="chatBox" class="chat-box"></div>
+      <input id="chatMsg" placeholder="Type message + Enter" />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+
+import {
+getFirestore, collection, addDoc, setDoc,
+doc, updateDoc, getDoc, onSnapshot,
+query, orderBy, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
   </div>
 </div>
 
-<script>
-  // 🔥 TODO: PUT YOUR FIREBASE CONFIG HERE
-  const firebaseConfig = {
-// 🔴 PASTE YOUR FIREBASE CONFIG
+import { getStorage, ref, uploadBytes, getDownloadURL }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, getDocs, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// 🔥 PUT YOUR CONFIG HERE
+/* 🔥 PUT YOUR REAL CONFIG HERE */
 const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_BUCKET",
+  appId: "YOUR_APP_ID"
+};
     apiKey: "AIzaSyBc-ie4WnBkVMfrb5halHIaKWHGyy3zGC4",
     authDomain: "website-ab5ea.firebaseapp.com",
     projectId: "website-ab5ea",
@@ -218,258 +225,231 @@ const firebaseConfig = {
     messagingSenderId: "1094491609955",
     appId: "1:1094491609955:web:4ac93d44c03490cd3d5156"
   };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  let currentRoom = null;
-  let unsubscribe = null;
-  // ================= AUTH =================
-  function register() {
-    const email = emailInput();
-    const pass = passInput();
-    auth.createUserWithEmailAndPassword(email, pass)
-      .then(() => setStatus("Account created!", true))
-      .catch(e => setStatus(e.message));
-  }
-  function login() {
-    const email = emailInput();
-    const pass = passInput();
-    auth.signInWithEmailAndPassword(email, pass)
-      .catch(e => setStatus(e.message));
-  }
-  function logout() {
-    auth.signOut();
-firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth();
-const db=firebase.firestore();
-const storage=firebase.storage();
-let me=null;
-let activeChat=null;
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore();
+const storage = getStorage();
 // AUTH
-function login(){
-  auth.signInWithEmailAndPassword(email.value,pass.value);
-}
-function register(){
-  auth.createUserWithEmailAndPassword(email.value,pass.value)
-  .then(u=>db.collection("users").doc(u.user.uid).set({
-    email:email.value,
-    online:true
-  }));
-}
-function logout(){auth.signOut();}
-// STATE
-auth.onAuthStateChanged(async user=>{
-  if(user){
-    me=user;
-    authBox.style.display="none";
-    app.style.display="flex";
-    await db.collection("users").doc(user.uid).set({online:true},{merge:true});
-    loadUsers();
-  }else{
-    app.style.display="none";
-    authBox.style.display="flex";
+window.signup = async ()=>{
+  const cred = await createUserWithEmailAndPassword(auth,email.value,pass.value);
+  await setDoc(doc(db,"users",cred.user.uid),{
+    name:name.value,
+    createdAt:serverTimestamp()
+  });
+};
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+
+window.login = async ()=>{
+  await signInWithEmailAndPassword(auth,email.value,pass.value);
+/* ===== AUTH ===== */
+window.register = async () => {
+  await createUserWithEmailAndPassword(auth, email.value, password.value);
+};
+
+window.logout = ()=>signOut(auth);
+window.login = async () => {
+  await signInWithEmailAndPassword(auth, email.value, password.value);
+};
+
+// CREATE POST
+window.createPost = async ()=>{
+  const user = auth.currentUser;
+  let imageUrl="";
+window.logout = () => signOut(auth);
+
+  if(postImage.files[0]){
+    const imageRef = ref(storage,"posts/"+Date.now());
+    await uploadBytes(imageRef,postImage.files[0]);
+    imageUrl = await getDownloadURL(imageRef);
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    currentUser = user;
+    login.classList.add("hidden");
+    home.classList.remove("hidden");
+    initRealtime();
+  } else {
+    currentUser = null;
+    home.classList.add("hidden");
+    login.classList.remove("hidden");
   }
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      loginView.classList.add("hidden");
-      appView.classList.remove("hidden");
-      userEmail.textContent = user.email;
-    } else {
-      appView.classList.add("hidden");
-      loginView.classList.remove("hidden");
-      if (unsubscribe) unsubscribe();
+});
+
+  await addDoc(collection(db,"posts"),{
+    uid:user.uid,
+    text:postText.value,
+    image:imageUrl,
+    likes:[],
+    createdAt:serverTimestamp()
+/* ===== POSTS REALTIME ===== */
+window.createPost = async () => {
+  if (!postText.value.trim()) return;
+  await addDoc(collection(db, "posts"), {
+    text: postText.value,
+    uid: currentUser.uid,
+    time: serverTimestamp(),
+    likes: 0
+  });
+  postText.value="";
+  postText.value = "";
+};
+
+// REALTIME FEED
+function loadFeed(){
+  const q = query(collection(db,"posts"),orderBy("createdAt","desc"));
+  onSnapshot(q,snap=>{
+    feed.innerHTML="";
+    snap.forEach(docSnap=>{
+      const p = docSnap.data();
+      feed.innerHTML+=`
+        <div class="card">
+          <p>${p.text}</p>
+          ${p.image?`<img src="${p.image}">`:""}
+          <button onclick="likePost('${docSnap.id}')">
+            ❤️ ${p.likes.length}
+          </button>
+          <div id="comments-${docSnap.id}"></div>
+          <input placeholder="Comment"
+          onkeypress="if(event.key==='Enter') addComment('${docSnap.id}',this.value)">
+        </div>
+      `;
+      loadComments(docSnap.id);
+    });
+/* ===== CHAT REALTIME ===== */
+window.sendMessage = async () => {
+  if (!chatMsg.value.trim()) return;
+  await addDoc(collection(db, "messages"), {
+    text: chatMsg.value,
+    uid: currentUser.uid,
+    time: serverTimestamp()
+  });
+}
+  chatMsg.value = "";
+};
+chatMsg.addEventListener("keypress", e => {
+  if (e.key === "Enter") sendMessage();
+});
+
+// LIKE
+window.likePost = async (id)=>{
+  const refDoc = doc(db,"posts",id);
+  const snap = await getDoc(refDoc);
+  let likes = snap.data().likes;
+/* ===== FRIEND SEARCH ===== */
+window.searchUsers = async () => {
+  searchResults.innerHTML = "Searching...";
+
+  if(!likes.includes(auth.currentUser.uid)){
+    likes.push(auth.currentUser.uid);
+    await updateDoc(refDoc,{likes});
+  }
+  const q = query(collection(db, "users"));
+  const snap = await getDocs(q);
+  searchResults.innerHTML = "";
+  snap.forEach(d => {
+    const u = d.data();
+    if (u.email.includes(searchUser.value) && u.uid !== currentUser.uid) {
+      searchResults.innerHTML += `
+        <div class="friend-item">
+          <span>${u.email}</span>
+          <button onclick="addFriend('${u.uid}')">Add</button>
+        </div>`;
     }
-});
-// ONLINE STATUS
-window.addEventListener("beforeunload",()=>{
-  if(me) db.collection("users").doc(me.uid).set({online:false},{merge:true});
-});
-// LOAD USERS / FRIENDS
-function loadUsers(){
-  db.collection("users").onSnapshot(snap=>{
-    friends.innerHTML="";
-    snap.forEach(doc=>{
-      if(doc.id===me.uid) return;
-      const d=doc.data();
-      friends.innerHTML+=`
-        <div class='friend' onclick="openChat('${doc.id}')">
-          <span>${d.email}</span>
-          <span class='${d.online?"online":"offline"}'>${d.online?"●":"○"}</span>
+  });
+};
+
+// COMMENT
+window.addComment = async (postId,text)=>{
+  await addDoc(collection(db,"posts",postId,"comments"),{
+    uid:auth.currentUser.uid,
+    text,
+    createdAt:serverTimestamp()
+window.addFriend = async (uid) => {
+  await setDoc(doc(db, "friends", currentUser.uid + "_" + uid), {
+    users: [currentUser.uid, uid]
+  });
+  alert("Friend added realtime");
+};
+
+// LOAD COMMENTS
+function loadComments(postId){
+  const q=query(collection(db,"posts",postId,"comments"),orderBy("createdAt"));
+  onSnapshot(q,snap=>{
+    let html="";
+    snap.forEach(d=>{
+      html+=`<p>💬 ${d.data().text}</p>`;
+    });
+    document.getElementById("comments-"+postId).innerHTML=html;
+/* ===== REALTIME INIT ===== */
+function initRealtime() {
+  // save self profile
+  setDoc(doc(db, "users", currentUser.uid), {
+    uid: currentUser.uid,
+    email: currentUser.email
+  });
+}
+
+// PRIVATE CHAT
+window.sendMessage = async ()=>{
+  const chatId = [auth.currentUser.uid,chatUser.value].sort().join("_");
+  await addDoc(collection(db,"chats",chatId,"messages"),{
+    from:auth.currentUser.uid,
+    text:chatText.value,
+    createdAt:serverTimestamp()
+  // realtime posts
+  const pq = query(collection(db, "posts"), orderBy("time", "desc"));
+  onSnapshot(pq, snap => {
+    feed.innerHTML = "";
+    snap.forEach(d => {
+      const p = d.data();
+      feed.innerHTML += `
+        <div class="feed-post">
+          <b>${p.uid.slice(0,6)}</b><br>
+          ${p.text}
+          <div class="reactions">
+            <span onclick="react('${d.id}')">👍</span>
+          </div>
         </div>`;
     });
   });
-}
-// CHAT ID
-function chatId(uid){
-  return [me.uid,uid].sort().join("_");
-}
-// OPEN CHAT
-function openChat(uid){
-  activeChat=chatId(uid);
-  listenMessages();
-}
-// REALTIME MESSAGES
-function listenMessages(){
-  db.collection("chats").doc(activeChat)
-    .collection("messages")
-    .orderBy("time")
-    .onSnapshot(snap=>{
-      messages.innerHTML="";
-      snap.forEach(doc=>renderMsg(doc));
-      messages.scrollTop=messages.scrollHeight;
+  chatText.value="";
+  loadMessages();
+};
+
+function loadMessages(){
+  const chatId = [auth.currentUser.uid,chatUser.value].sort().join("_");
+  const q=query(collection(db,"chats",chatId,"messages"),orderBy("createdAt"));
+  onSnapshot(q,snap=>{
+    messages.innerHTML="";
+    snap.forEach(d=>{
+      messages.innerHTML+=`<div>${d.data().text}</div>`;
+  // realtime chat
+  const cq = query(collection(db, "messages"), orderBy("time"));
+  onSnapshot(cq, snap => {
+    chatBox.innerHTML = "";
+    snap.forEach(d => {
+      const m = d.data();
+      chatBox.innerHTML += `<div><b>${m.uid.slice(0,6)}:</b> ${m.text}</div>`;
     });
-}
-
-  // ================= ROOMS =================
-  function joinRoom() {
-    const room = roomInput.value.trim();
-    if (!room) return;
-    currentRoom = room;
-    roomTitle.textContent = "Room: " + room;
-    messages.innerHTML = "";
-    if (unsubscribe) unsubscribe();
-// SEND MESSAGE
-async function sendMsg(){
-  if(!msgBox.value && !imgUpload.files[0]) return;
-
-    unsubscribe = db.collection("rooms")
-      .doc(room)
-      .collection("messages")
-      .orderBy("time")
-      .onSnapshot(snapshot => {
-        messages.innerHTML = "";
-        snapshot.forEach(doc => renderMessage(doc.id, doc.data()));
-        scrollBottom();
-      });
-  let imgUrl="";
-  if(imgUpload.files[0]){
-    const ref=storage.ref("chatImages/"+Date.now());
-    await ref.put(imgUpload.files[0]);
-    imgUrl=await ref.getDownloadURL();
-  }
-
-  // ================= SEND =================
-  function sendMessage() {
-    if (!currentRoom) return alert("Join a room first");
-    const text = messageInput.value.trim();
-    if (!text) return;
-  await db.collection("chats").doc(activeChat)
-    .collection("messages").add({
-      uid:me.uid,
-      text:msgBox.value,
-      img:imgUrl,
-      time:firebase.firestore.FieldValue.serverTimestamp(),
-      reacts:{}
-    });
-
-    const user = auth.currentUser;
-  msgBox.value="";
-  imgUpload.value="";
-}
-
-    db.collection("rooms")
-      .doc(currentRoom)
-      .collection("messages")
-      .add({
-        text,
-        user: user.email,
-        time: firebase.firestore.FieldValue.serverTimestamp(),
-        reactions: {}
-      });
-// ENTER KEY
-msgBox.addEventListener("keypress",e=>{
-  if(e.key==="Enter") sendMsg();
-});
-
-    messageInput.value = "";
-  }
-// RENDER MESSAGE
-function renderMsg(doc){
-  const d=doc.data();
-  const mine=d.uid===me.uid;
-
-  // ENTER KEY SEND
-  document.addEventListener("keydown", e => {
-    if (e.key === "Enter" && document.activeElement === messageInput) {
-      sendMessage();
-  let reacts="";
-  if(d.reacts){
-    for(let r in d.reacts){
-      reacts+=` ${r}${d.reacts[r].length}`;
-    }
+    chatBox.scrollTop = chatBox.scrollHeight;
   });
-  // ================= REACTIONS =================
-  function react(msgId, emoji) {
-    const ref = db.collection("rooms")
-      .doc(currentRoom)
-      .collection("messages")
-      .doc(msgId);
-    db.runTransaction(async t => {
-      const doc = await t.get(ref);
-      const data = doc.data();
-      const reactions = data.reactions || {};
-      reactions[emoji] = (reactions[emoji] || 0) + 1;
-      t.update(ref, { reactions });
-    });
-  }
-
-  // ================= UI =================
-  function renderMessage(id, data) {
-    const div = document.createElement("div");
-    div.className = "bg-white p-3 rounded-xl shadow";
-    const reacts = data.reactions || {};
-    div.innerHTML = `
-      <div class="text-xs text-gray-500">${data.user}</div>
-      <div class="text-sm mb-2">${escapeHtml(data.text)}</div>
-      <div class="flex gap-2 text-sm">
-        <button onclick="react('${id}','👍')">👍 ${reacts['👍']||0}</button>
-        <button onclick="react('${id}','❤️')">❤️ ${reacts['❤️']||0}</button>
-        <button onclick="react('${id}','😂')">😂 ${reacts['😂']||0}</button>
-  messages.innerHTML+=`
-    <div class='msg ${mine?"me":"other"}'>
-      ${d.text||""}
-      ${d.img?`<br><img src='${d.img}' style='max-width:200px;border-radius:10px'>`:""}
-      <div class='reactions'>
-        <span onclick="react('${doc.id}','👍')">👍</span>
-        <span onclick="react('${doc.id}','❤️')">❤️</span>
-        <span onclick="react('${doc.id}','😂')">😂</span>
-        ${reacts}
-      </div>
-    `;
-    </div>`;
 }
 
-    messages.appendChild(div);
+// INIT
+onAuthStateChanged(auth,user=>{
+  if(user){
+    auth.style.display="none";
+    app.style.display="block";
+    loadFeed();
   }
-  function scrollBottom() {
-    messages.scrollTop = messages.scrollHeight;
-  }
-// REACTIONS REALTIME
-async function react(id,emoji){
-  const ref=db.collection("chats").doc(activeChat)
-    .collction("messages").doc(id);
+});
+/* ===== REACTION ===== */
+window.react = async (postId) => {
+  const ref = doc(db, "posts", postId);
+  await setDoc(ref, { likes: 1 }, { merge: true });
+};
 
-  function setStatus(msg, ok=false) {
-    authStatus.textContent = msg;
-    authStatus.className = ok ? "text-green-600" : "text-red-500";
-  }
-  const doc=await ref.get();
-  const data=doc.data();
-  data.reacts=data.reacts||{};
-  data.reacts[emoji]=data.reacts[emoji]||[];
-
-  function emailInput() { return document.getElementById("email").value; }
-  function passInput() { return document.getElementById("password").value; }
-  if(!data.reacts[emoji].includes(me.uid))
-    data.reacts[emoji].push(me.uid);
-
-  function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.textContent = text;
-    return div.innerHTML;
-  }
-  await ref.update({reacts:data.reacts});
-}
 </script>
-</body>
-  </html>
+    </body>
