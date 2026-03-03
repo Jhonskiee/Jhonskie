@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Eljhon's WEB</title>
+<title>NICKERBUCKERS</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,7 +12,6 @@
 <div id="authPage">
   <div class="auth-box">
     <h2>Eljhon's WEB</h2>
-
     <div id="loginForm">
       <input type="email" id="loginEmail" placeholder="Email">
       <input type="password" id="loginPassword" placeholder="Password">
@@ -33,7 +32,6 @@
 
 <!-- HOME PAGE -->
 <div id="homePage" style="display:none;">
-
   <div class="navbar">
     <h2>Eljhon's WEB</h2>
     <span id="welcomeUser"></span>
@@ -50,8 +48,10 @@
         <textarea id="bio" placeholder="Your bio"></textarea>
         <button onclick="updateProfile()">Save Profile</button>
       </div>
+
       <h3>Friend Requests</h3>
       <div id="friendRequests"></div>
+
       <h3>Friends</h3>
       <div id="friendsList"></div>
     </div>
@@ -74,10 +74,15 @@
       <div id="globalChat" class="chat-box"></div>
       <input id="globalMessage" placeholder="Type message">
       <button onclick="sendGlobalMessage()">Send</button>
+
+      <h3>Private Chat</h3>
+      <input id="chatFriendUID" placeholder="Friend UID">
+      <div id="privateChat" class="chat-box"></div>
+      <input id="privateMessage" placeholder="Type message">
+      <button onclick="sendPrivateMessage()">Send</button>
     </div>
 
   </div>
-
 </div>
 
 <script type="module" src="script.js"></script>
