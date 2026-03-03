@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NICKERBUCKERS</title>
+<title>KnickHub</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
 <!-- AUTH -->
 <div id="authPage">
   <div class="auth-box">
-    <h2>Eljhon's WEB</h2>
+    <h2>KnickHub</h2>
     <div id="loginForm">
       <input type="email" id="loginEmail" placeholder="Email">
       <input type="password" id="loginPassword" placeholder="Password">
@@ -33,14 +33,14 @@
 <!-- HOME PAGE -->
 <div id="homePage" style="display:none;">
   <div class="navbar">
-    <h2>Eljhon's WEB</h2>
+    <h2>KnickHub</h2>
     <span id="welcomeUser"></span>
     <button onclick="logout()">Logout</button>
   </div>
 
   <div class="container">
 
-    <!-- LEFT -->
+    <!-- LEFT: Profile + Friends -->
     <div class="sidebar">
       <div class="profile-box">
         <img id="profilePic" class="avatar">
@@ -54,21 +54,24 @@
 
       <h3>Friends</h3>
       <div id="friendsList"></div>
+
+      <h3>Add Friend by UID</h3>
+      <input id="addFriendUID" placeholder="Friend UID">
+      <button onclick="sendFriendRequest()">Send Request</button>
     </div>
 
-    <!-- CENTER -->
+    <!-- CENTER: Feed -->
     <div class="feed-area">
       <div class="create-post">
         <textarea id="postText" placeholder="What's on your mind?"></textarea>
         <input type="file" id="postMedia">
         <button onclick="createPost()">Post</button>
       </div>
-
       <div class="stories" id="stories"></div>
       <div id="feed"></div>
     </div>
 
-    <!-- RIGHT -->
+    <!-- RIGHT: Chat -->
     <div class="chat-sidebar">
       <h3>Global Chat</h3>
       <div id="globalChat" class="chat-box"></div>
