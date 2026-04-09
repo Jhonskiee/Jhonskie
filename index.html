@@ -1,212 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>KnickHub Login</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life Is Unfair</title>
+<link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-<style>
-body {
-  font-family: Calibri, Helvetica, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-image: url("https://hotimg.com/bg1.jpeg.4Xk3X5");
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.card {
-  background-color: rgba(255, 255, 255, 0.75);
-  padding: 30px;
-  width: 100%;
-  max-width: 400px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-h1, h2 { text-align: center; margin-bottom: 20px; }
-
-input {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border: 2px solid black;
-  border-radius: 6px;
-  font-size: 18px;
-  box-sizing: border-box;
-}
-
-button {
-  width: 100%;
-  padding: 15px;
-  margin-top: 10px;
-  background-color: brown;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  border-radius: 6px;
-}
-
-button:hover {
-  opacity: 0.8;
-}
-
-.link {
-  text-align: center;
-  margin-top: 15px;
-}
-
-.link a {
-  color: brown;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.link a:hover {
-  text-decoration: underline;
-}
-
-.hidden {
-  display: none;
-}
-
-.message {
-  text-align: center;
-  color: green;
-  margin-top: 15px;
-  font-size: 16px;
-  display: none;
-}
-
-label { font-size: 16px; }
-</style>
 </head>
-
 <body>
-<div class="card">
 
-  <!-- LOGIN FORM -->
-  <div id="loginBox">
-    <h1>Login</h1>
-    <input type="email" id="loginEmail" placeholder="Enter Email" required>
-    <input type="password" id="loginPassword" placeholder="Enter Password" required>
-    <button onclick="login()">Login</button>
+<!-- AUTH PAGE -->
+<div id="authPage">
+  <div class="auth-box">
+    <h2>Life Is Unfair</h2>
 
-    <div class="link">
-      <a onclick="showForgot()">Forgot Password?</a> |
-      <a onclick="showRegister()">Create Account</a>
+    <div id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <p onclick="showRegister()">Create Account</p>
+      <p onclick="forgotPassword()">Forgot Password?</p>
     </div>
-  </div>
 
-  <!-- REGISTER FORM -->
-  <div id="registerBox" class="hidden">
-    <h1>Register</h1>
-    <input type="text" id="regName" placeholder="Full Name" required>
-    <input type="email" id="regEmail" placeholder="Email" required>
-    <input type="password" id="regPassword" placeholder="Password" required>
-    <button onclick="register()">Register</button>
-
-    <div class="link">
-      <a onclick="showLogin()">Back to Login</a>
-    </div>
-  </div>
-
-  <!-- FORGOT PASSWORD -->
-  <div id="forgotBox" class="hidden">
-    <h1>Forgot Password</h1>
-    <input type="email" id="forgotEmail" placeholder="Enter Email" required>
-    <button onclick="forgotPassword()">Send Reset Link</button>
-    <div class="message" id="message">Check your email for reset instructions.</div>
-
-    <div class="link">
-      <a onclick="showLogin()">Back to Login</a>
+    <div id="registerForm" style="display:none;">
+      <input type="text" id="regName" placeholder="Full Name">
+      <input type="email" id="regEmail" placeholder="Email">
+      <input type="password" id="regPassword" placeholder="Password">
+      <button onclick="register()">Register</button>
+      <p onclick="showLogin()">Back to Login</p>
     </div>
   </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+<!-- HOME PAGE -->
+<div id="homePage" style="display:none;">
+  <div class="navbar">
+    <h2>Life Is Unfair</h2>
+    <span id="welcomeUser"></span>
+    <button onclick="logout()">Logout</button>
+  </div>
 
-// Firebase config
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_BUCKET",
-  messagingSenderId: "YOUR_SENDER",
-  appId: "YOUR_APPID"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+  <div class="container">
 
-// UI SWITCHES
-function showForgot() {
-  document.getElementById("loginBox").classList.add("hidden");
-  document.getElementById("registerBox").classList.add("hidden");
-  document.getElementById("forgotBox").classList.remove("hidden");
-}
-function showRegister() {
-  document.getElementById("loginBox").classList.add("hidden");
-  document.getElementById("forgotBox").classList.add("hidden");
-  document.getElementById("registerBox").classList.remove("hidden");
-}
-function showLogin() {
-  document.getElementById("registerBox").classList.add("hidden");
-  document.getElementById("forgotBox").classList.add("hidden");
-  document.getElementById("loginBox").classList.remove("hidden");
-}
+    <!-- LEFT -->
+    <div class="sidebar">
+      <div class="profile-box">
+        <img id="profilePic" class="avatar">
+        <input type="file" id="profileUpload">
+        <textarea id="bio" placeholder="Your bio"></textarea>
+        <button onclick="updateProfile()">Save Profile</button>
+      </div>
 
-// AUTH FUNCTIONS
-window.register = async () => {
-  const name = document.getElementById("regName").value;
-  const email = document.getElementById("regEmail").value;
-  const password = document.getElementById("regPassword").value;
+      <h3>Friend Requests</h3>
+      <div id="friendRequests"></div>
 
-  if(!name || !email || !password) return alert("Fill all fields");
+      <h3>Friends</h3>
+      <div id="friendsList"></div>
 
-  try {
-    await createUserWithEmailAndPassword(auth, email, password);
-    alert("Account created successfully!");
-    showLogin();
-  } catch(e) {
-    alert(e.message);
-  }
-};
+      <h3>Add Friend by UID</h3>
+      <input id="addFriendUID" placeholder="Friend UID">
+      <button onclick="sendFriendRequest()">Send Request</button>
+    </div>
 
-window.login = async () => {
-  const email = document.getElementById("loginEmail").value;
-  const password = document.getElementById("loginPassword").value;
+    <!-- CENTER -->
+    <div class="feed-area">
+      <div class="create-post">
+        <textarea id="postText" placeholder="What's on your mind?"></textarea>
+        <input type="file" id="postMedia">
+        <button onclick="createPost()">Post</button>
+      </div>
+      <div class="stories" id="stories"></div>
+      <div id="feed"></div>
+    </div>
 
-  if(!email || !password) return alert("Fill all fields");
+    <!-- RIGHT -->
+    <div class="chat-sidebar">
+      <h3>Global Chat</h3>
+      <div id="globalChat" class="chat-box"></div>
+      <input id="globalMessage" placeholder="Type message">
+      <button onclick="sendGlobalMessage()">Send</button>
 
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    alert("Logged in successfully!");
-    // Redirect to app page
-  } catch(e) {
-    alert(e.message);
-  }
-};
+      <h3>Private Chat</h3>
+      <input id="chatFriendUID" placeholder="Friend UID">
+      <div id="privateChat" class="chat-box"></div>
+      <input id="privateMessage" placeholder="Type message">
+      <button onclick="sendPrivateMessage()">Send</button>
+    </div>
 
-window.forgotPassword = async () => {
-  const email = document.getElementById("forgotEmail").value;
-  if(!email) return alert("Enter your email");
-  try {
-    await sendPasswordResetEmail(auth,email);
-    document.getElementById("message").style.display = "block";
-  } catch(e) {
-    alert(e.message);
-  }
-};
-</script>
+  </div>
+</div>
 
+<script type="module" src="script.js"></script>
 </body>
 </html>
