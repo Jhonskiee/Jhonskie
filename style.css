@@ -1,28 +1,70 @@
-body{margin:0;font-family:Segoe UI,sans-serif;background:#f5f0e6;color:#333;}
-button{cursor:pointer;border:none;border-radius:6px;background:#d2b48c;color:white;padding:6px 12px;}
-input,textarea{border-radius:6px;border:1px solid #ccc;padding:8px;margin:5px 0;width:100%;}
-.hidden{display:none;}
-p{color:#d2b48c;text-align:center;cursor:pointer;margin:4px 0;font-weight:500;}
+body{
+  margin:0;
+  font-family:Segoe UI;
+  color:#fff;
+  background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+  url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f");
+  background-size:cover;
+}
 
-/* AUTH */
-#authPage{display:flex;justify-content:center;align-items:center;height:100vh;}
-.auth-box{background:white;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,.1);width:350px;border-radius:12px;text-align:center;}
+/* BOXES */
+.auth-box,.sidebar,.post,.chat-sidebar{
+  background:white;
+  color:black;
+  border-radius:10px;
+  padding:10px;
+}
 
-/* HOME */
-.navbar{background:#d2b48c;color:white;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;}
-.container{display:flex;gap:15px;padding:20px;}
+/* NAV */
+.navbar{
+  background:#d2b48c;
+  padding:10px;
+  display:flex;
+  justify-content:space-between;
+}
 
-/* LEFT */
-.sidebar{width:25%;background:white;padding:12px;border-radius:8px;box-shadow:0 5px 15px rgba(0,0,0,.05);}
-.avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:6px;}
+/* LAYOUT */
+.container{
+  display:flex;
+  gap:10px;
+  padding:10px;
+}
 
-/* CENTER */
+.sidebar{width:25%;}
 .feed-area{width:50%;}
-.create-post{background:white;padding:12px;border-radius:8px;margin-bottom:15px;box-shadow:0 5px 15px rgba(0,0,0,.05);}
-.stories{display:flex;gap:8px;overflow-x:auto;margin-bottom:15px;}
-.story{min-width:80px;height:100px;background:#ddd;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.post{background:white;padding:12px;border-radius:8px;margin-bottom:12px;box-shadow:0 5px 15px rgba(0,0,0,.05);}
+.chat-sidebar{width:25%;display:flex;flex-direction:column;}
 
-/* RIGHT */
-.chat-sidebar{width:25%;background:white;padding:12px;border-radius:8px;box-shadow:0 5px 15px rgba(0,0,0,.05);}
-.chat-box{height:200px;overflow:auto;border:1px solid #eee;border-radius:6px;padding:8px;background:#fafafa;margin-bottom:8px;}
+/* POSTS */
+.post{
+  margin:10px 0;
+  font-size:18px;
+}
+
+/* STORIES */
+#stories img{
+  width:80px;
+  margin:5px;
+  border-radius:8px;
+}
+
+/* CHAT */
+.chat-box{
+  height:200px;
+  overflow:auto;
+  background:#eee;
+  margin-bottom:5px;
+  padding:5px;
+}
+.chat-input{
+  display:flex;
+}
+.chat-input input{
+  flex:1;
+}
+
+/* AVATAR */
+.avatar{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+}
