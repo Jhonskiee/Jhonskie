@@ -3,7 +3,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, onSnapshot, serverTimestamp, query, orderBy, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-/* 🔥 PUT YOUR CONFIG */
+/* FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyA4F9GnvJZ-AGzID63vqQO79zJulh2NJmY",
   authDomain: "abcs-5859c.firebaseapp.com",
@@ -13,7 +13,6 @@ const firebaseConfig = {
   appId: "1:479969126573:web:26bdd9ff755a92615afe24",
   measurementId: "G-KTV3112JXN"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -21,18 +20,18 @@ const storage = getStorage(app);
 
 let currentUser;
 
-/* AUTH */
+/* AUTH FUNCTIONS */
 window.register=async()=>{
-  const cred=await createUserWithEmailAndPassword(auth,regEmail.value,regPassword.value);
+  const cred = await createUserWithEmailAndPassword(auth, regEmail.value, regPassword.value);
   await setDoc(doc(db,"users",cred.user.uid),{
-    name:regName.value,uid:cred.user.uid,
-    friends:[],requests:[],blocked:[]
+    name:regName.value, uid:cred.user.uid,
+    friends:[], requests:[], blocked:[]
   });
 };
-window.login=async()=>{await signInWithEmailAndPassword(auth,loginEmail.value,loginPassword.value);}
+window.login=async()=>{await signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);}
 window.logout=()=>signOut(auth);
 
-/* STATE */
+/* AUTH STATE */
 onAuthStateChanged(auth,user=>{
   if(user){
     currentUser=user;
@@ -40,30 +39,38 @@ onAuthStateChanged(auth,user=>{
     homePage.style.display="block";
 
     updateDoc(doc(db,"users",user.uid),{online:true});
-
     loadAll();
-
     window.addEventListener("beforeunload",()=>{
       updateDoc(doc(db,"users",user.uid),{online:false});
     });
-
-  }else{
+  } else {
     authPage.style.display="flex";
     homePage.style.display="none";
   }
 });
 
-/* LOAD ALL */
+/* LOAD EVERYTHING */
 function loadAll(){
   loadFeed();
   loadStories();
-  loadChat();
+  loadGlobalChat();
   loadPrivateChat();
-  loadRequests();
   loadFriends();
-  loadNotifications();
-  listenTyping();
+  loadFriendRequests();
 }
+
+/* PROFILE UPDATE */
+profileUpload.onchange=async e=>{
+  const file=e.target.files[0];
+  const fileRef=ref(storage,"profiles/"+currentUser.uid);
+  await uploadBytes(fileRef,file);
+  const url=await getDownloadURL(fileRef);
+  await setDoc(doc(db,"users",currentUser.uid),{profilePic:url},{merge:true});
+};
+window.updateProfile=async()=>{
+  await setDoc(doc(db,"users",currentUser.uid),{bio:bio.value},{merge:true});
+  alert("Profile Updated");
+};
 
 /* POSTS */
 window.createPost=async()=>{
@@ -76,7 +83,8 @@ function loadFeed(){
   onSnapshot(query(collection(db,"posts"),orderBy("createdAt","desc")),snap=>{
     feed.innerHTML="";
     snap.forEach(d=>{
-      feed.innerHTML+=`<div class="post">${d.data().text}</div>`;
+      const p=d.data();
+      feed.innerHTML+=`<div class="post">${p.text}</div>`;
     });
   });
 }
@@ -87,7 +95,6 @@ window.addStory=async()=>{
   const r=ref(storage,"stories/"+Date.now());
   await uploadBytes(r,file);
   const url=await getDownloadURL(r);
-
   await addDoc(collection(db,"stories"),{
     uid:currentUser.uid,media:url,createdAt:Date.now()
   });
@@ -105,12 +112,13 @@ function loadStories(){
 
 /* GLOBAL CHAT */
 window.sendGlobalMessage=async()=>{
+  if(!globalMessage.value)return;
   await addDoc(collection(db,"messages"),{
-    text:globalMessage.value,uid:currentUser.uid,createdAt:serverTimestamp()
+    uid:currentUser.uid,text:globalMessage.value,createdAt:serverTimestamp()
   });
   globalMessage.value="";
 };
-function loadChat(){
+function loadGlobalChat(){
   onSnapshot(query(collection(db,"messages"),orderBy("createdAt")),snap=>{
     globalChat.innerHTML="";
     snap.forEach(d=>{
@@ -122,114 +130,65 @@ function loadChat(){
 /* PRIVATE CHAT */
 window.sendPrivateMessage=async()=>{
   const fuid=chatUID.value;
+  if(!fuid||!privateMessage.value)return;
   const chatId=[currentUser.uid,fuid].sort().join("_");
-
   await addDoc(collection(db,"privateChats",chatId,"messages"),{
     text:privateMessage.value,from:currentUser.uid,seen:false,createdAt:serverTimestamp()
   });
-
   privateMessage.value="";
 };
-
 function loadPrivateChat(){
   chatUID.onchange=()=>{
     const fuid=chatUID.value;
     const chatId=[currentUser.uid,fuid].sort().join("_");
-
     onSnapshot(query(collection(db,"privateChats",chatId,"messages"),orderBy("createdAt")),snap=>{
       privateChat.innerHTML="";
       snap.forEach(async d=>{
         const m=d.data();
-
         if(m.from!==currentUser.uid && !m.seen){
           await updateDoc(d.ref,{seen:true});
         }
-
-        privateChat.innerHTML+=`
-          <div>${m.text} ${m.from===currentUser.uid?(m.seen?"✔✔":"✔"):""}</div>`;
+        privateChat.innerHTML+=`<div>${m.text}</div>`;
       });
     });
   };
 }
 
-/* TYPING */
-let typingTimeout;
-privateMessage.addEventListener("input",async()=>{
-  const chatId=[currentUser.uid,chatUID.value].sort().join("_");
-
-  await setDoc(doc(db,"typing",chatId),{[currentUser.uid]:true},{merge:true});
-
-  clearTimeout(typingTimeout);
-  typingTimeout=setTimeout(async()=>{
-    await setDoc(doc(db,"typing",chatId),{[currentUser.uid]:false},{merge:true});
-  },2000);
-});
-function listenTyping(){
-  onSnapshot(doc(db,"typing",[currentUser.uid,chatUID.value].sort().join("_")),snap=>{
-    const d=snap.data();
-    if(!d)return;
-    typingStatus.innerText=d[chatUID.value]?"Typing...":"";
-  });
-}
-
 /* FRIENDS */
 window.sendFriendRequest=async()=>{
   const fuid=addFriendUID.value;
+  if(!fuid)return;
   const snap=await getDoc(doc(db,"users",fuid));
-
   await setDoc(doc(db,"users",fuid),{
-    requests:[...(snap.data().requests||[]),currentUser.uid]
+    requests:[...(snap.data()?.requests||[]),currentUser.uid]
   },{merge:true});
 };
-
-function loadRequests(){
+function loadFriendRequests(){
   onSnapshot(doc(db,"users",currentUser.uid),snap=>{
     friendRequests.innerHTML="";
-    (snap.data().requests||[]).forEach(uid=>{
-      friendRequests.innerHTML+=`
-        <div>${uid}
-        <button onclick="acceptRequest('${uid}')">✔</button>
-        </div>`;
+    (snap.data()?.requests||[]).forEach(uid=>{
+      friendRequests.innerHTML+=`<div>${uid}<button onclick="acceptRequest('${uid}')">✔</button></div>`;
     });
   });
 }
-
 window.acceptRequest=async(uid)=>{
   const u=doc(db,"users",currentUser.uid);
   const f=doc(db,"users",uid);
-
   const us=await getDoc(u);
   const fs=await getDoc(f);
-
   await setDoc(u,{
-    friends:[...(us.data().friends||[]),uid],
-    requests:us.data().requests.filter(r=>r!==uid)
+    friends:[...(us.data()?.friends||[]),uid],
+    requests:us.data()?.requests.filter(r=>r!==uid)
   },{merge:true});
-
   await setDoc(f,{
-    friends:[...(fs.data().friends||[]),currentUser.uid]
+    friends:[...(fs.data()?.friends||[]),currentUser.uid]
   },{merge:true});
 };
-
 function loadFriends(){
-  onSnapshot(doc(db,"users",currentUser.uid),async snap=>{
+  onSnapshot(doc(db,"users",currentUser.uid),snap=>{
     friendsList.innerHTML="";
-    for(const uid of (snap.data().friends||[])){
-      const f=await getDoc(doc(db,"users",uid));
-      friendsList.innerHTML+=`${uid} ${f.data().online?"🟢":"⚫"}<br>`;
-    }
-  });
-}
-
-/* NOTIFICATIONS */
-function loadNotifications(){
-  onSnapshot(collection(db,"notifications"),snap=>{
-    notifications.innerHTML="";
-    snap.forEach(d=>{
-      const n=d.data();
-      if(n.to===currentUser.uid){
-        notifications.innerHTML+=`<div>${n.text}</div>`;
-      }
+    (snap.data()?.friends||[]).forEach(fuid=>{
+      friendsList.innerHTML+=`<div>${fuid}</div>`;
     });
   });
 }
