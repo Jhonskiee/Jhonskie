@@ -55,7 +55,6 @@ body{
   justify-content: center;
   align-items: center;
 
-  float: left;
   margin-top: 80px;
 
 }
@@ -70,8 +69,6 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-
-  float: left;
 }
 #join_input{
   width: 60%;
@@ -176,8 +173,6 @@ body{
 }
 #chat_logout_container{
   width: 100%;
-  display: inline-block;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -281,8 +276,7 @@ body{
   width: 6px;
 }
 /* Track */
-::-webkit-scrollbar-track {
-  background: #cccs;
+::-webkit-scrollbar-track {  background: #f1f1f1;
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
