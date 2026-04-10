@@ -1,285 +1,180 @@
-body{
-  /* https://www.color-hex.com/color/d3d3d3 */
-  background-color: #fff; /*#f6f6f6, EBEBD3, fafafa*/
-  font-family: Bungee Outline;
-  font-weight: 900;
+window.onload = function () {
 
-  overflow: hidden;
-  animation: blur 0.5s ease-out;
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+    projectId: "YOUR_PROJECT",
+  };
 
-}
-*{
-  outline: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-#title_container{
-  width: 100%;
-  height: 225px;
+  firebase.initializeApp(firebaseConfig);
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  const db = firebase.database();
+  const auth = firebase.auth();
 
-  background-color: #D64045;/*#467599;*/
-  border-bottom: 5px solid #fff;
-  box-shadow: 0 0 30px -18px #D64045;
+  class App {
 
-}
-#title_inner_container{
-  width: 100%;
-  height: 100%;
+    title() {
+      let div = document.createElement('div');
+      div.id = 'title_container';
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+      let h1 = document.createElement('h1');
+      h1.id = 'title';
+      h1.textContent = 'Life Is Unfair';
 
-  /* background-color: #083D77; */
-  border-radius: 200px;
-}
-#title{
-  display: inline-block;
-  color: #fff;/*EBEBD3, C5283D*/
-  font-size: 55px;
-  letter-spacing: 2px;
-  user-select: none;
-}
+      div.appendChild(h1);
+      document.body.appendChild(div);
+    }
 
-#join_container{
-  width: 100%;
-  height: 200px;
+    home() {
+      document.body.innerHTML = '';
+      this.title();
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+      let container = document.createElement('div');
+      container.className = 'container';
 
-  margin-top: 80px;
+      let name = document.createElement('input');
+      name.placeholder = 'Name';
 
-}
-#join_inner_container{
-  width: 50%;
-  height: 100%;
-}
-#join_input_container{
-  width: 100%;
-  height: 50px;
+      let email = document.createElement('input');
+      email.placeholder = 'Email';
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-#join_input{
-  width: 60%;
-  height: 40px;
+      let pass = document.createElement('input');
+      pass.placeholder = 'Password';
+      pass.type = 'password';
 
-  color: #1D3354;
-  font-family: Varela Round;
-  font-size: 15px;
-  font-weight: bold;
-  text-align: center;
-  background-color: Transparent;
-  border-bottom: 2px dashed #1D3354;
+      let login = document.createElement('button');
+      login.textContent = 'Login';
 
-}
-#join_input:focus{
-  box-shadow: 0 10px 30px -17px #1D3354;
-}
-#join_button_container{
-  width: 100%;
-  height: 50px;
+      let register = document.createElement('button');
+      register.textContent = 'Create Account';
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+      let forgot = document.createElement('button');
+      forgot.textContent = 'Forgot Password';
 
-  float: left;
-}
-#join_button{
-  width: 60%;
-  height: 40px;
+      login.onclick = () => {
+        auth.signInWithEmailAndPassword(email.value, pass.value)
+        .catch(e => alert(e.message));
+      };
 
-  font-family: Varela Round;
-  font-size: 15px;
-  font-weight: bold;
-  text-align: center;
-  color: #fff;
-}
+      register.onclick = () => {
+        auth.createUserWithEmailAndPassword(email.value, pass.value)
+        .then(user => {
+          user.user.updateProfile({ displayName: name.value });
+        })
+        .catch(e => alert(e.message));
+      };
 
-#chat_container{
-  width: 100%;
-  height: 450px;
+      forgot.onclick = () => {
+        if (!email.value) return alert("Enter email first");
+        auth.sendPasswordResetEmail(email.value)
+        .then(() => alert("Email sent"))
+        .catch(e => alert(e.message));
+      };
 
-  display: flex;
-  justify-content: center;
+      container.append(name, email, pass, login, register, forgot);
+      document.body.appendChild(container);
+    }
 
-  float: left;
-  margin-top: 40px;
-  /* Fade in container */
-  animation: fadeIn 1s linear;
+    chat(user) {
+      document.body.innerHTML = '';
+      this.title();
 
-}
-#chat_inner_container{
-  width: 40%;
-  height: 100%;
-}
-#chat_content_container{
-  width: 100%;
-  height: 90%;
+      let chat = document.createElement('div');
+      chat.className = 'chat';
 
-  float: left;
-  overflow-y: auto;
-  font-family: Varela Round;
+      let messages = document.createElement('div');
+      messages.className = 'messages';
 
-  padding-left: 15px;
-  padding-right: 15px;
-}
-#chat_input_container{
-  width: 100%;
-  height: 10%;
+      let input = document.createElement('input');
+      input.placeholder = 'Type message...';
 
-  float: left;
-  border-bottom: 2px dashed #1D3354;
-  background-color: Transparent;
+      let send = document.createElement('button');
+      send.textContent = 'Send';
 
-  padding-left: 15px;
-  padding-right: 15px;
-  font-family: Varela Round;
-  margin-top: 10px;
-}
-#chat_input{
-  width: 95%;
-  height: 100%;
-  float: left;
-  background-color: Transparent;
-  color: #1D3354;
-  font-size: 15px;
-}
-#chat_input_send{
-  width: 5%;
-  height: 100%;
-  float: left;
-  font-size: 18px;
-  background-color: Transparent;
-  text-align: right;
-  color: #ccc;
-}
-#chat_input_send.enabled{
-  color: #D64045;
-  background-color: Transparent;
-  cursor: pointer;
+      let typing = document.createElement('div');
+      typing.className = 'typing';
 
-}
-#chat_logout_container{
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+      let online = document.createElement('div');
+      online.className = 'online';
 
-  float: left;
-  margin-top: 20px;
-}
-#chat_logout{
-  color: #D64045;
-  cursor: pointer;
-}
-#chat_logout:hover{
-  text-decoration: underline;
-}
-.message_container{
-  width: 100%;
-  display: inline-block;
-  margin-bottom: 20px;
+      let logout = document.createElement('button');
+      logout.textContent = 'Logout';
 
-}
-.message_inner_container{
-  width: 100%;
-  display: inline-block;
+      // SEND
+      send.onclick = () => {
+        if (!input.value.trim()) return;
 
-  color: #1D3354;
-}
-.message_user_container{
-  width: 100%;
-  display: inline-block;
-}
-.message_user{
-  font-weight: bold;
-  font-size: 14px;
-}
-.message_content_container{
-  width: 100%;
-  display: inline-block;
+        db.ref('messages').push({
+          name: user.displayName || user.email,
+          text: input.value
+        });
 
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-.message_content{
-  font-weight: normal;
-  font-size: 14px;
-  margin-top: 5px;
-}
+        db.ref('typing/' + user.uid).remove();
+        input.value = '';
+      };
 
-.enabled{
-  transition: background-color 0.5s;
-  color: #fff;
-  background-color: #D64045; /*#5B7553;*/
-  cursor: pointer;
-}
-#title_container.chat_title_container{
-  transition: 0.8s;
-  transition-timing-function: ease-in-out;
-  height: 100px;
-}
-#title.chat_title{
-  transition: 0.8s;
-  font-size: 47px;
-}
-.loader_container{
-  width: 100%;
-  height: 100%;
+      // TYPING
+      input.oninput = () => {
+        db.ref('typing/' + user.uid).set(user.displayName || user.email);
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.loader {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
+        setTimeout(() => {
+          db.ref('typing/' + user.uid).remove();
+        }, 2000);
+      };
 
-  border-top: 6px solid #D64045;
-  border-bottom: 6px solid #1D3354;
-  border-left: 6px solid #E9FFF9;
-  border-right: 6px solid #E9FFF9;
-}
+      // LOGOUT
+      logout.onclick = () => {
+        db.ref('online/' + user.uid).remove();
+        auth.signOut();
+      };
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-@keyframes fadeIn {
-   0% {opacity: 0;}
-   100% {opacity: 1;}
-}
-@keyframes blur {
-  0% {filter: blur(5px);}
-  100% {}
-}
-::selection {
-  background-color: #D64045;
-  color: #fff;
-}
-/* width */
-::-webkit-scrollbar {
-  width: 6px;
-}
-/* Track */
-::-webkit-scrollbar-track {  background: #f1f1f1;
-}
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #D64045;
-  border-radius: 5px;
-}
+      chat.append(messages, input, send, typing, online, logout);
+      document.body.appendChild(chat);
+
+      // REALTIME CHAT
+      db.ref('messages').on('value', snap => {
+        messages.innerHTML = '';
+        snap.forEach(d => {
+          let m = d.val();
+          let p = document.createElement('div');
+          p.className = 'message';
+          p.textContent = m.name + ": " + m.text;
+          messages.appendChild(p);
+        });
+      });
+
+      // ONLINE USERS
+      db.ref('online/' + user.uid).set(user.displayName || user.email);
+
+      db.ref('online').on('value', snap => {
+        online.innerHTML = "<b>Online:</b><br>";
+        snap.forEach(u => {
+          let p = document.createElement('div');
+          p.textContent = "🟢 " + u.val();
+          online.appendChild(p);
+        });
+      });
+
+      // TYPING DISPLAY
+      db.ref('typing').on('value', snap => {
+        typing.innerHTML = '';
+        snap.forEach(t => {
+          if (t.key !== user.uid) {
+            typing.textContent = t.val() + " is typing...";
+          }
+        });
+      });
+    }
+  }
+
+  const app = new App();
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      app.chat(user);
+    } else {
+      app.home();
+    }
+  });
+};
