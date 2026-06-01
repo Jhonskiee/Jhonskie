@@ -1,63 +1,103 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { app } from "./firebase.js";
 
 import {
 getAuth,
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword,
-signOut,
-onAuthStateChanged
+onAuthStateChanged,
+signOut
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyA4F9GnvJZ-AGzID63vqQO79zJulh2NJmY",
-    authDomain: "abcs-5859c.firebaseapp.com",
-    databaseURL: "https://abcs-5859c-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "abcs-5859c",
-    storageBucket: "abcs-5859c.firebasestorage.app",
-    messagingSenderId: "479969126573",
-    appId: "1:479969126573:web:26bdd9ff755a92615afe24",
-    measurementId: "G-KTV3112JXN"
-  };
+import {
+getFirestore,
+collection,
+addDoc,
+serverTimestamp,
+query,
+orderBy,
+onSnapshot
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-window.register = function () {
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
-
-createUserWithEmailAndPassword(auth, email, password)
-.then(() => {
-alert("Account Created!");
-})
-.catch(error => {
-alert(error.message);
-});
-};
-
-window.login = function () {
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
-
-signInWithEmailAndPassword(auth, email, password)
-.catch(error => {
-alert(error.message);
-});
-};
-
-window.logout = function () {
+window.logout = function(){
 signOut(auth);
 };
 
-onAuthStateChanged(auth, user => {
-if(user){
-document.getElementById("loginPage").style.display="none";
-document.getElementById("homePage").style.display="block";
-document.getElementById("userEmail").textContent=user.email;
-}
-else{
-document.getElementById("loginPage").style.display="flex";
-document.getElementById("homePage").style.display="none";
-}
+window.createPost = async function(){
+
+const text =
+document.getElementById("postInput").value;
+
+if(text === "") return;
+
+await addDoc(collection(db,"posts"),{
+
+user:auth.currentUser.email,
+text:text,
+createdAt:serverTimestamp()
+
 });
+
+document.getElementById("postInput").value="";
+};
+
+onAuthStateChanged(auth,(user)=>{
+
+if(user){
+
+document.getElementById("username")
+.textContent=user.email;
+
+loadPosts();
+
+}else{
+
+window.location.href="pages/login.html";
+
+}
+
+});
+
+function loadPosts(){
+
+const q=query(
+collection(db,"posts"),
+orderBy("createdAt","desc")
+);
+
+onSnapshot(q,(snapshot)=>{
+
+const posts=document.getElementById("posts");
+
+posts.innerHTML="";
+
+snapshot.forEach((doc)=>{
+
+const data=doc.data();
+
+posts.innerHTML+=`
+
+<div class="post">
+
+<div class="post-header">
+
+<img class="avatar"
+src="assets/default-avatar.png">
+
+<b>${data.user}</b>
+
+</div>
+
+<p>${data.text}</p>
+
+</div>
+
+`;
+
+});
+
+});
+
+}
