@@ -1,69 +1,48 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Login - Sunriseee</title>
-<link rel="stylesheet" href="../style.css">
+<title>Register - Sunriseee</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>🌅 Sunriseee</h1>
+<div class="card">
 
-<input type="email"
+<div class="logo">
+🌅 Sunriseee
+</div>
+
+<input
 id="email"
+type="email"
 placeholder="Email">
 
-<input type="password"
+<input
 id="password"
+type="password"
 placeholder="Password">
 
-<button onclick="login()">
-Login
+<button onclick="registerUser()">
+Register
 </button>
 
-<a href="register.html">
-Create Account
+<a href="login.html">
+Already have an account?
 </a>
 
 </div>
 
-<script type="module">
+</div>
 
-import { app } from "../firebase.js";
-
-import {
-getAuth,
-signInWithEmailAndPassword
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-const auth=getAuth(app);
-
-window.login=function(){
-
-signInWithEmailAndPassword(
-auth,
-email.value,
-password.value
-)
-
-.then(()=>{
-
-location.href="../index.html";
-
-})
-
-.catch(error=>{
-
-alert(error.message);
-
-});
-
-};
-
+<script
+type="module"
+src="js/auth.js">
 </script>
 
 </body>
+
 </html>
