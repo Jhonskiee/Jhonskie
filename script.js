@@ -1,103 +1,146 @@
 import { app } from "./firebase.js";
 
 import {
-getAuth,
-onAuthStateChanged,
-signOut
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    sendEmailVerification,
+    sendPasswordResetEmail,
+    signOut,
+    onAuthStateChanged
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-import {
-getFirestore,
-collection,
-addDoc,
-serverTimestamp,
-query,
-orderBy,
-onSnapshot
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 const auth = getAuth(app);
-const db = getFirestore(app);
 
-window.logout = function(){
-signOut(auth);
+window.registerUser = async function () {
+
+    const email =
+    document.getElementById("email").value;
+
+    const password =
+    document.getElementById("password").value;
+
+    try {
+
+        const userCredential =
+        await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+        await sendEmailVerification(
+            userCredential.user
+        );
+
+        alert(
+            "Account created. Verify your email."
+        );
+
+        window.location.href =
+        "login.html";
+
+    } catch(error){
+
+        alert(error.message);
+
+    }
+
 };
 
-window.createPost = async function(){
+window.loginUser = async function(){
 
-const text =
-document.getElementById("postInput").value;
+    const email =
+    document.getElementById("email").value;
 
-if(text === "") return;
+    const password =
+    document.getElementById("password").value;
 
-await addDoc(collection(db,"posts"),{
+    try{
 
-user:auth.currentUser.email,
-text:text,
-createdAt:serverTimestamp()
+        const userCredential =
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
 
-});
+        if(
+            !userCredential.user
+            .emailVerified
+        ){
 
-document.getElementById("postInput").value="";
+            alert(
+            "Verify your email first."
+            );
+
+            return;
+        }
+
+        window.location.href =
+        "index.html";
+
+    }catch(error){
+
+        alert(error.message);
+
+    }
+
 };
 
-onAuthStateChanged(auth,(user)=>{
+window.resetPassword =
+async function(){
 
-if(user){
+    const email =
+    document.getElementById("email").value;
 
-document.getElementById("username")
-.textContent=user.email;
+    try{
 
-loadPosts();
+        await sendPasswordResetEmail(
+            auth,
+            email
+        );
 
-}else{
+        alert(
+        "Password reset email sent."
+        );
 
-window.location.href="pages/login.html";
+    }catch(error){
 
-}
+        alert(error.message);
 
-});
+    }
 
-function loadPosts(){
+};
 
-const q=query(
-collection(db,"posts"),
-orderBy("createdAt","desc")
+window.logoutUser =
+function(){
+
+    signOut(auth);
+
+};
+
+onAuthStateChanged(
+    auth,
+    (user)=>{
+
+        if(
+            window.location.pathname
+            .includes("index.html")
+            ||
+            window.location.pathname
+            === "/"
+        ){
+
+            if(!user){
+
+                window.location.href =
+                "login.html";
+
+            }
+
+        }
+
+    }
 );
-
-onSnapshot(q,(snapshot)=>{
-
-const posts=document.getElementById("posts");
-
-posts.innerHTML="";
-
-snapshot.forEach((doc)=>{
-
-const data=doc.data();
-
-posts.innerHTML+=`
-
-<div class="post">
-
-<div class="post-header">
-
-<img class="avatar"
-src="assets/default-avatar.png">
-
-<b>${data.user}</b>
-
-</div>
-
-<p>${data.text}</p>
-
-</div>
-
-`;
-
-});
-
-});
-
-}
