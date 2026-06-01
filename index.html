@@ -1,38 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sunriseee</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-<nav class="navbar">
-    <div class="logo">🌅 Sunriseee</div>
-
-    <div class="nav-right">
-        <span id="username"></span>
-        <button onclick="logout()">Logout</button>
-    </div>
-</nav>
-
 <div class="container">
 
-    <div class="create-post">
-        <textarea id="postInput"
-        placeholder="What's happening today?"></textarea>
+<div class="card">
 
-        <button onclick="createPost()">Post</button>
-    </div>
+<h1>
+Welcome to Sunriseee
+</h1>
 
-    <div id="posts"></div>
+<p>
+Authentication successful.
+</p>
+
+<button onclick="logoutUser()">
+Logout
+</button>
 
 </div>
 
-<script type="module" src="firebase.js"></script>
-<script type="module" src="app.js"></script>
+</div>
+
+<script
+type="module"
+src="js/auth.js">
+</script>
 
 </body>
+
 </html>
