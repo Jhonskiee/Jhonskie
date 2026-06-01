@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Reset Password</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<div class="logo">
+🔒 Reset Password
+</div>
+
+<input
+id="email"
+type="email"
+placeholder="Email">
+
+<button onclick="resetPassword()">
+Send Reset Email
+</button>
+
+<a href="login.html">
+Back to Login
+</a>
+
+</div>
+
+</div>
+
+<script
+type="module"
+src="js/auth.js">
+</script>
+
+</body>
+
+</html>
