@@ -176,13 +176,9 @@ body{
 }
 #chat_logout_container{
   width: 100%;
-  display: inline-block;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
-  float: left;
   margin-top: 20px;
 }
 #chat_logout{
@@ -282,9 +278,10 @@ body{
 }
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #cccs;
+  background: #ccc;
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #D64045;
   border-radius: 5px;
+}
