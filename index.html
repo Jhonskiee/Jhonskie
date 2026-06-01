@@ -3,51 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SocialHub</title>
+<title>Sunriseee</title>
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="loginPage" class="container">
-    <div class="login-card">
-        <h1>SocialHub</h1>
-        <p>Connect with friends and the world around you.</p>
+<nav class="navbar">
+    <div class="logo">🌅 Sunriseee</div>
 
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-
-        <button onclick="login()">Login</button>
-        <button class="register" onclick="register()">Create Account</button>
+    <div class="nav-right">
+        <span id="username"></span>
+        <button onclick="logout()">Logout</button>
     </div>
+</nav>
+
+<div class="container">
+
+    <div class="create-post">
+        <textarea id="postInput"
+        placeholder="What's happening today?"></textarea>
+
+        <button onclick="createPost()">Post</button>
+    </div>
+
+    <div id="posts"></div>
+
 </div>
 
-<div id="homePage" style="display:none;">
-    <nav>
-        <h2>SocialHub</h2>
-        <div>
-            <span id="userEmail"></span>
-            <button onclick="logout()">Logout</button>
-        </div>
-    </nav>
-
-    <div class="feed">
-        <div class="create-post">
-            <textarea placeholder="What's on your mind?"></textarea>
-            <button>Post</button>
-        </div>
-
-        <div class="post">
-            <h3>Welcome to SocialHub</h3>
-            <p>Your Firebase login is working successfully.</p>
-        </div>
-
-        <div class="post">
-            <h3>Community Update</h3>
-            <p>This is a sample Facebook-style feed layout.</p>
-        </div>
-    </div>
-</div>
-
+<script type="module" src="firebase.js"></script>
 <script type="module" src="app.js"></script>
+
 </body>
 </html>
