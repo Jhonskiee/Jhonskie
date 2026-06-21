@@ -6,7 +6,6 @@
 <title>Im Boreddd</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -133,209 +132,168 @@ font-size:25px;
 color:#ff4d6d;
 line-height:1.8;
 }
-
 </style>
 </head>
 <body>
 
-<!-- PAGE 1 -->
-
 <div class="page" id="page1">
-
 <h2>Please Enter Your Name po😁</h2>
-
 <input id="name" placeholder="Your Name">
-
-<button onclick="startConfession()">
-Submit
-</button>
-
+<button onclick="startConfession()">Submit</button>
 </div>
-
-<!-- LOADING -->
 
 <div class="page hidden" id="loading">
-
 <div class="loader"></div>
-
-<h2 style="margin-top:20px;">
-Preparing your message...
-</h2>
-
+<h2 style="margin-top:20px;">Preparing your message...</h2>
 </div>
-
-<!-- CONFESSION -->
 
 <div class="page hidden" id="page2">
-
 <h2>💌 Message For You</h2>
-
 <p id="typed"></p>
-
-<button onclick="nextPage()">
-Continue Po😁
-</button>
-
+<button onclick="nextPage()">Continue Po😁</button>
 </div>
-
-<!-- QUESTION -->
 
 <div class="page hidden" id="page3">
-
 <h2>Can I Court You? Hehe</h2>
-
 <div id="question">
-
-<button id="yesBtn" onclick="yesAnswer()">
-YES🥰
-</button>
-
-<button id="noBtn">
-NO🥲
-</button>
-
+<button id="yesBtn" onclick="yesAnswer()">YES🥰</button>
+<button id="noBtn">NO🥲</button>
 </div>
-
 </div>
-
-<!-- SUCCESS -->
 
 <div class="page hidden" id="page4">
-
 <div class="success">
-
- YAYYYY 
-
-<br><br>
-
-You just made me the happiest person today 🥰
-
-<br><br>
-
+ YAYYYY <br><br>
+You just made me the happiest person today 🥰<br><br>
 Thank you
-
+</div>
 </div>
 
-</div>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
 <script>
+// 2. YOUR FIREBASE CONFIGURATION
+// Replace these placeholders with your actual project settings from the Firebase Console!
+ const firebaseConfig = {
+    apiKey: "AIzaSyBpxlYUntT6flNCjCXUd4fYa6hmSmX2kpA",
+    authDomain: "memecha-c10e2.firebaseapp.com",
+    databaseURL: "https://memecha-c10e2-default-rtdb.firebaseio.com",
+    projectId: "memecha-c10e2",
+    storageBucket: "memecha-c10e2.firebasestorage.app",
+    messagingSenderId: "682910602156",
+    appId: "1:682910602156:web:9b7fd6beda2aa3e36ae009"
+  };
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// Track session ID so we update the same user record throughout their interaction
+let userSessionRef = null; 
 
 const noBtn = document.getElementById("noBtn");
-
 noBtn.addEventListener("mouseover", moveButton);
 noBtn.addEventListener("click", moveButton);
 
 function moveButton(){
-
-const x = Math.random()*220;
-const y = Math.random()*150;
-
-noBtn.style.left = x+"px";
-noBtn.style.top = y+"px";
-
+  const x = Math.random()*220;
+  const y = Math.random()*150;
+  noBtn.style.left = x+"px";
+  noBtn.style.top = y+"px";
+  
+  // Real-time track: Update whenever they try to click "No"
+  if(userSessionRef) {
+    userSessionRef.child("attemptedNoCount").transaction((currentCount) => {
+      return (currentCount || 0) + 1;
+    });
+  }
 }
 
 function startConfession(){
+  const name = document.getElementById("name").value;
 
-const name = document.getElementById("name").value;
+  if(name.trim()==""){
+    alert("Please enter your name.");
+    return;
+  }
 
-if(name.trim()==""){
-alert("Please enter your name.");
-return;
-}
+  window.userName = name;
 
-window.userName = name;
+  // 3. CREATE NEW ENTRY IN DATABASE
+  // Generates a unique ID under 'confessions'
+  userSessionRef = database.ref('confessions').push();
+  userSessionRef.set({
+    name: name,
+    timestamp: new Date().toISOString(),
+    status: "Started reading message",
+    attemptedNoCount: 0,
+    finalAnswer: "Pending"
+  });
 
-document.getElementById("page1").classList.add("hidden");
-document.getElementById("loading").classList.remove("hidden");
+  document.getElementById("page1").classList.add("hidden");
+  document.getElementById("loading").classList.remove("hidden");
 
-setTimeout(()=>{
-document.getElementById("loading").classList.add("hidden");
-document.getElementById("page2").classList.remove("hidden");
-
-typeMessage();
-},2500);
-
+  setTimeout(()=>{
+    document.getElementById("loading").classList.add("hidden");
+    document.getElementById("page2").classList.remove("hidden");
+    typeMessage();
+  },2500);
 }
 
 function typeMessage(){
+  let text = `Hi ${window.userName},\n\nI have something important to tell you...\nMaybe I've been keeping this for a while.\nEvery time I see you,\nmy day becomes a little brighter.\nYou make me smile without even trying.\nYou're someone special to me.\nAnd today,\nI just wanted to be honest...\nI like you ❤️\n\nIT'S A PRANK😆😆😆`;
+  let i = 0;
 
-let text =
-
-`Hi ${window.userName},
-
-I have something important to tell you...
-Maybe I've been keeping this for a while.
-Every time I see you,
-my day becomes a little brighter.
-You make me smile without even trying.
-You're someone special to me.
-And today,
-I just wanted to be honest...
-I like you ❤️
-
-IT'S A PRANK😆😆😆`;
-
-let i = 0;
-
-function typing(){
-
-if(i < text.length){
-
-document.getElementById("typed").innerHTML += text.charAt(i);
-
-i++;
-
-setTimeout(typing,45);
-
-}
-
-}
-
-typing();
-
+  function typing(){
+    if(i < text.length){
+      document.getElementById("typed").innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typing,45);
+    }
+  }
+  typing();
 }
 
 function nextPage(){
+  // Real-time track: They moved past the prank message to the actual question
+  if(userSessionRef) {
+    userSessionRef.update({
+      status: "Viewing final question"
+    });
+  }
 
-document.getElementById("page2").classList.add("hidden");
-
-document.getElementById("page3").classList.remove("hidden");
-
+  document.getElementById("page2").classList.add("hidden");
+  document.getElementById("page3").classList.remove("hidden");
 }
 
 function yesAnswer(){
+  // Real-time track: They clicked YES!
+  if(userSessionRef) {
+    userSessionRef.update({
+      status: "Completed",
+      finalAnswer: "YES"
+    });
+  }
 
-document.getElementById("page3").classList.add("hidden");
-
-document.getElementById("page4").classList.remove("hidden");
-
-setInterval(createHeart,250);
-
+  document.getElementById("page3").classList.add("hidden");
+  document.getElementById("page4").classList.remove("hidden");
+  setInterval(createHeart,250);
 }
 
 function createHeart(){
+  const heart=document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerHTML="❤️";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.bottom="0";
+  heart.style.fontSize=(20+Math.random()*25)+"px";
+  document.body.appendChild(heart);
 
-const heart=document.createElement("div");
-
-heart.classList.add("heart");
-
-heart.innerHTML="❤️";
-
-heart.style.left=Math.random()*100+"vw";
-
-heart.style.bottom="0";
-
-heart.style.fontSize=(20+Math.random()*25)+"px";
-
-document.body.appendChild(heart);
-
-setTimeout(()=>{
-heart.remove();
-},5000);
-
+  setTimeout(()=>{
+    heart.remove();
+  },5000);
 }
-
 </script>
 
 </body>
