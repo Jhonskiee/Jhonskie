@@ -1,34 +1,128 @@
-<!DOCTYPE html>
-<html lang="en">
+here<!DOCTYPE html>
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bored WEB By MEEEEEE</title>
-<link rel="stylesheet" href="style.css">
+<title>Confession</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:Arial,sans-serif;
+
+    background-color:#fff8f5;
+    background-image:
+    radial-gradient(#ff9db5 2px, transparent 2px);
+    background-size:60px 60px;
+}
+
+.container{
+    width:350px;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+h2{
+    color:#ff4d6d;
+}
+
+input{
+    width:90%;
+    padding:12px;
+    border-radius:30px;
+    border:2px solid #ff4d6d;
+    text-align:center;
+}
+
+button{
+    width:90%;
+    margin-top:15px;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#ff4d6d;
+    color:white;
+    cursor:pointer;
+}
+
+#messageBox{
+    display:none;
+}
+
+#typedText{
+    font-size:18px;
+    line-height:1.8;
+}
+</style>
 </head>
 <body>
 
-<div class="container" id="page1">
-    <h2>Make Your Confession </h2>
+<div class="container" id="formBox">
+    <h2>Please Enter Your Name 😊</h2>
 
-    <input type="text" id="sender" placeholder="Your Name">
-    <input type="text" id="receiver" placeholder="Receiver's Name">
+    <input type="text" id="name" placeholder="Your Name">
 
-    <textarea id="message" placeholder="Write your confession here..."></textarea>
-
-    <button onclick="startConfession()">Generate Confession</button>
+    <button onclick="showMessage()">
+        Submit
+    </button>
 </div>
 
-<div class="container hidden" id="loading">
-    <h2>Loading...</h2>
+<div class="container" id="messageBox">
+    <h2>💖 Confession 💖</h2>
+
+    <p id="typedText"></p>
 </div>
 
-<div class="container hidden" id="page2">
-    <h2>💌 Confession</h2>
-    <p id="typed"></p>
-</div>
+<script>
 
-<script src="script.js"></script>
+function showMessage(){
+
+    let name = document.getElementById("name").value;
+
+    if(name==""){
+        alert("Please enter your name!");
+        return;
+    }
+
+    document.getElementById("formBox").style.display="none";
+    document.getElementById("messageBox").style.display="block";
+
+    // EDIT THIS MESSAGE
+    let text =
+`Hi ${name},
+
+I just want to tell you something...
+
+You've become someone very special to me.
+
+Every time I see you, my day gets better.
+
+I like you more than a friend and I wanted you to know that.
+
+❤️`;
+
+    let i=0;
+    let speed=50;
+
+    function typeWriter(){
+        if(i < text.length){
+            document.getElementById("typedText").innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typeWriter,speed);
+        }
+    }
+
+    typeWriter();
+}
+
+</script>
 
 </body>
 </html>
