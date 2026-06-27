@@ -3,179 +3,501 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Im Boreddd</title>
-
+<title>ChatApp</title>
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-body{
-height:100vh;
-overflow:hidden;
-display:flex;
-justify-content:center;
-align-items:center;
-background:#fff7f0;
-background-image:
-radial-gradient(#ff9db5 2px, transparent 2px);
-background-size:60px 60px;
-}
-
-.page{
-width:90%;
-max-width:400px;
-background:white;
-padding:25px;
-border-radius:20px;
-text-align:center;
-box-shadow:0 5px 20px rgba(0,0,0,.15);
-}
-
-h1,h2{
-color:#ff4d6d;
-margin-bottom:15px;
-}
-
-input{
-width:100%;
-padding:12px;
-border:2px solid #ff4d6d;
-border-radius:30px;
-text-align:center;
-font-size:16px;
-}
-
-button{
-margin-top:15px;
-padding:12px;
-width:100%;
-border:none;
-border-radius:10px;
-font-size:16px;
-cursor:pointer;
-background:#ff4d6d;
-color:white;
-}
-
-button:hover{
-opacity:.9;
-}
-
-.hidden{
-display:none;
-}
-
-#typed{
-min-height:180px;
-white-space:pre-wrap;
-line-height:1.8;
-font-size:17px;
-}
-
-.loader{
-width:50px;
-height:50px;
-border:5px solid #ffd1dc;
-border-top:5px solid #ff4d6d;
-border-radius:50%;
-animation:spin 1s linear infinite;
-margin:auto;
-}
-
-@keyframes spin{
-100%{
-transform:rotate(360deg);
-}
-}
-
-.heart{
-position:fixed;
-font-size:25px;
-pointer-events:none;
-animation:float 5s linear forwards;
-}
-
-@keyframes float{
-0%{
-transform:translateY(0);
-opacity:1;
-}
-100%{
-transform:translateY(-100vh);
-opacity:0;
-}
-}
-
-#question{
-position:relative;
-height:250px;
-}
-
-#yesBtn{
-background:#28a745;
-}
-
-#noBtn{
-background:#dc3545;
-position:absolute;
-width:120px;
-left:50%;
-transform:translateX(-50%);
-}
-
-.success{
-font-size:25px;
-color:#ff4d6d;
-line-height:1.8;
-}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --crimson: #C0392B;
+    --crimson-dark: #A93226;
+    --crimson-light: #E74C3C;
+    --indigo: #2C3E9E;
+    --indigo-dark: #1A2580;
+    --bg: #f5f5f7;
+    --white: #ffffff;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --border: #e0e0e0;
+    --radius: 12px;
+    --pink-light: #fce4ec;
+    --pink-dot: #f48fb1;
+    --green-send: #27ae60;
+  }
+ 
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+ 
+  /* ── PAGE SYSTEM ── */
+  .page { display: none; width: 100%; min-height: 100vh; }
+  .page.active { display: flex; align-items: center; justify-content: center; }
+  #chat-page.active { display: flex; flex-direction: column; align-items: stretch; }
+ 
+  /* ── AUTH PAGES ── */
+  .auth-card {
+    background: var(--white);
+    border: 1.5px solid #222;
+    border-radius: 0;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: none;
+  }
+  .auth-card h1 {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 28px;
+    color: var(--text);
+  }
+  .field-group { margin-bottom: 18px; }
+  .field-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .field-group label span.icon { font-size: 16px; }
+  .field-group input {
+    width: 100%;
+    border: 1.5px solid #ccc;
+    border-radius: 0;
+    padding: 11px 14px;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field-group input:focus { border-color: #222; }
+  .field-group input::placeholder { color: #bbb; }
+ 
+  .btn-primary {
+    width: 100%;
+    background: var(--crimson);
+    color: white;
+    border: none;
+    border-radius: 0;
+    padding: 13px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-top: 8px;
+  }
+  .btn-primary:hover { background: var(--crimson-dark); }
+  .btn-primary:disabled { background: #c0737a; cursor: default; }
+ 
+  .remember-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .remember-row input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--crimson); }
+ 
+  .auth-links {
+    text-align: center;
+    margin-top: 16px;
+  }
+  .auth-links a {
+    color: #1a6fc4;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    display: block;
+    margin-top: 8px;
+  }
+  .auth-links a:hover { text-decoration: underline; }
+ 
+  .divider-row {
+    text-align: center;
+    margin: 16px 0 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .divider-row a {
+    color: #1a6fc4;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 500;
+  }
+ 
+  .error-msg {
+    background: #fdecea;
+    color: var(--crimson);
+    border-left: 3px solid var(--crimson);
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-bottom: 14px;
+    border-radius: 0;
+    display: none;
+  }
+  .error-msg.show { display: block; }
+  .success-msg {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-left: 3px solid #43a047;
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-bottom: 14px;
+    border-radius: 0;
+    display: none;
+  }
+  .success-msg.show { display: block; }
+ 
+  /* ── NICKNAME PAGE (dotted pink bg) ── */
+  #nickname-page { background: var(--pink-light); position: relative; overflow: hidden; }
+  .dots-bg {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: radial-gradient(circle, var(--pink-dot) 1.5px, transparent 1.5px);
+    background-size: 40px 40px;
+  }
+  .nickname-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.07);
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+  .nickname-card h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #e91e8c;
+    margin-bottom: 22px;
+  }
+  .nickname-card input {
+    width: 100%;
+    border: 1.5px solid #f48fb1;
+    border-radius: 999px;
+    padding: 12px 20px;
+    font-size: 15px;
+    text-align: center;
+    outline: none;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  .nickname-card input:focus { border-color: #e91e8c; }
+  .nickname-card input::placeholder { color: #ccc; }
+  .btn-pink {
+    width: 100%;
+    background: #f06292;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 13px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-pink:hover { background: #e91e8c; }
+ 
+  /* ── CHAT PAGE ── */
+  #chat-page { background: var(--white); }
+  .chat-header {
+    background: var(--indigo);
+    padding: 0 0 0 0;
+    text-align: center;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .chat-title {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: white;
+    padding: 16px 24px 14px;
+    font-family: 'Courier New', monospace;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    border: 3px solid rgba(255,255,255,0.3);
+    display: inline-block;
+    margin: 16px;
+    border-radius: 4px;
+  }
+ 
+  .chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 20px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .msg-item {
+    padding: 10px 0;
+    border-bottom: none;
+  }
+  .msg-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--indigo);
+    margin-bottom: 2px;
+  }
+  .msg-text {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .msg-time {
+    font-size: 11px;
+    color: #bbb;
+    margin-top: 2px;
+  }
+ 
+  .chat-footer-wrapper {
+    border-top: 1.5px dashed var(--border);
+    background: var(--white);
+    flex-shrink: 0;
+  }
+  .chat-footer {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 10px 20px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+  .chat-footer .nick-tag {
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .chat-footer input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    color: var(--text);
+    background: transparent;
+    padding: 6px 0;
+    min-width: 0;
+  }
+  .chat-footer input::placeholder { color: #bbb; }
+  .chat-footer .logout-tag {
+    font-size: 13px;
+    color: var(--crimson);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .chat-footer .logout-tag:hover { text-decoration: underline; }
+  .send-btn {
+    width: 44px; height: 44px;
+    background: var(--green-send);
+    border: none; border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+    position: absolute;
+    right: 20px;
+    bottom: 14px;
+  }
+  .send-btn:hover { background: #219a52; }
+ 
+  .footer-meta {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 20px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .footer-meta .dot { color: var(--crimson); margin: 0 6px; }
+ 
+  /* scrollbar */
+  .chat-body::-webkit-scrollbar { width: 5px; }
+  .chat-body::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+ 
+  /* loading spinner */
+  .spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--crimson);
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+ 
+  .empty-chat {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    font-size: 14px;
+    padding: 40px;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
-
-<div class="page" id="page1">
-<h2>Please Enter Your Name po😁</h2>
-<input id="name" placeholder="Your Name">
-<button onclick="startConfession()">Submit</button>
+ 
+<!-- ══════════════ LOGIN PAGE ══════════════ -->
+<div class="page active" id="login-page">
+  <div class="auth-card">
+    <h1>Login Form</h1>
+    <div class="error-msg" id="login-error"></div>
+    <div class="success-msg" id="login-success"></div>
+    <div class="field-group">
+      <label><span class="icon">👤</span> Email</label>
+      <input type="email" id="login-email" placeholder="Enter Email">
+    </div>
+    <div class="field-group">
+      <label><span class="icon">🔒</span> Password</label>
+      <input type="password" id="login-password" placeholder="Enter Password">
+    </div>
+    <button class="btn-primary" id="login-btn" onclick="doLogin()">Login</button>
+    <div class="remember-row">
+      <input type="checkbox" id="remember-me" checked>
+      <label for="remember-me">Remember me</label>
+    </div>
+    <div class="auth-links">
+      <a onclick="showPage('forgot-page')">Forgot password?</a>
+    </div>
+    <div class="divider-row">
+      No account? <a onclick="showPage('register-page')">Create one</a>
+    </div>
+  </div>
 </div>
-
-<div class="page hidden" id="loading">
-<div class="loader"></div>
-<h2 style="margin-top:20px;">Preparing your message...</h2>
+ 
+<!-- ══════════════ REGISTER PAGE ══════════════ -->
+<div class="page" id="register-page">
+  <div class="auth-card">
+    <h1>Create Account</h1>
+    <div class="error-msg" id="reg-error"></div>
+    <div class="success-msg" id="reg-success"></div>
+    <div class="field-group">
+      <label><span class="icon">👤</span> Email</label>
+      <input type="email" id="reg-email" placeholder="Enter Email">
+    </div>
+    <div class="field-group">
+      <label><span class="icon">🔒</span> Password</label>
+      <input type="password" id="reg-password" placeholder="At least 6 characters">
+    </div>
+    <div class="field-group">
+      <label><span class="icon">🔒</span> Confirm Password</label>
+      <input type="password" id="reg-confirm" placeholder="Repeat Password">
+    </div>
+    <button class="btn-primary" id="reg-btn" onclick="doRegister()">Create Account</button>
+    <div class="divider-row" style="margin-top:14px">
+      Already have an account? <a onclick="showPage('login-page')">Log in</a>
+    </div>
+  </div>
 </div>
-
-<div class="page hidden" id="page2">
-<h2>💌 Message For You</h2>
-<p id="typed"></p>
-<button onclick="nextPage()">Continue Po😁</button>
+ 
+<!-- ══════════════ FORGOT PASSWORD PAGE ══════════════ -->
+<div class="page" id="forgot-page">
+  <div class="auth-card">
+    <h1>Reset Password</h1>
+    <div class="error-msg" id="forgot-error"></div>
+    <div class="success-msg" id="forgot-success"></div>
+    <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px; text-align:center;">
+      Enter your email and we'll send a reset link.
+    </p>
+    <div class="field-group">
+      <label><span class="icon">📧</span> Email</label>
+      <input type="email" id="forgot-email" placeholder="Enter your email">
+    </div>
+    <button class="btn-primary" id="forgot-btn" onclick="doForgot()">Send Reset Email</button>
+    <div class="divider-row" style="margin-top:14px">
+      <a onclick="showPage('login-page')">← Back to Login</a>
+    </div>
+  </div>
 </div>
-
-<div class="page hidden" id="page3">
-<h2>Can I Court You? Hehe</h2>
-<div id="question">
-<button id="yesBtn" onclick="yesAnswer()">YES🥰</button>
-<button id="noBtn">NO🥲</button>
+ 
+<!-- ══════════════ NICKNAME PAGE ══════════════ -->
+<div class="page" id="nickname-page">
+  <div class="dots-bg"></div>
+  <div class="nickname-card">
+    <h2>Please Enter Your Name po 😄</h2>
+    <input type="text" id="nickname-input" placeholder="Your Name" maxlength="30">
+    <button class="btn-pink" onclick="doSetNickname()">Submit</button>
+    <div class="error-msg" id="nick-error" style="margin-top:12px; border-radius:4px;"></div>
+  </div>
 </div>
+ 
+<!-- ══════════════ CHAT PAGE ══════════════ -->
+<div class="page" id="chat-page">
+  <div class="chat-header">
+    <div class="chat-title">CHATAPP :}</div>
+  </div>
+  <div class="chat-body" id="chat-body">
+    <div class="empty-chat" id="empty-chat">No messages yet. Say hello! 👋</div>
+  </div>
+  <div class="chat-footer-wrapper">
+    <div class="chat-footer">
+      <span class="nick-tag" id="footer-nick">you</span>
+      <input type="text" id="msg-input" placeholder="Say something..." onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="send-btn" onclick="sendMsg()" title="Send">▶</button>
+    </div>
+    <div class="footer-meta">
+      <span id="footer-user-label"></span>
+      <span>
+        <span class="dot">•</span>
+        <span class="logout-tag" onclick="doLogout()">logout</span>
+      </span>
+    </div>
+  </div>
 </div>
-
-<div class="page hidden" id="page4">
-<div class="success">
- YAYYYY <br><br>
-You just made me the happiest person today 🥰<br><br>
-Thank you
-</div>
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
-<script>
-// 2. YOUR FIREBASE CONFIGURATION
-// Replace these placeholders with your actual project settings from the Firebase Console!
- const firebaseConfig = {
+ 
+<!-- Firebase SDKs -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
+  onAuthStateChanged,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  setPersistence
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  doc,
+  setDoc,
+  getDoc
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+ 
+// ╔══════════════════════════════════════════╗
+// ║  🔥 PASTE YOUR FIREBASE CONFIG BELOW    ║
+// ║  Go to: Firebase Console → Project      ║
+// ║  Settings → Your apps → Config snippet  ║
+// ╚══════════════════════════════════════════╝
+const firebaseConfig = {
     apiKey: "AIzaSyBpxlYUntT6flNCjCXUd4fYa6hmSmX2kpA",
     authDomain: "memecha-c10e2.firebaseapp.com",
     databaseURL: "https://memecha-c10e2-default-rtdb.firebaseio.com",
@@ -184,117 +506,228 @@ Thank you
     messagingSenderId: "682910602156",
     appId: "1:682910602156:web:9b7fd6beda2aa3e36ae009"
   };
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
-// Track session ID so we update the same user record throughout their interaction
-let userSessionRef = null; 
-
-const noBtn = document.getElementById("noBtn");
-noBtn.addEventListener("mouseover", moveButton);
-noBtn.addEventListener("click", moveButton);
-
-function moveButton(){
-  const x = Math.random()*220;
-  const y = Math.random()*150;
-  noBtn.style.left = x+"px";
-  noBtn.style.top = y+"px";
-  
-  // Real-time track: Update whenever they try to click "No"
-  if(userSessionRef) {
-    userSessionRef.child("attemptedNoCount").transaction((currentCount) => {
-      return (currentCount || 0) + 1;
-    });
-  }
-}
-
-function startConfession(){
-  const name = document.getElementById("name").value;
-
-  if(name.trim()==""){
-    alert("Please enter your name.");
-    return;
-  }
-
-  window.userName = name;
-
-  // 3. CREATE NEW ENTRY IN DATABASE
-  // Generates a unique ID under 'confessions'
-  userSessionRef = database.ref('confessions').push();
-  userSessionRef.set({
-    name: name,
-    timestamp: new Date().toISOString(),
-    status: "Started reading message",
-    attemptedNoCount: 0,
-    finalAnswer: "Pending"
-  });
-
-  document.getElementById("page1").classList.add("hidden");
-  document.getElementById("loading").classList.remove("hidden");
-
-  setTimeout(()=>{
-    document.getElementById("loading").classList.add("hidden");
-    document.getElementById("page2").classList.remove("hidden");
-    typeMessage();
-  },2500);
-}
-
-function typeMessage(){
-  let text = `Hi ${window.userName},\n\nI have something important to tell you...\nMaybe I've been keeping this for a while.\nEvery time I see you,\nmy day becomes a little brighter.\nYou make me smile without even trying.\nYou're someone special to me.\nAnd today,\nI just wanted to be honest...\nI like you ❤️\n\n`;
-  let i = 0;
-
-  function typing(){
-    if(i < text.length){
-      document.getElementById("typed").innerHTML += text.charAt(i);
-      i++;
-      setTimeout(typing,45);
+ 
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+ 
+let currentUser = null;
+let currentNickname = null;
+let unsubscribeMessages = null;
+ 
+// ── PAGE NAVIGATION ──
+window.showPage = (id) => {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+};
+ 
+// ── AUTH STATE LISTENER ──
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    const nickDoc = await getDoc(doc(db, 'users', user.uid));
+    if (nickDoc.exists() && nickDoc.data().nickname) {
+      currentNickname = nickDoc.data().nickname;
+      enterChat();
+    } else {
+      showPage('nickname-page');
     }
+  } else {
+    currentUser = null;
+    currentNickname = null;
+    if (unsubscribeMessages) { unsubscribeMessages(); unsubscribeMessages = null; }
+    showPage('login-page');
   }
-  typing();
+});
+ 
+// ── REGISTER ──
+window.doRegister = async () => {
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-password').value;
+  const confirm = document.getElementById('reg-confirm').value;
+  const errEl = document.getElementById('reg-error');
+  const sucEl = document.getElementById('reg-success');
+  errEl.classList.remove('show'); sucEl.classList.remove('show');
+ 
+  if (!email || !pass || !confirm) { showErr(errEl, 'All fields are required.'); return; }
+  if (pass !== confirm) { showErr(errEl, 'Passwords do not match.'); return; }
+  if (pass.length < 6) { showErr(errEl, 'Password must be at least 6 characters.'); return; }
+ 
+  const btn = document.getElementById('reg-btn');
+  btn.disabled = true; btn.textContent = 'Creating...';
+  try {
+    await createUserWithEmailAndPassword(auth, email, pass);
+    sucEl.textContent = 'Account created! Redirecting...';
+    sucEl.classList.add('show');
+  } catch (e) {
+    showErr(errEl, friendlyError(e.code));
+    btn.disabled = false; btn.textContent = 'Create Account';
+  }
+};
+ 
+// ── LOGIN ──
+window.doLogin = async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-password').value;
+  const remember = document.getElementById('remember-me').checked;
+  const errEl = document.getElementById('login-error');
+  const sucEl = document.getElementById('login-success');
+  errEl.classList.remove('show'); sucEl.classList.remove('show');
+ 
+  if (!email || !pass) { showErr(errEl, 'Email and password are required.'); return; }
+ 
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true; btn.textContent = 'Logging in...';
+  try {
+    const persistence = remember ? browserLocalPersistence : browserSessionPersistence;
+    await setPersistence(auth, persistence);
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch (e) {
+    showErr(errEl, friendlyError(e.code));
+    btn.disabled = false; btn.textContent = 'Login';
+  }
+};
+ 
+// ── FORGOT PASSWORD ──
+window.doForgot = async () => {
+  const email = document.getElementById('forgot-email').value.trim();
+  const errEl = document.getElementById('forgot-error');
+  const sucEl = document.getElementById('forgot-success');
+  errEl.classList.remove('show'); sucEl.classList.remove('show');
+ 
+  if (!email) { showErr(errEl, 'Please enter your email.'); return; }
+ 
+  const btn = document.getElementById('forgot-btn');
+  btn.disabled = true; btn.textContent = 'Sending...';
+  try {
+    await sendPasswordResetEmail(auth, email);
+    sucEl.textContent = '✓ Reset link sent! Check your inbox (and spam folder).';
+    sucEl.classList.add('show');
+    btn.textContent = 'Email Sent';
+  } catch (e) {
+    showErr(errEl, friendlyError(e.code));
+    btn.disabled = false; btn.textContent = 'Send Reset Email';
+  }
+};
+ 
+// ── NICKNAME ──
+window.doSetNickname = async () => {
+  const nick = document.getElementById('nickname-input').value.trim();
+  const errEl = document.getElementById('nick-error');
+  errEl.classList.remove('show');
+ 
+  if (!nick) { showErr(errEl, 'Please enter a nickname.'); return; }
+  if (nick.length < 2) { showErr(errEl, 'Nickname must be at least 2 characters.'); return; }
+ 
+  try {
+    await setDoc(doc(db, 'users', currentUser.uid), { nickname: nick, email: currentUser.email });
+    currentNickname = nick;
+    enterChat();
+  } catch (e) {
+    showErr(errEl, 'Could not save nickname. Try again.');
+  }
+};
+ 
+// ── ENTER CHAT ──
+function enterChat() {
+  document.getElementById('footer-nick').textContent = currentNickname + '.';
+  document.getElementById('footer-user-label').textContent = currentNickname;
+  showPage('chat-page');
+  loadMessages();
 }
-
-function nextPage(){
-  // Real-time track: They moved past the prank message to the actual question
-  if(userSessionRef) {
-    userSessionRef.update({
-      status: "Viewing final question"
+ 
+// ── LOAD MESSAGES (REALTIME) ──
+function loadMessages() {
+  if (unsubscribeMessages) unsubscribeMessages();
+  const q = query(collection(db, 'messages'), orderBy('createdAt', 'asc'));
+  unsubscribeMessages = onSnapshot(q, (snapshot) => {
+    const body = document.getElementById('chat-body');
+    const empty = document.getElementById('empty-chat');
+    if (snapshot.empty) {
+      empty.style.display = 'flex';
+    } else {
+      empty.style.display = 'none';
+      const existing = body.querySelectorAll('.msg-item');
+      existing.forEach(e => e.remove());
+ 
+      snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        const div = document.createElement('div');
+        div.className = 'msg-item';
+        const ts = d.createdAt ? d.createdAt.toDate() : new Date();
+        div.innerHTML = `
+          <div class="msg-name">${esc(d.nickname)}</div>
+          <div class="msg-text">${esc(d.text)}</div>
+          <div class="msg-time">${formatTime(ts)}</div>
+        `;
+        body.insertBefore(div, empty);
+      });
+    }
+    body.scrollTop = body.scrollHeight;
+  });
+}
+ 
+// ── SEND MESSAGE ──
+window.sendMsg = async () => {
+  const input = document.getElementById('msg-input');
+  const text = input.value.trim();
+  if (!text || !currentUser) return;
+  input.value = '';
+  try {
+    await addDoc(collection(db, 'messages'), {
+      text,
+      nickname: currentNickname,
+      uid: currentUser.uid,
+      createdAt: serverTimestamp()
     });
+  } catch (e) {
+    console.error('Send failed', e);
   }
-
-  document.getElementById("page2").classList.add("hidden");
-  document.getElementById("page3").classList.remove("hidden");
+};
+ 
+// ── LOGOUT ──
+window.doLogout = async () => {
+  if (unsubscribeMessages) { unsubscribeMessages(); unsubscribeMessages = null; }
+  await signOut(auth);
+};
+ 
+// ── HELPERS ──
+function showErr(el, msg) { el.textContent = msg; el.classList.add('show'); }
+ 
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
 }
-
-function yesAnswer(){
-  // Real-time track: They clicked YES!
-  if(userSessionRef) {
-    userSessionRef.update({
-      status: "Completed",
-      finalAnswer: "YES"
-    });
-  }
-
-  document.getElementById("page3").classList.add("hidden");
-  document.getElementById("page4").classList.remove("hidden");
-  setInterval(createHeart,250);
+ 
+function formatTime(d) {
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
-
-function createHeart(){
-  const heart=document.createElement("div");
-  heart.classList.add("heart");
-  heart.innerHTML="❤️";
-  heart.style.left=Math.random()*100+"vw";
-  heart.style.bottom="0";
-  heart.style.fontSize=(20+Math.random()*25)+"px";
-  document.body.appendChild(heart);
-
-  setTimeout(()=>{
-    heart.remove();
-  },5000);
+ 
+function friendlyError(code) {
+  const map = {
+    'auth/email-already-in-use': 'That email is already registered.',
+    'auth/invalid-email': 'Please enter a valid email address.',
+    'auth/weak-password': 'Password must be at least 6 characters.',
+    'auth/user-not-found': 'No account found with that email.',
+    'auth/wrong-password': 'Incorrect password. Try again.',
+    'auth/invalid-credential': 'Incorrect email or password.',
+    'auth/too-many-requests': 'Too many attempts. Please wait a moment.',
+    'auth/network-request-failed': 'Network error. Check your connection.',
+    'auth/user-disabled': 'This account has been disabled.',
+  };
+  return map[code] || 'Something went wrong. Please try again.';
 }
+ 
+// Enter to submit on auth pages
+document.getElementById('login-password').addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); });
+document.getElementById('login-email').addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); });
+document.getElementById('reg-confirm').addEventListener('keydown', e => { if(e.key==='Enter') window.doRegister(); });
+document.getElementById('forgot-email').addEventListener('keydown', e => { if(e.key==='Enter') window.doForgot(); });
+document.getElementById('nickname-input').addEventListener('keydown', e => { if(e.key==='Enter') window.doSetNickname(); });
+ 
 </script>
-
 </body>
 </html>
