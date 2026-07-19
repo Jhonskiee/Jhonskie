@@ -492,6 +492,112 @@ footer{ background:var(--navy-deep); color:rgba(255,255,255,0.7); padding:44px 0
   .field-row{ grid-template-columns:1fr; }
   .foot-grid{ grid-template-columns:1fr; }
 }
+
+/* ==========================================================================
+   24. FLASH SALE BANNER
+   ========================================================================== */
+.flash-band{ background:linear-gradient(90deg,var(--navy),var(--blue)); color:#fff; }
+.flash-inner{ display:flex; align-items:center; justify-content:space-between; padding:12px 0; gap:14px; flex-wrap:wrap; }
+.flash-left{ display:flex; align-items:center; gap:12px; font-size:13.5px; font-weight:700; }
+.flash-badge{ background:#fff; color:var(--navy); padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:800; letter-spacing:0.04em; }
+.flash-timer{ display:flex; gap:6px; }
+.flash-timer .t{ background:rgba(255,255,255,0.16); padding:5px 9px; border-radius:6px; font-family:var(--font-display); font-size:13px; min-width:34px; text-align:center; }
+.flash-right{ font-size:12px; opacity:0.85; }
+
+/* ==========================================================================
+   25. VOUCHER STRIP
+   ========================================================================== */
+.voucher-strip{ display:flex; gap:12px; overflow-x:auto; padding-bottom:6px; }
+.voucher-card{
+  flex:0 0 auto; min-width:230px; border:1px dashed var(--blue); border-radius:10px; padding:12px 14px;
+  background:var(--blue-pale); display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.voucher-card .vc-left b{ display:block; color:var(--navy); font-family:var(--font-display); font-size:14px; }
+.voucher-card .vc-left span{ font-size:11px; color:var(--muted); }
+.voucher-card button{ font-size:11px; font-weight:700; color:var(--blue); background:#fff; border:1px solid var(--blue); border-radius:6px; padding:6px 10px; white-space:nowrap; }
+.voucher-card.claimed button{ color:var(--green); border-color:var(--green); }
+.applied-voucher{
+  display:flex; align-items:center; justify-content:space-between; background:var(--green-pale); color:var(--green);
+  padding:9px 12px; border-radius:8px; font-size:12.5px; font-weight:600; margin-bottom:12px;
+}
+.applied-voucher button{ color:var(--red); font-size:11px; font-weight:700; }
+.voucher-input-row{ display:flex; gap:8px; margin-bottom:12px; }
+.voucher-input-row input{ flex:1; padding:9px 12px; border:1px solid var(--line); border-radius:7px; font-size:12.5px; }
+
+/* ==========================================================================
+   26. WISHLIST
+   ========================================================================== */
+.wish-btn{
+  position:absolute; top:10px; right:10px; width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.9);
+  display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--muted); z-index:2;
+}
+.wish-btn.on{ color:var(--red); }
+.card-top .stock-pill{ top:46px; }
+
+/* ==========================================================================
+   27. NOTIFICATIONS
+   ========================================================================== */
+.notif-wrap{ position:relative; }
+.notif-count{
+  position:absolute; top:-6px; right:-6px; background:var(--red); color:#fff; font-size:10px; font-weight:700;
+  min-width:18px; height:18px; border-radius:999px; display:flex; align-items:center; justify-content:center; padding:0 4px;
+}
+.notif-dropdown{
+  position:absolute; top:48px; right:0; width:300px; background:#fff; border:1px solid var(--line); border-radius:12px;
+  box-shadow:var(--shadow-lg); display:none; z-index:120; overflow:hidden;
+}
+.notif-dropdown.on{ display:block; }
+.notif-dropdown .nd-head{ padding:14px 16px; border-bottom:1px solid var(--line); font-weight:700; font-size:13px; color:var(--navy); }
+.notif-item{ padding:12px 16px; border-bottom:1px solid var(--line-soft); font-size:12.5px; }
+.notif-item b{ display:block; color:var(--navy); font-size:12.5px; margin-bottom:2px; }
+.notif-item span{ color:var(--muted); font-size:11px; }
+.notif-empty{ padding:24px 16px; text-align:center; color:var(--muted); font-size:12.5px; }
+
+/* ==========================================================================
+   28. REVIEWS
+   ========================================================================== */
+.review-item{ border-bottom:1px solid var(--line-soft); padding:14px 0; }
+.review-item:last-child{ border-bottom:none; }
+.review-head{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+.review-head .av{ width:28px; height:28px; border-radius:50%; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; font-family:var(--font-display); }
+.review-head b{ font-size:12.5px; color:var(--navy); }
+.review-stars{ color:#F5A623; font-size:12px; }
+.review-item p{ font-size:12.5px; color:var(--ink-soft); line-height:1.55; }
+.review-form{ display:flex; gap:8px; margin-top:14px; }
+.review-form input{ flex:1; padding:9px 12px; border:1px solid var(--line); border-radius:7px; font-size:12.5px; }
+
+/* ==========================================================================
+   29. ORDER TRACKING TIMELINE
+   ========================================================================== */
+.track-line{ display:flex; align-items:center; margin-top:10px; }
+.track-step{ display:flex; flex-direction:column; align-items:center; flex:1; position:relative; }
+.track-step .tdot{ width:14px; height:14px; border-radius:50%; background:var(--line); border:2px solid var(--line); z-index:1; }
+.track-step.done .tdot{ background:var(--blue); border-color:var(--blue); }
+.track-step span{ font-size:10px; color:var(--muted); margin-top:6px; text-align:center; }
+.track-step::after{ content:""; position:absolute; top:6px; left:50%; width:100%; height:2px; background:var(--line); z-index:0; }
+.track-step:last-child::after{ display:none; }
+.track-step.done::after{ background:var(--blue); }
+
+/* ==========================================================================
+   30. CHAT WIDGET
+   ========================================================================== */
+.chat-fab{
+  position:fixed; bottom:24px; right:24px; width:54px; height:54px; border-radius:50%; background:var(--navy); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:22px; box-shadow:var(--shadow-lg); z-index:150;
+}
+.chat-window{
+  position:fixed; bottom:90px; right:24px; width:310px; max-height:420px; background:#fff; border-radius:14px;
+  box-shadow:var(--shadow-lg); z-index:150; display:none; flex-direction:column; overflow:hidden; border:1px solid var(--line);
+}
+.chat-window.on{ display:flex; }
+.chat-head{ background:var(--navy); color:#fff; padding:14px 16px; font-size:13.5px; font-weight:700; display:flex; justify-content:space-between; align-items:center; }
+.chat-body{ flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:8px; min-height:200px; max-height:260px; }
+.chat-msg{ max-width:80%; padding:8px 12px; border-radius:12px; font-size:12.5px; line-height:1.4; }
+.chat-msg.them{ background:var(--sky); color:var(--ink); align-self:flex-start; border-bottom-left-radius:2px; }
+.chat-msg.me{ background:var(--blue); color:#fff; align-self:flex-end; border-bottom-right-radius:2px; }
+.chat-input-row{ border-top:1px solid var(--line); display:flex; padding:10px; gap:8px; }
+.chat-input-row input{ flex:1; border:1px solid var(--line); border-radius:20px; padding:8px 14px; font-size:12.5px; }
+.chat-input-row button{ width:34px; height:34px; border-radius:50%; background:var(--blue); color:#fff; flex:0 0 auto; }
 </style>
 </head>
 <body>
@@ -517,6 +623,18 @@ footer{ background:var(--navy-deep); color:rgba(255,255,255,0.7); padding:44px 0
       <input id="searchInput" placeholder="Search products…" aria-label="Search products">
     </div>
     <div class="nav-right" id="navRight">
+      <div class="notif-wrap">
+        <button class="btn btn-icon btn-ghost" id="notifBtn" aria-label="Notifications">
+          🔔<span class="notif-count hide" id="notifCount">0</span>
+        </button>
+        <div class="notif-dropdown" id="notifDropdown">
+          <div class="nd-head">Notifications</div>
+          <div id="notifList"></div>
+        </div>
+      </div>
+      <button class="btn btn-icon btn-ghost cart-btn" id="wishlistBtn" aria-label="Open wishlist">
+        ❤️<span class="cart-count hide" id="wishlistCount">0</span>
+      </button>
       <button class="btn btn-icon btn-ghost cart-btn" id="cartBtn" aria-label="Open cart">
         🛒<span class="cart-count hide" id="cartCount">0</span>
       </button>
@@ -555,6 +673,28 @@ footer{ background:var(--navy-deep); color:rgba(255,255,255,0.7); padding:44px 0
     </div>
     <button class="edit-btn owner-only hide" id="editAdBtn">✎ Edit headline &amp; text</button>
   </div>
+</section>
+
+<!-- ================= FLASH SALE ================= -->
+<div class="flash-band">
+  <div class="wrap flash-inner">
+    <div class="flash-left">
+      <span class="flash-badge">FLASH SALE</span>
+      <span>Selected items, today only</span>
+      <div class="flash-timer" id="flashTimer">
+        <span class="t" id="fH">00</span><span class="t">:</span><span class="t" id="fM">00</span><span class="t">:</span><span class="t" id="fS">00</span>
+      </div>
+    </div>
+    <div class="flash-right">Prices update live while owner edits products</div>
+  </div>
+</div>
+
+<!-- ================= VOUCHERS ================= -->
+<section class="wrap" style="padding-bottom:0;">
+  <div class="section-head">
+    <div><span class="section-tag">Vouchers</span><h2>Claim a discount code</h2></div>
+  </div>
+  <div class="voucher-strip" id="voucherStrip"></div>
 </section>
 
 <!-- ================= STATS ================= -->
@@ -732,8 +872,28 @@ footer{ background:var(--navy-deep); color:rgba(255,255,255,0.7); padding:44px 0
   </div>
   <div class="drawer-body" id="cartBody"></div>
   <div class="drawer-foot">
+    <div id="appliedVoucherArea"></div>
+    <div class="voucher-input-row">
+      <input id="voucherCodeInput" placeholder="Enter voucher code">
+      <button class="btn btn-outline btn-sm" id="applyVoucherBtn">Apply</button>
+    </div>
+    <div class="drawer-total"><span>Subtotal</span><span id="cartSubtotal">₱0</span></div>
+    <div class="drawer-total" id="discountRow" style="display:none; color:var(--green); font-size:13px; font-weight:600;"><span>Discount</span><span id="cartDiscount">-₱0</span></div>
     <div class="drawer-total"><span>Total</span><span id="cartTotal">₱0</span></div>
     <button class="btn btn-blue btn-block" id="checkoutBtn">Checkout with GCash</button>
+  </div>
+</div>
+
+<!-- ================= CHAT WIDGET ================= -->
+<button class="chat-fab" id="chatFab" aria-label="Chat with ChongHua">💬</button>
+<div class="chat-window" id="chatWindow">
+  <div class="chat-head"><span>Chat with ChongHua</span><button id="closeChat" style="color:#fff; font-size:16px;">✕</button></div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-msg them">Hi! This is ChongHua's storefront chat. Ask about an order, a product, or GCash payment.</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chatInput" placeholder="Type a message…">
+    <button id="chatSendBtn">➤</button>
   </div>
 </div>
 
@@ -811,6 +971,31 @@ footer{ background:var(--navy-deep); color:rgba(255,255,255,0.7); padding:44px 0
   </div>
 </div>
 
+<!-- ================= REVIEWS MODAL ================= -->
+<div class="overlay" id="reviewsOverlay">
+  <div class="modal modal-lg">
+    <button class="close-x" data-close="reviewsOverlay">✕</button>
+    <h3 id="reviewsTitle">Reviews</h3>
+    <div class="sub">What buyers said about this product.</div>
+    <div id="reviewsListArea"></div>
+    <div class="review-form">
+      <input id="newReviewName" placeholder="Your name">
+      <input id="newReviewText" placeholder="Write a short review…" style="flex:2;">
+      <button class="btn btn-blue btn-sm" id="submitReviewBtn">Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= WISHLIST MODAL ================= -->
+<div class="overlay" id="wishlistOverlay">
+  <div class="modal modal-lg">
+    <button class="close-x" data-close="wishlistOverlay">✕</button>
+    <h3>Your wishlist</h3>
+    <div class="sub">Items you've saved for later.</div>
+    <div id="wishlistArea"></div>
+  </div>
+</div>
+
 <!-- ================= RECEIPT MODAL ================= -->
 <div class="overlay" id="receiptOverlay">
   <div class="modal">
@@ -826,7 +1011,1013 @@ footer{ background:var(--navy-deep); color:rgba(255,255,255,0.7); padding:44px 0
 <div class="toast-stack" id="toastStack"></div>
 
 <script>
-/* JS continues in next section */
+(function(){
+/* ==========================================================================
+   STATE — everything lives in memory only (no browser storage, per policy)
+   ========================================================================== */
+const state = {
+  currentUser: null, // {name, email, role:'customer'} or {role:'owner'}
+  ad: {
+    eyebrow: 'Owner-run storefront',
+    headline: 'Products priced, listed, and advertised by ChongHua.',
+    sub: "Every product on this page is added and priced by the owner. Log in to order — every order is recorded against your name so ChongHua knows exactly who bought what."
+  },
+  categories: ['Bundles','Custom','Add-ons','Digital','Physical'],
+  colors: ['#0B2545','#155FCC','#1B8A5A','#B4232D','#8a6d00','#6d4aa6'],
+  products: [
+    {id:1, name:'Starter Bundle', price:1200, cat:'Bundles', stock:18, color:'#0B2545', desc:'Owner-picked starter package — everything a new buyer needs to get going.', rating:4.6,
+      reviews:[{name:'Mika R.', text:'Great value for the price, arrived as described.'}]},
+    {id:2, name:'Pro Package', price:3500, cat:'Bundles', stock:9, color:'#155FCC', desc:'Mid-tier offering with extra add-ons bundled in at a discount.', rating:4.8,
+      reviews:[{name:'Juan D.', text:'Worth the upgrade over the starter bundle.'}]},
+    {id:3, name:'Custom Order', price:5000, cat:'Custom', stock:4, color:'#1B8A5A', desc:'Placeholder for a made-to-order product — fully editable by the owner.', rating:4.9,
+      reviews:[]},
+    {id:4, name:'Digital Add-on Pack', price:450, cat:'Add-ons', stock:40, color:'#8a6d00', desc:'A small digital extra that pairs well with any bundle.', rating:4.4,
+      reviews:[{name:'Aya L.', text:'Cheap and did exactly what I needed.'}]},
+    {id:5, name:'Express Package', price:2100, cat:'Digital', stock:0, color:'#B4232D', desc:'Fast-turnaround digital package. Currently out of stock — owner is restocking.', rating:4.7,
+      reviews:[]},
+    {id:6, name:'Physical Print Set', price:980, cat:'Physical', stock:22, color:'#6d4aa6', desc:'A physical, shippable product — good example of a tangible ChongHua item.', rating:4.5,
+      reviews:[]}
+  ],
+  cart: [], // {productId, qty}
+  wishlist: [], // productIds
+  orders: [],
+  vouchers: [
+    {code:'WELCOME10', label:'10% off your order', type:'percent', amount:10, claimed:false},
+    {code:'SAVE150', label:'₱150 off, min ₱1000', type:'flat', amount:150, minSpend:1000, claimed:false},
+    {code:'FREESHIP', label:'Free shipping voucher', type:'flat', amount:80, minSpend:0, claimed:false}
+  ],
+  appliedVoucher: null,
+  notifications: [
+    {title:'Welcome to ChongHua', body:'Browse the catalogue and log in when you\'re ready to order.', time:'Just now'}
+  ],
+  notifUnread: 1,
+  nextProductId: 7,
+  nextOrderId: 1,
+  nextNotifId: 2,
+  pendingOrderIsCart: false,
+  pendingOrderProductId: null,
+  editingProductId: null,
+  activeCategory: 'all',
+  searchTerm: '',
+  sortMode: 'default',
+  activeReviewsProductId: null,
+  faqData: [
+    {q:'How does payment work?', a:'Every order is paid through GCash. After checkout you\'ll see the store\'s GCash number — send payment, then enter your GCash reference number to confirm.'},
+    {q:'Who fulfills my order?', a:'ChongHua is a single-owner store. The owner lists every product, sets every price, and fulfills every order directly — no third-party sellers.'},
+    {q:'Can I track my order?', a:'Yes. Once logged in, your Order History page shows every order you\'ve placed along with its current status.'},
+    {q:'Do I need an account to order?', a:'Yes — logging in with your name and email lets ChongHua record exactly who placed each order, which is required before checkout.'}
+  ],
+  flashSaleEndsAt: Date.now() + (3*60*60*1000) // 3 hours from load, purely illustrative
+};
+
+const $ = (id) => document.getElementById(id);
+const money = (n) => '₱' + Number(n || 0).toLocaleString(undefined,{maximumFractionDigits:0});
+const escapeHtml = (str) => { const d = document.createElement('div'); d.textContent = str == null ? '' : str; return d.innerHTML; };
+
+function openOverlay(id){ $(id).classList.add('on'); }
+function closeOverlay(id){ $(id).classList.remove('on'); }
+
+/* ==========================================================================
+   TOASTS
+   ========================================================================== */
+function toast(msg, kind){
+  const stack = $('toastStack');
+  const el = document.createElement('div');
+  el.className = 'toast' + (kind ? ' ' + kind : '');
+  el.textContent = msg;
+  stack.appendChild(el);
+  setTimeout(()=>{ el.style.opacity = '0'; el.style.transition = 'opacity .3s ease'; setTimeout(()=>el.remove(), 300); }, 2800);
+}
+
+/* ==========================================================================
+   ROLE HELPERS
+   ========================================================================== */
+function isOwner(){ return !!(state.currentUser && state.currentUser.role === 'owner'); }
+function isCustomer(){ return !!(state.currentUser && state.currentUser.role === 'customer'); }
+
+/* ==========================================================================
+   HEADER / NAV RENDER
+   ========================================================================== */
+function renderHeader(){
+  const navRight = $('navRight');
+  const loginSlot = state.currentUser
+    ? `<div class="user-badge"><span class="dot"></span>${escapeHtml(isOwner() ? 'Owner' : state.currentUser.name)}${isOwner() ? ' <span class="owner-flag">Owner</span>' : ''}</div>
+       <button class="btn btn-outline btn-sm" id="logoutBtn">Log out</button>`
+    : `<button class="btn btn-outline" id="loginBtn">Log in</button>`;
+
+  // rebuild only the login/user portion, keep wishlist/cart/notif/hamburger intact
+  let existingUserBadge = navRight.querySelector('.user-badge');
+  let existingLoginBtn = navRight.querySelector('#loginBtn');
+  let existingLogoutBtn = navRight.querySelector('#logoutBtn');
+  if(existingUserBadge) existingUserBadge.remove();
+  if(existingLogoutBtn) existingLogoutBtn.remove();
+  if(existingLoginBtn) existingLoginBtn.remove();
+
+  const hamburger = navRight.querySelector('#hamburgerBtn');
+  const temp = document.createElement('div');
+  temp.innerHTML = loginSlot;
+  Array.from(temp.childNodes).forEach(node => navRight.insertBefore(node, hamburger));
+
+  const loginBtn = $('loginBtn');
+  if(loginBtn) loginBtn.addEventListener('click', ()=>openOverlay('loginOverlay'));
+  const logoutBtn = $('logoutBtn');
+  if(logoutBtn) logoutBtn.addEventListener('click', logout);
+
+  document.querySelectorAll('.owner-only').forEach(el=>{ el.classList.toggle('hide', !isOwner()); });
+  $('adminStrip').classList.toggle('on', isOwner());
+  $('ordersNavLink').classList.toggle('hide', !isOwner());
+  $('ordersNavLinkMobile').classList.toggle('hide', !isOwner());
+  $('historyNavLink').classList.toggle('hide', !isCustomer());
+  $('historyNavLinkMobile').classList.toggle('hide', !isCustomer());
+  document.getElementById('history').classList.toggle('hide', !isCustomer());
+
+  renderCartCount();
+  renderWishlistCount();
+}
+
+function logout(){
+  state.currentUser = null;
+  toast('Logged out.');
+  renderAll();
+}
+
+/* ==========================================================================
+   ADVERTISEMENT / HERO
+   ========================================================================== */
+function renderAd(){
+  $('adEyebrow').textContent = state.ad.eyebrow;
+  $('adHeadline').textContent = state.ad.headline;
+  $('adSub').textContent = state.ad.sub;
+  $('editAdBtn').classList.toggle('hide', !isOwner());
+}
+
+/* ==========================================================================
+   STATS STRIP
+   ========================================================================== */
+function renderStats(){
+  $('statProducts').textContent = state.products.length;
+  $('statOrders').textContent = state.orders.length;
+  const rev = state.orders.filter(o=>o.status==='Confirmed' || o.status==='Shipped').reduce((s,o)=>s+o.total,0);
+  $('statRevenue').textContent = money(rev);
+}
+
+/* ==========================================================================
+   FLASH SALE COUNTDOWN
+   ========================================================================== */
+function tickFlashTimer(){
+  const remaining = Math.max(0, state.flashSaleEndsAt - Date.now());
+  const h = Math.floor(remaining / 3600000);
+  const m = Math.floor((remaining % 3600000) / 60000);
+  const s = Math.floor((remaining % 60000) / 1000);
+  const pad = (n)=> String(n).padStart(2,'0');
+  $('fH').textContent = pad(h);
+  $('fM').textContent = pad(m);
+  $('fS').textContent = pad(s);
+  if(remaining <= 0){ state.flashSaleEndsAt = Date.now() + 3*60*60*1000; }
+}
+setInterval(tickFlashTimer, 1000);
+
+/* ==========================================================================
+   CATEGORY FILTER BAR
+   ========================================================================== */
+function renderFilterBar(){
+  const bar = $('filterBar');
+  const sortSelect = $('sortSelect');
+  bar.innerHTML = '';
+  const allChip = document.createElement('button');
+  allChip.className = 'chip' + (state.activeCategory === 'all' ? ' active' : '');
+  allChip.dataset.cat = 'all';
+  allChip.textContent = 'All';
+  bar.appendChild(allChip);
+  state.categories.forEach(cat=>{
+    const chip = document.createElement('button');
+    chip.className = 'chip' + (state.activeCategory === cat ? ' active' : '');
+    chip.dataset.cat = cat;
+    chip.textContent = cat;
+    bar.appendChild(chip);
+  });
+  bar.appendChild(sortSelect);
+  bar.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      state.activeCategory = chip.dataset.cat;
+      renderFilterBar();
+      renderProducts();
+    });
+  });
+}
+
+/* ==========================================================================
+   PRODUCT GRID
+   ========================================================================== */
+function getFilteredProducts(){
+  let list = state.products.slice();
+  if(state.activeCategory !== 'all'){
+    list = list.filter(p=>p.cat === state.activeCategory);
+  }
+  if(state.searchTerm.trim()){
+    const term = state.searchTerm.trim().toLowerCase();
+    list = list.filter(p=> p.name.toLowerCase().includes(term) || p.desc.toLowerCase().includes(term) || p.cat.toLowerCase().includes(term));
+  }
+  if(state.sortMode === 'price-asc') list.sort((a,b)=>a.price-b.price);
+  else if(state.sortMode === 'price-desc') list.sort((a,b)=>b.price-a.price);
+  else if(state.sortMode === 'name') list.sort((a,b)=>a.name.localeCompare(b.name));
+  return list;
+}
+
+function renderProducts(){
+  const grid = $('productGrid');
+  grid.innerHTML = '';
+  const list = getFilteredProducts();
+
+  if(list.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.textContent = 'No products match your search or filter.';
+    grid.appendChild(empty);
+  }
+
+  list.forEach(p=>{
+    const inWishlist = state.wishlist.includes(p.id);
+    const stockLabel = p.stock === 0 ? 'Out of stock' : (p.stock <= 5 ? `Only ${p.stock} left` : 'In stock');
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-top" style="background:linear-gradient(135deg, ${p.color}, #3B82F6);">
+        <button class="wish-btn ${inWishlist ? 'on' : ''}" data-wish="${p.id}" aria-label="Toggle wishlist">${inWishlist ? '❤️' : '🤍'}</button>
+        <span class="cat-pill">${escapeHtml(p.cat)}</span>
+        <span class="stock-pill">${stockLabel}</span>
+        <span>${escapeHtml(p.name)}</span>
+      </div>
+      <div class="card-body">
+        <h4>${escapeHtml(p.name)}</h4>
+        <div class="card-rating"><span class="stars">★★★★★</span><span>${p.rating.toFixed(1)} · ${p.reviews.length} review${p.reviews.length===1?'':'s'}</span></div>
+        <div class="desc">${escapeHtml(p.desc)}</div>
+        <div class="card-price"><b>${money(p.price)}</b></div>
+        <div class="card-actions">
+          <button class="btn btn-outline" data-reviews="${p.id}">Reviews</button>
+          <button class="btn btn-blue" data-addcart="${p.id}" ${p.stock===0?'disabled':''}>${p.stock===0?'Sold out':'Add to cart'}</button>
+        </div>
+        ${isOwner() ? `<div class="owner-tools">
+          <button data-edit="${p.id}">Edit</button>
+          <button class="danger" data-del="${p.id}">Remove</button>
+        </div>` : ''}
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  if(isOwner()){
+    const addCard = document.createElement('div');
+    addCard.className = 'add-card';
+    addCard.innerHTML = '<span>+</span>Add product';
+    addCard.addEventListener('click', ()=>openEditModal(null));
+    grid.appendChild(addCard);
+  }
+
+  grid.querySelectorAll('[data-addcart]').forEach(b=>b.addEventListener('click', ()=>addToCart(Number(b.dataset.addcart))));
+  grid.querySelectorAll('[data-wish]').forEach(b=>b.addEventListener('click', ()=>toggleWishlist(Number(b.dataset.wish))));
+  grid.querySelectorAll('[data-reviews]').forEach(b=>b.addEventListener('click', ()=>openReviews(Number(b.dataset.reviews))));
+  grid.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click', ()=>openEditModal(Number(b.dataset.edit))));
+  grid.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>removeProduct(Number(b.dataset.del))));
+}
+
+/* ==========================================================================
+   WISHLIST
+   ========================================================================== */
+function toggleWishlist(productId){
+  const idx = state.wishlist.indexOf(productId);
+  if(idx >= 0){ state.wishlist.splice(idx,1); toast('Removed from wishlist.'); }
+  else { state.wishlist.push(productId); toast('Saved to wishlist.', 'ok'); }
+  renderProducts();
+  renderWishlistCount();
+  if($('wishlistOverlay').classList.contains('on')) renderWishlistModal();
+}
+function renderWishlistCount(){
+  const c = $('wishlistCount');
+  c.textContent = state.wishlist.length;
+  c.classList.toggle('hide', state.wishlist.length === 0);
+}
+function renderWishlistModal(){
+  const area = $('wishlistArea');
+  if(state.wishlist.length === 0){
+    area.innerHTML = '<div class="notif-empty">Your wishlist is empty. Tap the heart on any product to save it here.</div>';
+    return;
+  }
+  area.innerHTML = '';
+  state.wishlist.forEach(id=>{
+    const p = state.products.find(x=>x.id===id);
+    if(!p) return;
+    const row = document.createElement('div');
+    row.className = 'history-item';
+    row.innerHTML = `
+      <div class="h-left"><b>${escapeHtml(p.name)}</b><span>${escapeHtml(p.cat)} · ${money(p.price)}</span></div>
+      <div class="flex gap-2">
+        <button class="btn btn-blue btn-sm" data-wladd="${p.id}">Add to cart</button>
+        <button class="btn btn-outline btn-sm" data-wlremove="${p.id}">Remove</button>
+      </div>`;
+    area.appendChild(row);
+  });
+  area.querySelectorAll('[data-wladd]').forEach(b=>b.addEventListener('click', ()=>{ addToCart(Number(b.dataset.wladd)); }));
+  area.querySelectorAll('[data-wlremove]').forEach(b=>b.addEventListener('click', ()=>{ toggleWishlist(Number(b.dataset.wlremove)); }));
+}
+
+/* ==========================================================================
+   REVIEWS
+   ========================================================================== */
+function openReviews(productId){
+  state.activeReviewsProductId = productId;
+  const p = state.products.find(x=>x.id===productId);
+  $('reviewsTitle').textContent = `Reviews · ${p.name}`;
+  renderReviewsList();
+  openOverlay('reviewsOverlay');
+}
+function renderReviewsList(){
+  const p = state.products.find(x=>x.id===state.activeReviewsProductId);
+  const area = $('reviewsListArea');
+  if(!p || p.reviews.length === 0){
+    area.innerHTML = '<div class="notif-empty">No reviews yet — be the first to write one.</div>';
+    return;
+  }
+  area.innerHTML = '';
+  p.reviews.forEach(r=>{
+    const initials = r.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    const item = document.createElement('div');
+    item.className = 'review-item';
+    item.innerHTML = `
+      <div class="review-head"><div class="av">${escapeHtml(initials)}</div><b>${escapeHtml(r.name)}</b><span class="review-stars">★★★★★</span></div>
+      <p>${escapeHtml(r.text)}</p>`;
+    area.appendChild(item);
+  });
+}
+
+/* ==========================================================================
+   VOUCHERS
+   ========================================================================== */
+function renderVoucherStrip(){
+  const strip = $('voucherStrip');
+  strip.innerHTML = '';
+  state.vouchers.forEach(v=>{
+    const card = document.createElement('div');
+    card.className = 'voucher-card' + (v.claimed ? ' claimed' : '');
+    card.innerHTML = `
+      <div class="vc-left"><b>${escapeHtml(v.code)}</b><span>${escapeHtml(v.label)}</span></div>
+      <button data-claim="${v.code}">${v.claimed ? 'Claimed' : 'Claim'}</button>`;
+    strip.appendChild(card);
+  });
+  strip.querySelectorAll('[data-claim]').forEach(b=>b.addEventListener('click', ()=>{
+    const v = state.vouchers.find(x=>x.code === b.dataset.claim);
+    if(v && !v.claimed){ v.claimed = true; toast(`Voucher ${v.code} claimed!`, 'ok'); renderVoucherStrip(); pushNotification('Voucher claimed', `${v.code} is ready to use at checkout.`); }
+  }));
+}
+
+function computeVoucherDiscount(subtotal){
+  if(!state.appliedVoucher) return 0;
+  const v = state.appliedVoucher;
+  if(v.minSpend && subtotal < v.minSpend) return 0;
+  if(v.type === 'percent') return Math.round(subtotal * (v.amount/100));
+  return Math.min(v.amount, subtotal);
+}
+
+/* ==========================================================================
+   CART
+   ========================================================================== */
+function addToCart(productId){
+  const p = state.products.find(x=>x.id===productId);
+  if(!p || p.stock === 0) return;
+  const line = state.cart.find(x=>x.productId===productId);
+  if(line) line.qty += 1;
+  else state.cart.push({productId, qty:1});
+  toast(`${p.name} added to cart.`, 'ok');
+  renderCartCount();
+  renderCartDrawer();
+}
+function changeQty(productId, delta){
+  const line = state.cart.find(x=>x.productId===productId);
+  if(!line) return;
+  line.qty += delta;
+  if(line.qty <= 0) state.cart = state.cart.filter(x=>x.productId!==productId);
+  renderCartCount();
+  renderCartDrawer();
+}
+function removeFromCart(productId){
+  state.cart = state.cart.filter(x=>x.productId!==productId);
+  renderCartCount();
+  renderCartDrawer();
+}
+function renderCartCount(){
+  const count = state.cart.reduce((s,l)=>s+l.qty,0);
+  const el = $('cartCount');
+  el.textContent = count;
+  el.classList.toggle('hide', count === 0);
+}
+function cartSubtotal(){
+  return state.cart.reduce((sum,line)=>{
+    const p = state.products.find(x=>x.id===line.productId);
+    return sum + (p ? p.price*line.qty : 0);
+  },0);
+}
+function renderCartDrawer(){
+  const body = $('cartBody');
+  body.innerHTML = '';
+  if(state.cart.length === 0){
+    body.innerHTML = '<div class="empty-cart">Your cart is empty. Add a product to get started.</div>';
+  } else {
+    state.cart.forEach(line=>{
+      const p = state.products.find(x=>x.id===line.productId);
+      if(!p) return;
+      const row = document.createElement('div');
+      row.className = 'cart-item';
+      row.innerHTML = `
+        <div class="thumb" style="background:linear-gradient(135deg, ${p.color}, #3B82F6);">${escapeHtml(p.name.slice(0,10))}</div>
+        <div class="info">
+          <h5>${escapeHtml(p.name)}</h5>
+          <div class="qty-row">
+            <button class="qty-btn" data-dec="${p.id}">−</button>
+            <span class="qty-num">${line.qty}</span>
+            <button class="qty-btn" data-inc="${p.id}">+</button>
+          </div>
+          <div class="remove" data-remove="${p.id}">Remove</div>
+        </div>
+        <div class="price-col">${money(p.price*line.qty)}</div>`;
+      body.appendChild(row);
+    });
+  }
+  body.querySelectorAll('[data-inc]').forEach(b=>b.addEventListener('click', ()=>changeQty(Number(b.dataset.inc),1)));
+  body.querySelectorAll('[data-dec]').forEach(b=>b.addEventListener('click', ()=>changeQty(Number(b.dataset.dec),-1)));
+  body.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click', ()=>removeFromCart(Number(b.dataset.remove))));
+
+  const subtotal = cartSubtotal();
+  const discount = computeVoucherDiscount(subtotal);
+  $('cartSubtotal').textContent = money(subtotal);
+  $('cartDiscount').textContent = '-' + money(discount);
+  $('discountRow').style.display = discount > 0 ? 'flex' : 'none';
+  $('cartTotal').textContent = money(Math.max(0, subtotal - discount));
+
+  const appliedArea = $('appliedVoucherArea');
+  if(state.appliedVoucher){
+    appliedArea.innerHTML = `<div class="applied-voucher"><span>Voucher ${escapeHtml(state.appliedVoucher.code)} applied</span><button id="removeVoucherBtn">Remove</button></div>`;
+    $('removeVoucherBtn').addEventListener('click', ()=>{ state.appliedVoucher = null; renderCartDrawer(); });
+  } else {
+    appliedArea.innerHTML = '';
+  }
+}
+
+/* ==========================================================================
+   OWNER: EDIT ADVERTISEMENT
+   ========================================================================== */
+function wireAdEdit(){
+  $('editAdBtn').addEventListener('click', ()=>{
+    $('editEyebrow').value = state.ad.eyebrow;
+    $('editHeadline').value = state.ad.headline;
+    $('editSub').value = state.ad.sub;
+    openOverlay('editAdOverlay');
+  });
+  $('editAdSaveBtn').addEventListener('click', ()=>{
+    state.ad.eyebrow = $('editEyebrow').value.trim() || state.ad.eyebrow;
+    state.ad.headline = $('editHeadline').value.trim() || state.ad.headline;
+    state.ad.sub = $('editSub').value.trim() || state.ad.sub;
+    closeOverlay('editAdOverlay');
+    renderAd();
+    toast('Advertisement updated.', 'ok');
+  });
+}
+
+/* ==========================================================================
+   OWNER: ADD / EDIT / REMOVE PRODUCT
+   ========================================================================== */
+function renderColorSwatches(selected){
+  const wrap = $('colorSwatches');
+  wrap.innerHTML = '';
+  state.colors.forEach(c=>{
+    const sw = document.createElement('div');
+    sw.className = 'swatch' + (c === selected ? ' active' : '');
+    sw.style.background = c;
+    sw.dataset.color = c;
+    sw.addEventListener('click', ()=>{
+      wrap.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
+      sw.classList.add('active');
+    });
+    wrap.appendChild(sw);
+  });
+}
+function openEditModal(id){
+  state.editingProductId = id;
+  clearFieldError('editName'); clearFieldError('editPrice');
+  if(id){
+    const p = state.products.find(x=>x.id===id);
+    $('editTitle').textContent = 'Edit product';
+    $('editName').value = p.name;
+    $('editCat').value = p.cat;
+    $('editPrice').value = p.price;
+    $('editStock').value = p.stock;
+    $('editDesc').value = p.desc;
+    renderColorSwatches(p.color);
+  } else {
+    $('editTitle').textContent = 'Add product';
+    $('editName').value = '';
+    $('editCat').value = '';
+    $('editPrice').value = '';
+    $('editStock').value = '';
+    $('editDesc').value = '';
+    renderColorSwatches(state.colors[0]);
+  }
+  openOverlay('editOverlay');
+}
+function removeProduct(id){
+  if(!confirm('Remove this product from the store?')) return;
+  state.products = state.products.filter(p=>p.id !== id);
+  state.cart = state.cart.filter(l=>l.productId !== id);
+  renderProducts();
+  renderCartCount();
+  renderCartDrawer();
+  toast('Product removed.');
+}
+
+/* ==========================================================================
+   FIELD VALIDATION HELPERS
+   ========================================================================== */
+function setFieldError(inputId){ $(inputId).closest('.field').classList.add('invalid'); }
+function clearFieldError(inputId){ $(inputId).closest('.field').classList.remove('invalid'); }
+function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+/* ==========================================================================
+   LOGIN
+   ========================================================================== */
+function wireLogin(){
+  $('tabCustomer').addEventListener('click', ()=>{
+    $('tabCustomer').classList.add('active'); $('tabOwner').classList.remove('active');
+    $('customerForm').style.display = 'block'; $('ownerForm').style.display = 'none';
+    $('msgArea').innerHTML = '';
+  });
+  $('tabOwner').addEventListener('click', ()=>{
+    $('tabOwner').classList.add('active'); $('tabCustomer').classList.remove('active');
+    $('ownerForm').style.display = 'block'; $('customerForm').style.display = 'none';
+    $('msgArea').innerHTML = '';
+  });
+
+  $('custLoginBtn').addEventListener('click', ()=>{
+    const name = $('custName').value.trim();
+    const email = $('custEmail').value.trim();
+    let ok = true;
+    clearFieldError('custName'); clearFieldError('custEmail');
+    if(!name){ setFieldError('custName'); ok = false; }
+    if(!email || !isValidEmail(email)){ setFieldError('custEmail'); ok = false; }
+    if(!ok){ $('msgArea').innerHTML = '<div class="msg err">Please fix the highlighted fields.</div>'; return; }
+    state.currentUser = {name, email, role:'customer'};
+    closeOverlay('loginOverlay');
+    $('msgArea').innerHTML = '';
+    toast(`Welcome, ${name}!`, 'ok');
+    renderAll();
+    resumePendingOrder();
+  });
+
+  $('ownLoginBtn').addEventListener('click', ()=>{
+    const u = $('ownUser').value.trim();
+    const p = $('ownPass').value.trim();
+    if(u === 'chonghua' && p === 'admin123'){
+      state.currentUser = {role:'owner'};
+      closeOverlay('loginOverlay');
+      $('msgArea').innerHTML = '';
+      toast('Owner mode enabled.', 'ok');
+      renderAll();
+    } else {
+      $('msgArea').innerHTML = '<div class="msg err">Incorrect owner username or password.</div>';
+    }
+  });
+
+  $('exitOwner').addEventListener('click', logout);
+}
+
+function resumePendingOrder(){
+  if(state.pendingOrderIsCart){
+    state.pendingOrderIsCart = false;
+    openCheckout();
+  } else if(state.pendingOrderProductId){
+    const pid = state.pendingOrderProductId;
+    state.pendingOrderProductId = null;
+    addToCart(pid);
+    openCheckout();
+  }
+}
+
+/* ==========================================================================
+   CHECKOUT / GCASH
+   ========================================================================== */
+function openCheckout(){
+  if(state.cart.length === 0){ toast('Your cart is empty.', 'err'); return; }
+  if(!state.currentUser || isOwner()){
+    state.pendingOrderIsCart = true;
+    openOverlay('loginOverlay');
+    $('tabCustomer').click();
+    closeCartDrawer();
+    return;
+  }
+  const list = $('gcashItemsList');
+  list.innerHTML = '';
+  state.cart.forEach(line=>{
+    const p = state.products.find(x=>x.id===line.productId);
+    if(!p) return;
+    const row = document.createElement('div');
+    row.className = 'receipt-row';
+    row.innerHTML = `<span>${escapeHtml(p.name)} × ${line.qty}</span><span>${money(p.price*line.qty)}</span>`;
+    list.appendChild(row);
+  });
+  const subtotal = cartSubtotal();
+  const discount = computeVoucherDiscount(subtotal);
+  const totalRow = document.createElement('div');
+  totalRow.className = 'receipt-row';
+  totalRow.innerHTML = `<span>Total to pay</span><span>${money(subtotal-discount)}</span>`;
+  list.appendChild(totalRow);
+  $('gcashRef').value = '';
+  clearFieldError('gcashRef');
+  closeCartDrawer();
+  openOverlay('gcashOverlay');
+}
+
+function confirmGcashPayment(){
+  const ref = $('gcashRef').value.trim();
+  clearFieldError('gcashRef');
+  if(!ref){ setFieldError('gcashRef'); return; }
+  const subtotal = cartSubtotal();
+  const discount = computeVoucherDiscount(subtotal);
+  const total = Math.max(0, subtotal - discount);
+  const itemsSummary = state.cart.map(line=>{
+    const p = state.products.find(x=>x.id===line.productId);
+    return p ? `${p.name} ×${line.qty}` : '';
+  }).filter(Boolean).join(', ');
+
+  const order = {
+    id: state.nextOrderId++,
+    items: state.cart.map(l=>({...l})),
+    itemsSummary,
+    subtotal, discount, total,
+    voucherCode: state.appliedVoucher ? state.appliedVoucher.code : null,
+    buyerName: state.currentUser.name,
+    buyerEmail: state.currentUser.email,
+    gcashRef: ref,
+    time: new Date().toLocaleString(),
+    status: 'Pending'
+  };
+  state.orders.push(order);
+
+  // decrement stock
+  state.cart.forEach(line=>{
+    const p = state.products.find(x=>x.id===line.productId);
+    if(p) p.stock = Math.max(0, p.stock - line.qty);
+  });
+
+  state.cart = [];
+  state.appliedVoucher = null;
+  closeOverlay('gcashOverlay');
+  renderCartCount();
+  renderCartDrawer();
+  renderProducts();
+  renderStats();
+  if(isOwner()) renderDashboard();
+
+  pushNotification('Order recorded', `Order #CH-${String(order.id).padStart(4,'0')} is awaiting GCash confirmation.`);
+  showReceipt(order);
+  toast('Order recorded successfully.', 'ok');
+}
+
+function showReceipt(order){
+  const box = $('receiptBox');
+  box.innerHTML = `
+    <div class="receipt-row"><span>Order #</span><span>CH-${String(order.id).padStart(4,'0')}</span></div>
+    <div class="receipt-row"><span>Items</span><span>${escapeHtml(order.itemsSummary)}</span></div>
+    <div class="receipt-row"><span>Buyer</span><span>${escapeHtml(order.buyerName)}</span></div>
+    <div class="receipt-row"><span>GCash ref</span><span>${escapeHtml(order.gcashRef)}</span></div>
+    ${order.voucherCode ? `<div class="receipt-row"><span>Voucher</span><span>${escapeHtml(order.voucherCode)}</span></div>` : ''}
+    <div class="receipt-row"><span>Total</span><span>${money(order.total)}</span></div>`;
+  openOverlay('receiptOverlay');
+}
+
+/* ==========================================================================
+   OWNER DASHBOARD
+   ========================================================================== */
+function renderOrdersTable(){
+  const body = $('ordersBody');
+  body.innerHTML = '';
+  $('noOrders').style.display = state.orders.length ? 'none' : 'block';
+  [...state.orders].reverse().forEach(o=>{
+    const tr = document.createElement('tr');
+    const cls = o.status === 'Confirmed' ? 'confirmed' : (o.status === 'Shipped' ? 'shipped' : 'pending');
+    tr.innerHTML = `
+      <td>${escapeHtml(o.buyerName)}<br><span class="text-muted text-xs">${escapeHtml(o.buyerEmail)}</span></td>
+      <td>${escapeHtml(o.itemsSummary)}</td>
+      <td>${money(o.total)}</td>
+      <td>${escapeHtml(o.gcashRef)}</td>
+      <td>${o.time}</td>
+      <td><span class="status-tag ${cls}" data-toggle="${o.id}">${o.status}</span></td>`;
+    body.appendChild(tr);
+  });
+  body.querySelectorAll('[data-toggle]').forEach(tag=>{
+    tag.addEventListener('click', ()=>{
+      const o = state.orders.find(x=>x.id === Number(tag.dataset.toggle));
+      const order = ['Pending','Confirmed','Shipped'];
+      const next = order[(order.indexOf(o.status)+1) % order.length];
+      o.status = next;
+      renderOrdersTable();
+      renderDashboard();
+      renderStats();
+      if(isCustomer()) renderHistory();
+    });
+  });
+}
+
+function renderDashboardCards(){
+  $('dashOrders').textContent = state.orders.length;
+  const rev = state.orders.filter(o=>o.status==='Confirmed' || o.status==='Shipped').reduce((s,o)=>s+o.total,0);
+  $('dashRevenue').textContent = money(rev);
+  $('dashPending').textContent = state.orders.filter(o=>o.status==='Pending').length;
+  $('dashCustomers').textContent = new Set(state.orders.map(o=>o.buyerEmail)).size;
+}
+
+function renderRevenueChart(){
+  const canvas = $('revenueChart');
+  const ctx = canvas.getContext('2d');
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * devicePixelRatio;
+  canvas.height = rect.height * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  ctx.clearRect(0,0,rect.width,rect.height);
+
+  const recent = state.orders.slice(-10);
+  if(recent.length === 0){
+    ctx.fillStyle = '#5b667a';
+    ctx.font = '13px Inter';
+    ctx.fillText('No orders yet — the chart will populate as orders come in.', 10, rect.height/2);
+    return;
+  }
+  const max = Math.max(...recent.map(o=>o.total), 1);
+  const barWidth = rect.width / recent.length;
+  recent.forEach((o,i)=>{
+    const h = (o.total / max) * (rect.height - 30);
+    const x = i * barWidth + barWidth*0.2;
+    const y = rect.height - h - 20;
+    const grad = ctx.createLinearGradient(0,y,0,rect.height-20);
+    grad.addColorStop(0, '#155FCC');
+    grad.addColorStop(1, '#0B2545');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x, y, barWidth*0.6, h);
+    ctx.fillStyle = '#5b667a';
+    ctx.font = '10px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText('#'+o.id, x + barWidth*0.3, rect.height - 6);
+  });
+}
+
+function renderDashboard(){
+  if(!isOwner()) return;
+  renderDashboardCards();
+  renderOrdersTable();
+  renderRevenueChart();
+}
+
+/* ==========================================================================
+   CUSTOMER ORDER HISTORY
+   ========================================================================== */
+function renderHistory(){
+  if(!isCustomer()) return;
+  const mine = state.orders.filter(o=>o.buyerEmail === state.currentUser.email);
+  const list = $('historyList');
+  list.innerHTML = '';
+  $('noHistory').style.display = mine.length ? 'none' : 'block';
+  const steps = ['Pending','Confirmed','Shipped'];
+  [...mine].reverse().forEach(o=>{
+    const idx = steps.indexOf(o.status);
+    const item = document.createElement('div');
+    item.className = 'history-item';
+    item.style.flexDirection = 'column';
+    item.style.alignItems = 'stretch';
+    item.innerHTML = `
+      <div class="flex justify-between items-center" style="width:100%;">
+        <div class="h-left"><b>Order #CH-${String(o.id).padStart(4,'0')}</b><span>${escapeHtml(o.itemsSummary)} · ${o.time}</span></div>
+        <div class="h-right"><b>${money(o.total)}</b><span class="text-xs text-muted">${escapeHtml(o.gcashRef)}</span></div>
+      </div>
+      <div class="track-line">
+        ${steps.map((s,i)=>`<div class="track-step ${i<=idx?'done':''}"><div class="tdot"></div><span>${s}</span></div>`).join('')}
+      </div>`;
+    list.appendChild(item);
+  });
+}
+
+/* ==========================================================================
+   FAQ
+   ========================================================================== */
+function renderFaq(){
+  const list = $('faqList');
+  list.innerHTML = '';
+  state.faqData.forEach((f,i)=>{
+    const item = document.createElement('div');
+    item.className = 'faq-item';
+    item.innerHTML = `
+      <div class="faq-q" data-faq="${i}"><span>${escapeHtml(f.q)}</span><span class="plus">+</span></div>
+      <div class="faq-a"><p>${escapeHtml(f.a)}</p></div>`;
+    list.appendChild(item);
+  });
+  list.querySelectorAll('[data-faq]').forEach(q=>{
+    q.addEventListener('click', ()=>{ q.closest('.faq-item').classList.toggle('on'); });
+  });
+}
+
+/* ==========================================================================
+   NOTIFICATIONS
+   ========================================================================== */
+function pushNotification(title, body){
+  state.notifications.unshift({title, body, time:'Just now'});
+  state.notifUnread += 1;
+  renderNotifications();
+}
+function renderNotifications(){
+  const countEl = $('notifCount');
+  countEl.textContent = state.notifUnread;
+  countEl.classList.toggle('hide', state.notifUnread === 0);
+  const list = $('notifList');
+  if(state.notifications.length === 0){
+    list.innerHTML = '<div class="notif-empty">No notifications yet.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  state.notifications.slice(0,8).forEach(n=>{
+    const item = document.createElement('div');
+    item.className = 'notif-item';
+    item.innerHTML = `<b>${escapeHtml(n.title)}</b>${escapeHtml(n.body)}<span style="display:block; margin-top:4px;">${escapeHtml(n.time)}</span>`;
+    list.appendChild(item);
+  });
+}
+
+/* ==========================================================================
+   CHAT WIDGET (mock canned responses)
+   ========================================================================== */
+const chatReplies = [
+  "Thanks for reaching out! ChongHua will get back to you shortly.",
+  "You can check your order status any time in the Order History section once you're logged in.",
+  "Payments are confirmed through GCash — send to the number shown at checkout, then enter your reference number.",
+  "Good question — feel free to also check the FAQ section further down the page."
+];
+function sendChatMessage(){
+  const input = $('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  appendChatMessage(text, 'me');
+  input.value = '';
+  setTimeout(()=>{
+    const reply = chatReplies[Math.floor(Math.random()*chatReplies.length)];
+    appendChatMessage(reply, 'them');
+  }, 550);
+}
+function appendChatMessage(text, who){
+  const body = $('chatBody');
+  const msg = document.createElement('div');
+  msg.className = 'chat-msg ' + who;
+  msg.textContent = text;
+  body.appendChild(msg);
+  body.scrollTop = body.scrollHeight;
+}
+
+/* ==========================================================================
+   CART DRAWER OPEN / CLOSE
+   ========================================================================== */
+function openCartDrawer(){ $('cartDrawer').classList.add('on'); $('cartOverlay').classList.add('on'); renderCartDrawer(); }
+function closeCartDrawer(){ $('cartDrawer').classList.remove('on'); $('cartOverlay').classList.remove('on'); }
+
+/* ==========================================================================
+   GLOBAL WIRING
+   ========================================================================== */
+function wireGlobal(){
+  document.querySelectorAll('[data-close]').forEach(b=>{
+    b.addEventListener('click', ()=>closeOverlay(b.dataset.close));
+  });
+  document.querySelectorAll('.overlay').forEach(ov=>{
+    ov.addEventListener('click', (e)=>{ if(e.target === ov) ov.classList.remove('on'); });
+  });
+
+  $('cartBtn').addEventListener('click', openCartDrawer);
+  $('closeCart').addEventListener('click', closeCartDrawer);
+  $('cartOverlay').addEventListener('click', closeCartDrawer);
+  $('checkoutBtn').addEventListener('click', openCheckout);
+  $('browseBtn').addEventListener('click', ()=>document.getElementById('shop').scrollIntoView({behavior:'smooth'}));
+  $('heroLoginBtn').addEventListener('click', ()=>openOverlay('loginOverlay'));
+
+  $('wishlistBtn').addEventListener('click', ()=>{ renderWishlistModal(); openOverlay('wishlistOverlay'); });
+
+  $('hamburgerBtn').addEventListener('click', ()=>$('mobileMenu').classList.toggle('on'));
+
+  $('notifBtn').addEventListener('click', ()=>{
+    $('notifDropdown').classList.toggle('on');
+    state.notifUnread = 0;
+    renderNotifications();
+  });
+  document.addEventListener('click', (e)=>{
+    if(!e.target.closest('.notif-wrap')) $('notifDropdown').classList.remove('on');
+  });
+
+  $('searchInput').addEventListener('input', (e)=>{ state.searchTerm = e.target.value; renderProducts(); });
+  $('sortSelect').addEventListener('change', (e)=>{ state.sortMode = e.target.value; renderProducts(); });
+
+  $('editSaveBtn').addEventListener('click', ()=>{
+    const name = $('editName').value.trim();
+    const cat = $('editCat').value.trim() || 'Uncategorized';
+    const price = Number($('editPrice').value);
+    const stock = Number($('editStock').value) || 0;
+    const desc = $('editDesc').value.trim();
+    const colorEl = $('colorSwatches').querySelector('.swatch.active');
+    const color = colorEl ? colorEl.dataset.color : state.colors[0];
+    clearFieldError('editName'); clearFieldError('editPrice');
+    let ok = true;
+    if(!name){ setFieldError('editName'); ok = false; }
+    if(!price || price <= 0){ setFieldError('editPrice'); ok = false; }
+    if(!ok) return;
+
+    if(!state.categories.includes(cat)) state.categories.push(cat);
+
+    if(state.editingProductId){
+      const p = state.products.find(x=>x.id === state.editingProductId);
+      Object.assign(p, {name, cat, price, stock, desc, color});
+    } else {
+      state.products.push({id: state.nextProductId++, name, cat, price, stock, desc, color, rating:5.0, reviews:[]});
+    }
+    closeOverlay('editOverlay');
+    renderFilterBar();
+    renderProducts();
+    toast('Product saved.', 'ok');
+  });
+
+  $('applyVoucherBtn').addEventListener('click', ()=>{
+    const code = $('voucherCodeInput').value.trim().toUpperCase();
+    const v = state.vouchers.find(x=>x.code === code);
+    if(!v){ toast('Voucher code not found.', 'err'); return; }
+    if(!v.claimed){ toast('Claim this voucher first.', 'err'); return; }
+    state.appliedVoucher = v;
+    $('voucherCodeInput').value = '';
+    renderCartDrawer();
+    toast('Voucher applied.', 'ok');
+  });
+
+  $('gcashConfirmBtn').addEventListener('click', confirmGcashPayment);
+  $('printReceiptBtn').addEventListener('click', ()=>window.print());
+
+  $('submitReviewBtn').addEventListener('click', ()=>{
+    const name = $('newReviewName').value.trim();
+    const text = $('newReviewText').value.trim();
+    if(!name || !text){ toast('Add your name and a short review.', 'err'); return; }
+    const p = state.products.find(x=>x.id===state.activeReviewsProductId);
+    if(!p) return;
+    p.reviews.push({name, text});
+    $('newReviewName').value = ''; $('newReviewText').value = '';
+    renderReviewsList();
+    renderProducts();
+    toast('Review posted. Thank you!', 'ok');
+  });
+
+  $('contactForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const name = $('contactName').value.trim();
+    const email = $('contactEmail').value.trim();
+    const msg = $('contactMsg').value.trim();
+    if(!name || !isValidEmail(email) || !msg){ toast('Please fill out all contact fields correctly.', 'err'); return; }
+    $('contactName').value = ''; $('contactEmail').value = ''; $('contactMsg').value = '';
+    toast('Message sent to ChongHua.', 'ok');
+  });
+
+  $('newsletterBtn').addEventListener('click', ()=>{
+    const email = $('newsletterEmail').value.trim();
+    if(!isValidEmail(email)){ toast('Enter a valid email to subscribe.', 'err'); return; }
+    $('newsletterEmail').value = '';
+    toast('Subscribed to ChongHua updates.', 'ok');
+  });
+
+  $('chatFab').addEventListener('click', ()=>$('chatWindow').classList.add('on'));
+  $('closeChat').addEventListener('click', ()=>$('chatWindow').classList.remove('on'));
+  $('chatSendBtn').addEventListener('click', sendChatMessage);
+  $('chatInput').addEventListener('keydown', (e)=>{ if(e.key === 'Enter') sendChatMessage(); });
+
+  wireAdEdit();
+  wireLogin();
+}
+
+/* ==========================================================================
+   INIT
+   ========================================================================== */
+function renderAll(){
+  renderHeader();
+  renderAd();
+  renderStats();
+  renderFilterBar();
+  renderProducts();
+  renderVoucherStrip();
+  renderCartDrawer();
+  renderFaq();
+  renderNotifications();
+  renderWishlistCount();
+  if(isOwner()) renderDashboard();
+  if(isCustomer()) renderHistory();
+}
+
+wireGlobal();
+renderAll();
+tickFlashTimer();
+})();
 </script>
 </body>
 </html>
