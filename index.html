@@ -77,7 +77,7 @@ img{max-width:100%}
 .inp{width:100%;background:rgba(255,255,255,.06);border:1.5px solid var(--bdr);border-radius:var(--r8);color:#fff;font-size:13.5px;padding:10px 12px;outline:none;margin-bottom:10px;transition:border .13s}
 .inp:focus{border-color:var(--pk)}
 .inp::placeholder{color:var(--txt3)}
-.card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r16);padding:24px}
+.card{background:rgba(19,26,43,.6);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border:1px solid rgba(255,255,255,.1);border-radius:var(--r16);padding:26px;box-shadow:0 24px 70px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06)}
 .es{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px;text-align:center;color:rgba(255,255,255,.2)}
 .es-ico{font-size:40px;margin-bottom:10px;opacity:.5}
 .es-ttl{font-size:15px;font-weight:800;color:rgba(255,255,255,.35);margin-bottom:4px}
@@ -92,17 +92,27 @@ img{max-width:100%}
 
 /* ---------- auth screens ---------- */
 #auth-shell{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden;background:var(--bg)}
-.auth-blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.35;pointer-events:none;animation:blobFloat 14s ease-in-out infinite}
+/* Optional real photo background(s) — configured in config.json under
+   "backgroundImages". If none are set, .bg-layer just never gets an
+   image and the gradient blobs below carry the whole look. */
+.bg-layer{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.4s ease;z-index:0}
+.bg-layer.active{opacity:1}
+.bg-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,14,26,.55),rgba(10,14,26,.88) 70%);z-index:0}
+.tech-grid{position:absolute;inset:0;z-index:0;opacity:.35;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:42px 42px;mask-image:radial-gradient(circle at 50% 40%,#000 10%,transparent 72%)}
+.tech-scan{position:absolute;left:0;right:0;height:120px;background:linear-gradient(180deg,transparent,rgba(99,102,241,.09),transparent);z-index:0;animation:scanSweep 7s linear infinite}
+@keyframes scanSweep{0%{top:-120px}100%{top:100%}}
+.auth-blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.35;pointer-events:none;animation:blobFloat 14s ease-in-out infinite;z-index:0}
 .auth-blob.b1{width:420px;height:420px;background:var(--pk);top:-10%;left:-8%;animation-delay:0s}
 .auth-blob.b2{width:380px;height:380px;background:var(--ind);bottom:-14%;right:-6%;animation-delay:-5s}
 .auth-blob.b3{width:260px;height:260px;background:var(--b2);top:40%;left:60%;animation-delay:-9s}
 @keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-25px) scale(1.08)}66%{transform:translate(-25px,20px) scale(.94)}}
-.auth-heart{position:absolute;pointer-events:none;opacity:0;font-size:14px;animation:authHeartRise linear forwards}
+.auth-heart{position:absolute;pointer-events:none;opacity:0;font-size:14px;animation:authHeartRise linear forwards;z-index:0}
 @keyframes authHeartRise{0%{opacity:0;transform:translateY(0) scale(.6)}10%{opacity:.7}90%{opacity:.5}100%{opacity:0;transform:translateY(-90vh) scale(1.1)}}
 .auth-card{position:relative;z-index:1}
 .auth-card{width:100%;max-width:380px}
-.brand{text-align:center;margin-bottom:22px}
-.brand-ico{font-size:34px;margin-bottom:6px}
+.brand{text-align:center;margin-bottom:26px}
+.brand-ico{width:74px;height:74px;margin:0 auto 12px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:38px;background:linear-gradient(135deg,rgba(219,39,119,.35),rgba(99,102,241,.35));border:1.5px solid rgba(255,255,255,.14);box-shadow:0 0 0 1px rgba(255,255,255,.04),0 14px 40px rgba(219,39,119,.35),0 0 60px rgba(99,102,241,.25);animation:logoPulse 3.2s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 0 1px rgba(255,255,255,.04),0 14px 40px rgba(219,39,119,.35),0 0 60px rgba(99,102,241,.25)}50%{box-shadow:0 0 0 1px rgba(255,255,255,.08),0 14px 46px rgba(219,39,119,.5),0 0 78px rgba(99,102,241,.4)}}
 .brand-name{font-size:22px;font-weight:800;background:linear-gradient(120deg,#fff,var(--pk2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .brand-sub{font-size:12.5px;color:var(--txt3);margin-top:3px}
 .auth-toggle{text-align:center;margin-top:14px;font-size:12.5px;color:var(--txt3)}
@@ -361,6 +371,10 @@ img{max-width:100%}
 
 <!-- ================= AUTH ================= -->
 <div id="auth-shell">
+  <div id="bg-layers"></div>
+  <div class="bg-scrim"></div>
+  <div class="tech-grid"></div>
+  <div class="tech-scan"></div>
   <div class="auth-blob b1"></div><div class="auth-blob b2"></div><div class="auth-blob b3"></div>
   <div id="auth-hearts"></div>
   <div class="auth-card">
@@ -565,6 +579,7 @@ const CONFIG = {
   API_URL: 'http://localhost:4000',
   APP_NAME: 'StrangerLines',
   FEATURES: { shop: true, confessions: true, treasurePhotos: true, groupChats: true, confetti: true },
+  BACKGROUND_IMAGES: [],
 };
 async function loadRuntimeConfig() {
   try {
@@ -574,7 +589,30 @@ async function loadRuntimeConfig() {
     if (cfg.apiUrl) CONFIG.API_URL = cfg.apiUrl;
     if (cfg.appName) CONFIG.APP_NAME = cfg.appName;
     if (cfg.features) Object.assign(CONFIG.FEATURES, cfg.features);
+    if (Array.isArray(cfg.backgroundImages)) CONFIG.BACKGROUND_IMAGES = cfg.backgroundImages;
   } catch (e) { console.warn('config.json not reachable — using built-in defaults.', e.message); }
+  setupBackgroundImages();
+}
+
+/** Drop your own photos in next to index.html and list their filenames
+ *  under "backgroundImages" in config.json — e.g. ["bg1.jpg","bg2.jpg"].
+ *  They'll cross-fade behind the login screen every 8s. Leave the array
+ *  empty (the default) and you just get the animated gradient blobs —
+ *  nothing breaks either way, no image files are required. */
+function setupBackgroundImages() {
+  const wrap = document.getElementById('bg-layers');
+  if (!wrap || !CONFIG.BACKGROUND_IMAGES.length) return;
+  wrap.innerHTML = CONFIG.BACKGROUND_IMAGES.map(src => `<div class="bg-layer" style="background-image:url('${src}')"></div>`).join('');
+  const layers = wrap.querySelectorAll('.bg-layer');
+  let i = 0;
+  layers[0].classList.add('active');
+  if (layers.length > 1) {
+    setInterval(() => {
+      layers[i].classList.remove('active');
+      i = (i + 1) % layers.length;
+      layers[i].classList.add('active');
+    }, 8000);
+  }
 }
 
 /* ============================== api.js ============================== */
@@ -666,6 +704,13 @@ window.showAuth = mode => {
 };
 function authError(msg) {
   const el = document.getElementById('auth-err');
+  // Browsers throw the exact same generic "Failed to fetch" whether the
+  // backend is down, unreachable, or just not deployed anywhere public
+  // yet — that's the #1 setup issue people hit, so translate it instead
+  // of showing a message that means nothing to whoever's staring at it.
+  if (/failed to fetch/i.test(msg)) {
+    msg = `Can't reach the server at ${CONFIG.API_URL}. Either it's not running right now, or it hasn't been deployed publicly yet — see config.json.`;
+  }
   el.textContent = msg; el.classList.add('show');
 }
 
