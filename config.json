@@ -3,6 +3,8 @@
   "appName": "StrangerLines",
   "tagline": "Your class space — with a little love in the code.",
   "apiUrl": "http://localhost:4000",
+  "backgroundImages": [],
+  "_backgroundImagesHelp": "Put image files (e.g. bg1.jpg) in the same folder as index.html, then list their filenames above, like [\"bg1.jpg\",\"bg2.jpg\"]. They'll cross-fade behind the login screen. Leave empty for the animated gradient look instead.",
   "theme": {
     "primary": "#db2777",
     "secondary": "#6366f1"
