@@ -17,6 +17,8 @@
     --wax: #7a2e2e;
     --wax-dark: #5c1f1f;
     --gold: #a6813c;
+    --rose: #c1596a;
+    --rose-soft: #e7b3ba;
   }
 
   * { box-sizing: border-box; }
@@ -27,90 +29,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(ellipse at 50% 20%, #3a2f29 0%, var(--wood) 55%, var(--wood-dark) 100%);
-    font-family: 'EB Garamond', serif;
-    overflow-x: hidden;
-    padding: 40px 16px;
-  }
-
-  .scene {
-    position: relative;
-    width: 100%;
-    max-width: 480px;
-    perspective: 1400px;
-  }
-
-  [data-view] { display: none; }
-  [data-view].active { display: block; }
-
-  /* ---------- WRITE FORM ---------- */
-  .write-card {
-    background: linear-gradient(180deg, var(--paper), var(--paper-shadow) 130%);
-    border-radius: 3px;
-    padding: 38px 30px;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 2px 0 rgba(255,255,255,0.15) inset;
-  }
-
-  .write-title {
-    font-family: 'Dancing Script', cursive;
-    font-size: 32px;
-    color: var(--wax);
-    margin: 0 0 6px;
-  }
-
-  .write-sub {
-    color: var(--ink-soft);
-    font-size: 15px;
-    font-style: italic;
-    margin: 0 0 26px;
-  }
-
-  label {
-    display: block;
-    font-size: 14px;
-    color: var(--ink-soft);
-    font-style: italic;
-    margin-bottom: 6px;
-  }
-
-  .field { margin-bottom: 20px; }
-
-  input[type="text"], textarea {
-    width: 100%;
-    font-family: 'EB Garamond', serif;
-    font-size: 17px;
-    color: var(--ink);
-    background: rgba(255,255,255,0.35);
-    border: none;
-    border-bottom: 1px solid var(--gold);
-    padding: 8px 4px;
-    outline: none;
-  }
-
-  textarea {
-    resize: vertical;
-    min-height: 140px;
-    line-height: 1.6;
-    border: 1px solid rgba(122,46,46,0.25);
-    border-radius: 2px;
-    padding: 12px;
-    background: rgba(255,255,255,0.4);
-  }
-
-  input[type="text"]:focus, textarea:focus {
-    border-color: var(--wax);
-  }
-
-  .generate-btn {
-    width: 100%;
-    font-family: 'EB Garamond', serif;
-    font-size: 18px;
-    font-style: italic;
-    color: #fff;
-    background: var(--wax);
-    border: none;
-    border-radius: 2px;
-    padding: 13px;
+    background: radial-gradient(ellipse at 50% 15%, #402c30 0%, var(--wood) 45%, var(--wood-dark) 100%);    padding: 13px;
     cursor: pointer;
     letter-spacing: 0.01em;
     transition: background 0.2s ease;
