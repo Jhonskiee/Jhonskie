@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Letter For You</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wood: #2b2320;
+    --wood-dark: #1c1613;
+    --paper: #ede3c8;
+    --paper-shadow: #d9c9a3;
+    --ink: #3b2f2f;
+    --ink-soft: #5a4b40;
+    --wax: #7a2e2e;
+    --wax-dark: #5c1f1f;
+    --gold: #a6813c;
+    --gold-light: #cba15c;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 20%, #3a2f29 0%, var(--wood) 55%, var(--wood-dark) 100%);
+    font-family: 'EB Garamond', serif;
+    overflow-x: hidden;
+    padding: 40px 16px;
+    position: relative;
+  }
+
+  .motes { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .mote {
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: rgba(203,161,92,0.35);
+    filter: blur(0.5px);
+    animation: drift 14s ease-in-out infinite;
+  }
+  @keyframes drift {
+    0%   { transform: translate3d(0,0,0); opacity: 0; }
+    10%  { opacity: 0.6; }
+    50%  { transform: translate3d(6px,-60px,0); opacity: 0.9; }
+    90%  { opacity: 0.2; }
+    100% { transform: translate3d(-4px,-120px,0); opacity: 0; }
+  }
+
+  .scene {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    perspective: 1400px;
+    z-index: 1;
+  }
+
+  [data-view] { display: none; }
+  [data-view].active { display: block; }
+
+  .write-card {
+    background: linear-gradient(180deg, var(--paper), var(--paper-shadow) 130%);
+    border-radius: 3px;
+    padding: 38px 30px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 2px 0 rgba(255,255,255,0.15) inset;
+    transform-style: preserve-3d;
+    transition: transform 0.25s ease-out;
+    will-change: transform;
+  }
+
+  .write-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 32px;
+    color: var(--wax);
+    margin: 0 0 6px;
+  }
+
+  .write-sub {
+    color: var(--ink-soft);
+    font-size: 15px;
+    font-style: italic;
+    margin: 0 0 26px;
+  }
+
+  label {
+    display: block;
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+
+  .field { margin-bottom: 20px; }
+
+  input[type="text"], textarea {
+    width: 100%;
+    font-family: 'EB Garamond', serif;
+    font-size: 17px;
+    color: var(--ink);
+    background: rgba(255,255,255,0.35);
+    border: none;
+    border-bottom: 1px solid var(--gold);
+    padding: 8px 4px;
+    outline: none;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 140px;
+    line-height: 1.6;
+    border: 1px solid rgba(122,46,46,0.25);
+    border-radius: 2px;
+    padding: 12px;
+    background: rgba(255,255,255,0.4);
+  }
+
+  input[type="text"]:focus, textarea:focus {
+    border-color: var(--wax);
+  }
+
+  .generate-btn {
+    width: 100%;
+    font-family: 'EB Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: #fff;
+    background: var(--wax);
+    border: none;
+    border-radius: 2px;
+    padding: 13px;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: background 0.2s ease;
+  }
+
+  .generate-btn:hover { background: var(--wax-dark); }
+  .generate-btn:focus-visible, .copy-btn:focus-visible, .btn:focus-visible, .share-btn:focus-visible {
+    outline: 2px solid var(--gold-light); outline-offset: 2px;
+  }
+
+  .result {
+    margin-top: 22px;
+    display: none;
+  }
+
+  .result.show { display: block; }
+
+  .result-label {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+
+  .link-field {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .link-text {
+    flex: 1;
+    font-family: 'EB Garamond', serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(122,46,46,0.3);
+    border-radius: 2px;
+    padding: 10px;
+    word-break: break-all;
+  }
+
+  .copy-btn {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--wax);
+    background: none;
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    padding: 0 16px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .copy-btn:hover { background: rgba(166,129,60,0.12); }
+
+  .note {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .share-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .share-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 6px;
+    border-radius: 2px;
+    border: 1px solid rgba(122,46,46,0.3);
+    background: rgba(255,255,255,0.35);
+    color: var(--ink);
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+  .share-btn:hover { background: rgba(255,255,255,0.6); transform: translateY(-1px); }
+  .share-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  .envelope-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    cursor: pointer;
+    transition: transform 0.6s ease, opacity 0.6s ease;
+    transform-style: preserve-3d;
+  }
+
+  .envelope-wrap.opened { pointer-events: none; }
+
+  .envelope-body {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(155deg, #c9aa73, #b3925c 60%, #9c7c48);
+    border-radius: 4px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.55), 0 4px 10px rgba(0,0,0,0.4);
+  }
+
+  .envelope-body::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(105deg, transparent 45%, rgba(0,0,0,0.08) 50%, transparent 55%),
+      linear-gradient(75deg, transparent 45%, rgba(0,0,0,0.08) 50%, transparent 55%);
+  }
+
+  .flap {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 62%;
+    background: linear-gradient(160deg, #d4b783, #b3925c 70%);
+    clip-path: polygon(0 0, 100% 0, 50% 78%);
+    transform-origin: top center;
+    transition: transform 0.9s cubic-bezier(.6,-0.28,.2,1.3);
+    z-index: 3;
+    box-shadow: inset 0 -6px 12px -6px rgba(0,0,0,0.25);
+  }
+
+  .envelope-wrap.opened .flap { transform: rotateX(178deg); }
+
+  .seal {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.45));
+    animation: pulse 2.6s ease-in-out infinite;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .envelope-wrap.opened .seal {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6) rotate(35deg);
+    animation: none;
+  }
+
+  .envelope-wrap:active .seal { transform: translate(-50%, -50%) scale(0.88); }
+
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.05); }
+  }
+
+  .hint {
+    position: absolute;
+    bottom: -42px;
+    left: 0; right: 0;
+    text-align: center;
+    color: #c9b795;
+    font-size: 15px;
+    font-style: italic;
+    opacity: 0.85;
+    transition: opacity 0.4s ease;
+  }
+
+  .envelope-wrap.opened .hint { opacity: 0; }
+
+  .letter-outer { position: relative; }
+
+  .letter-wrap {
+    position: absolute;
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%) translateY(0) scale(0.94) rotateX(8deg);
+    width: 92%;
+    max-width: 440px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.7s ease 0.35s, transform 0.9s cubic-bezier(.2,.8,.25,1) 0.35s;
+    z-index: 2;
+    transform-style: preserve-3d;
+  }
+
+  .letter-wrap.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-46px) scale(1) rotateX(0deg);
+    pointer-events: auto;
+  }
+
+  .paper {
+    background: linear-gradient(180deg, var(--paper), var(--paper-shadow) 130%);
+    border-radius: 2px;
+    padding: 46px 34px 40px;
+    box-shadow: 0 40px 70px rgba(0,0,0,0.5), 0 2px 0 rgba(255,255,255,0.15) inset;
+    position: relative;
+    min-height: 380px;
+    transition: transform 0.25s ease-out;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .letter-heading {
+    font-family: 'Dancing Script', cursive;
+    font-size: 30px;
+    color: var(--wax);
+    margin: 0 0 18px;
+    font-weight: 700;
+  }
+
+  .letter-body {
+    color: var(--ink);
+    font-size: 19px;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    min-height: 180px;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 2px;
+    background: var(--ink-soft);
+    margin-left: 1px;
+    animation: blink 0.9s steps(1) infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .signature {
+    font-family: 'Dancing Script', cursive;
+    font-size: 26px;
+    color: var(--ink);
+    margin-top: 26px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .signature.show { opacity: 1; transform: translateY(0); }
+
+  .actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    opacity: 0;
+    transition: opacity 0.8s ease 0.2s;
+  }
+
+  .actions.show { opacity: 1; }
+
+  .btn {
+    font-family: 'EB Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--wax);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--gold);
+    padding: 4px 2px;
+    cursor: pointer;
+  }
+
+  .btn:hover { color: var(--wax-dark); }
+
+  hr.divider {
+    border: none;
+    border-top: 1px dashed rgba(122,46,46,0.3);
+    margin: 26px 0 20px;
+  }
+
+  .reply-section { display: none; }
+  .reply-section.show { display: block; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .seal, .mote { animation: none !important; }
+    .flap, .letter-wrap, .signature, .actions, .write-card, .paper { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="motes" id="motes"></div>
+
+<audio id="bgm" loop preload="auto">
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<div class="scene">
+
+  <div data-view="write" class="write-card" id="writeCard">
+    <h1 class="write-title">Write your confession</h1>
+    <p class="write-sub">Fill this in, then generate a link to send.</p>
+
+    <div class="field">
+      <label for="toName">Who is this for?</label>
+      <input type="text" id="toName" placeholder="e.g. Alex">
+    </div>
+
+    <div class="field">
+      <label for="fromName">Who's it from? (shown as the signature)</label>
+      <input type="text" id="fromName" placeholder="e.g. yours, always">
+    </div>
+
+    <div class="field">
+      <label for="messageInput">Your message</label>
+      <textarea id="messageInput" placeholder="Say what you actually mean..."></textarea>
+    </div>
+
+    <button class="generate-btn" id="generateBtn">Generate link</button>
+
+    <div class="result" id="result">
+      <div class="result-label">Send this link to them:</div>
+      <div class="link-field">
+        <div class="link-text" id="linkText"></div>
+        <button class="copy-btn" id="copyBtn">Copy</button>
+      </div>
+      <div class="share-row" id="writeShareRow"></div>
+      <div class="note">This link contains your message directly — there's no server storing it. Anyone with the link can open the letter, so only send it to the person it's meant for. Want to preview it first? <span class="btn" id="previewBtn" style="display:inline;padding:0;">Open the letter now</span></div>
+    </div>
+  </div>
+
+  <div data-view="letter" class="letter-outer">
+    <div class="envelope-wrap" id="envelope">
+      <div class="envelope-body"></div>
+      <div class="flap"></div>
+      <svg class="seal" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="#7a2e2e"/>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#5c1f1f" stroke-width="2"/>
+        <path d="M32 18 C24 18 20 26 20 32 C20 40 26 46 32 48 C38 46 44 40 44 32 C44 26 40 18 32 18 Z"
+              fill="none" stroke="#c9a876" stroke-width="1.6"/>
+      </svg>
+    </div>
+    <div class="hint" id="hint">tap the seal to open</div>
+
+    <div class="letter-wrap" id="letterWrap">
+      <div class="paper" id="paper">
+        <h1 class="letter-heading" id="letterHeading">My dearest,</h1>
+        <div class="letter-body" id="letterBody"></div>
+        <div class="signature" id="signature"></div>
+        <div class="actions" id="actions">
+          <button class="btn" id="replayBtn">read it again</button>
+          <button class="btn" id="writeBackToggle">write back</button>
+        </div>
+
+        <div class="reply-section" id="replySection">
+          <hr class="divider">
+          <p class="write-sub" style="margin-bottom:14px;">Write your reply — it becomes its own sealed letter, addressed back to them.</p>
+          <div class="field">
+            <textarea id="replyInput" placeholder="Write what you want them to read..."></textarea>
+          </div>
+          <button class="generate-btn" id="replyGenerateBtn" type="button">Generate reply link</button>
+
+          <div class="result" id="replyResult">
+            <div class="result-label">Send this reply link back to <span id="replyToName"></span>:</div>
+            <div class="link-field">
+              <div class="link-text" id="replyLinkText"></div>
+              <button class="copy-btn" id="replyCopyBtn">Copy</button>
+            </div>
+            <div class="share-row" id="replyShareRow"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function encodeData(obj) {
+    const json = JSON.stringify(obj);
+    return btoa(unescape(encodeURIComponent(json)));
+  }
+  function decodeData(str) {
+    const json = decodeURIComponent(escape(atob(str)));
+    return JSON.parse(json);
+  }
+
+  function getHashData() {
+    const hash = window.location.hash;
+    const match = hash.match(/data=([^&]+)/);
+    if (!match) return null;
+    try {
+      return decodeData(decodeURIComponent(match[1]));
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function showView(name) {
+    document.querySelectorAll('[data-view]').forEach(el => {
+      el.classList.toggle('active', el.getAttribute('data-view') === name);
+    });
+  }
+
+  const bgm = document.getElementById('bgm');
+  let musicStarted = false;
+
+  function tryPlay() {
+    if (musicStarted) return;
+    const p = bgm.play();
+    if (p && p.then) {
+      p.then(() => { musicStarted = true; })
+       .catch(() => { /* still waiting on a gesture; listeners below catch it */ });
+    } else {
+      musicStarted = true;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', tryPlay);
+  ['pointerdown', 'keydown', 'touchstart', 'wheel', 'scroll'].forEach((evt) => {
+    document.addEventListener(evt, tryPlay, { once: false, passive: true });
+  });
+
+  const motesEl = document.getElementById('motes');
+  for (let i = 0; i < 10; i++) {
+    const m = document.createElement('div');
+    m.className = 'mote';
+    m.style.left = (Math.random() * 100) + '%';
+    m.style.bottom = (Math.random() * 30) + '%';
+    m.style.animationDelay = (Math.random() * 14) + 's';
+    m.style.animationDuration = (10 + Math.random() * 10) + 's';
+    motesEl.appendChild(m);
+  }
+
+  function attachTilt(el) {
+    el.addEventListener('mousemove', (e) => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `rotateY(${x * 6}deg) rotateX(${-y * 6}deg)`;
+    });
+    el.addEventListener('mouseleave', () => { el.style.transform = 'rotateY(0deg) rotateX(0deg)'; });
+  }
+  attachTilt(document.getElementById('writeCard'));
+  attachTilt(document.getElementById('paper'));
+
+  const ICONS = {
+    x: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23 22h-6.9l-5.4-6.7L4.4 22H1.3l8.1-9.3L1 2h7l4.9 6.1L18.9 2zm-1.2 18h1.9L7.4 4H5.3l12.4 16z"/></svg>',
+    fb: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.5 17.5 2 12 2S2 6.5 2 12.06C2 17.06 5.66 21.2 10.44 22v-7.03H7.9v-2.9h2.54V9.85c0-2.5 1.5-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.9h-2.34V22C18.34 21.2 22 17.06 22 12.06z"/></svg>',
+    ig: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.85.07 1.25.06 2.1.26 2.85.55.77.3 1.42.7 2.07 1.35.65.65 1.05 1.3 1.35 2.07.29.75.49 1.6.55 2.85.06 1.25.07 1.65.07 4.85s0 3.6-.07 4.85c-.06 1.25-.26 2.1-.55 2.85-.3.77-.7 1.42-1.35 2.07-.65.65-1.3 1.05-2.07 1.35-.75.29-1.6.49-2.85.55-1.25.06-1.65.07-4.85.07s-3.6 0-4.85-.07c-1.25-.06-2.1-.26-2.85-.55-.77-.3-1.42-.7-2.07-1.35-.65-.65-1.05-1.3-1.35-2.07-.29-.75-.49-1.6-.55-2.85C2.21 15.6 2.2 15.2 2.2 12s0-3.6.07-4.85c.06-1.25.26-2.1.55-2.85.3-.77.7-1.42 1.35-2.07.65-.65 1.3-1.05 2.07-1.35.75-.29 1.6-.49 2.85-.55C8.4 2.21 8.8 2.2 12 2.2zm0 1.8c-3.14 0-3.51 0-4.75.07-1.02.05-1.57.22-1.94.36-.49.19-.84.42-1.2.79-.37.36-.6.71-.79 1.2-.14.37-.31.92-.36 1.94C3.9 8.4 3.9 8.77 3.9 11.9s0 3.51.07 4.75c.05 1.02.22 1.57.36 1.94.19.49.42.84.79 1.2.36.37.71.6 1.2.79.37.14.92.31 1.94.36 1.24.06 1.61.07 4.75.07s3.51 0 4.75-.07c1.02-.05 1.57-.22 1.94-.36.49-.19.84-.42 1.2-.79.37-.36.6-.71.79-1.2.14-.37.31-.92.36-1.94.06-1.24.07-1.61.07-4.75s0-3.51-.07-4.75c-.05-1.02-.22-1.57-.36-1.94a3.2 3.2 0 00-.79-1.2 3.2 3.2 0 00-1.2-.79c-.37-.14-.92-.31-1.94-.36C15.51 4 15.14 4 12 4zm0 3.4a4.7 4.7 0 110 9.4 4.7 4.7 0 010-9.4zm0 1.8a2.9 2.9 0 100 5.8 2.9 2.9 0 000-5.8zm5.9-2a1.1 1.1 0 11-2.2 0 1.1 1.1 0 012.2 0z"/></svg>'
+  };
+
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+    } else {
+      fallbackCopy(text);
+    }
+  }
+  function fallbackCopy(text) {
+    const t = document.createElement('textarea');
+    t.value = text;
+    t.style.position = 'fixed';
+    t.style.opacity = '0';
+    document.body.appendChild(t);
+    t.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(t);
+  }
+
+  function buildShareRow(container, url, text) {
+    container.innerHTML = '';
+
+    const xLink = document.createElement('a');
+    xLink.className = 'share-btn';
+    xLink.target = '_blank';
+    xLink.rel = 'noopener';
+    xLink.href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+    xLink.innerHTML = ICONS.x + '<span>X</span>';
+    container.appendChild(xLink);
+
+    const fbLink = document.createElement('a');
+    fbLink.className = 'share-btn';
+    fbLink.target = '_blank';
+    fbLink.rel = 'noopener';
+    fbLink.href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
+    fbLink.innerHTML = ICONS.fb + '<span>Facebook</span>';
+    container.appendChild(fbLink);
+
+    const igBtn = document.createElement('button');
+    igBtn.type = 'button';
+    igBtn.className = 'share-btn';
+    igBtn.innerHTML = ICONS.ig + '<span>Instagram</span>';
+    igBtn.addEventListener('click', () => {
+      copyText(url);
+      igBtn.querySelector('span').textContent = 'Link copied!';
+      setTimeout(() => { igBtn.querySelector('span').textContent = 'Instagram'; }, 1800);
+    });
+    container.appendChild(igBtn);
+  }
+
+  const toName = document.getElementById('toName');
+  const fromName = document.getElementById('fromName');
+  const messageInput = document.getElementById('messageInput');
+  const generateBtn = document.getElementById('generateBtn');
+  const result = document.getElementById('result');
+  const linkText = document.getElementById('linkText');
+  const copyBtn = document.getElementById('copyBtn');
+  const previewBtn = document.getElementById('previewBtn');
+
+  let lastData = null;
+
+  function buildLink() {
+    const to = toName.value.trim() || 'you';
+    const from = fromName.value.trim() || 'yours, always';
+    const msg = messageInput.value.trim();
+    if (!msg) {
+      messageInput.style.borderColor = '#7a2e2e';
+      messageInput.focus();
+      return null;
+    }
+    messageInput.style.borderColor = '';
+    lastData = { to, from, msg };
+    const encoded = encodeData(lastData);
+    const base = window.location.href.split('#')[0];
+    return base + '#data=' + encodeURIComponent(encoded);
+  }
+
+  generateBtn.addEventListener('click', () => {
+    const link = buildLink();
+    if (!link) return;
+    linkText.textContent = link;
+    result.classList.add('show');
+    buildShareRow(document.getElementById('writeShareRow'), link, lastData.to + ', I wrote you a letter —');
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    if (!linkText.textContent) return;
+    copyText(linkText.textContent);
+    copyBtn.textContent = 'Copied';
+    setTimeout(() => (copyBtn.textContent = 'Copy'), 1500);
+  });
+
+  previewBtn.addEventListener('click', () => {
+    if (!lastData) {
+      const link = buildLink();
+      if (!link) return;
+      linkText.textContent = link;
+      result.classList.add('show');
+      buildShareRow(document.getElementById('writeShareRow'), link, lastData.to + ', I wrote you a letter —');
+    }
+    window.location.hash = 'data=' + encodeURIComponent(encodeData(lastData));
+    init();
+  });
+
+  const envelope = document.getElementById('envelope');
+  const letterWrap = document.getElementById('letterWrap');
+  const letterHeading = document.getElementById('letterHeading');
+  const letterBody = document.getElementById('letterBody');
+  const signature = document.getElementById('signature');
+  const actions = document.getElementById('actions');
+  const replayBtn = document.getElementById('replayBtn');
+  const writeBackToggle = document.getElementById('writeBackToggle');
+  const replySection = document.getElementById('replySection');
+  const replyInput = document.getElementById('replyInput');
+  const replyGenerateBtn = document.getElementById('replyGenerateBtn');
+  const replyResult = document.getElementById('replyResult');
+  const replyLinkText = document.getElementById('replyLinkText');
+  const replyCopyBtn = document.getElementById('replyCopyBtn');
+  const replyToNameEl = document.getElementById('replyToName');
+
+  let currentMessage = '';
+  let typing = false;
+  let viewingData = null;
+
+  function typeWriter() {
+    if (typing) return;
+    typing = true;
+    letterBody.innerHTML = '';
+    signature.classList.remove('show');
+    actions.classList.remove('show');
+    replySection.classList.remove('show');
+    replyResult.classList.remove('show');
+
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    cursor.textContent = '\u00A0';
+
+    let i = 0;
+    const textNode = document.createTextNode('');
+    letterBody.appendChild(textNode);
+    letterBody.appendChild(cursor);
+
+    function step() {
+      if (i < currentMessage.length) {
+        textNode.textContent += currentMessage[i];
+        i++;
+        const ch = currentMessage[i - 1];
+        const delay = ch === ',' || ch === '.' ? 90 : (Math.random() * 18 + 14);
+        setTimeout(step, delay);
+      } else {
+        cursor.remove();
+        typing = false;
+        setTimeout(() => {
+          signature.classList.add('show');
+          setTimeout(() => actions.classList.add('show'), 250);
+        }, 200);
+      }
+    }
+    step();
+  }
+
+  envelope.addEventListener('click', () => {
+    if (envelope.classList.contains('opened')) return;
+    tryPlay();
+    envelope.classList.add('opened');
+    setTimeout(() => {
+      letterWrap.classList.add('visible');
+      typeWriter();
+    }, 500);
+  });
+
+  replayBtn.addEventListener('click', typeWriter);
+
+  writeBackToggle.addEventListener('click', () => {
+    replySection.classList.toggle('show');
+    if (replySection.classList.contains('show')) {
+      replyToNameEl.textContent = viewingData ? viewingData.from : 'them';
+      replyInput.focus();
+    }
+  });
+
+  replyGenerateBtn.addEventListener('click', () => {
+    const msg = replyInput.value.trim();
+    if (!msg || !viewingData) {
+      replyInput.style.borderColor = '#7a2e2e';
+      replyInput.focus();
+      return;
+    }
+    replyInput.style.borderColor = '';
+    const replyData = { to: viewingData.from, from: viewingData.to, msg: msg };
+    const encoded = encodeData(replyData);
+    const base = window.location.href.split('#')[0];
+    const link = base + '#data=' + encodeURIComponent(encoded);
+
+    replyLinkText.textContent = link;
+    replyToNameEl.textContent = viewingData.from;
+    replyResult.classList.add('show');
+    buildShareRow(document.getElementById('replyShareRow'), link, viewingData.from + ', I wrote you back —');
+  });
+
+  replyCopyBtn.addEventListener('click', () => {
+    if (!replyLinkText.textContent) return;
+    copyText(replyLinkText.textContent);
+    replyCopyBtn.textContent = 'Copied';
+    setTimeout(() => (replyCopyBtn.textContent = 'Copy'), 1500);
+  });
+
+  function init() {
+    const data = getHashData();
+    if (data && data.msg) {
+      viewingData = data;
+      letterHeading.textContent = 'Dear ' + data.to + ',';
+      signature.textContent = '— ' + data.from;
+      currentMessage = data.msg;
+      envelope.classList.remove('opened');
+      letterWrap.classList.remove('visible');
+      replySection.classList.remove('show');
+      replyResult.classList.remove('show');
+      showView('letter');
+    } else {
+      showView('write');
+    }
+  }
+
+  window.addEventListener('hashchange', init);
+  init();
+</script>
+
+</body>
+</html>
